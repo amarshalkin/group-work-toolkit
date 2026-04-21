@@ -1,0 +1,33 @@
+{
+  "name": "group-work-toolkit",
+  "owner": {
+    "name": "Artem Marshalkin",
+    "email": "artem.marshalkin@gmail.com",
+    "url": "https://github.com/amarshalkin"
+  },
+  "metadata": {
+    "description": "Claude Code плагин для полного цикла работы с групповой работой в неформальном образовании: проектирование → ревью → разбор. Методологическая база — КСП (Конструкторы сообществ практики).",
+    "version": "0.10.0"
+  },
+  "plugins": [
+    {
+      "name": "group-work-toolkit",
+      "source": "./",
+      "description": "Проектирование, ревью и пост-сессионный разбор групповой работы. 3 скилла (design-group-work, review-session-design, debrief-session), 3 slash-команды, заделы под расширение методологиями и ролями.",
+      "version": "0.10.0",
+      "author": {
+        "name": "Центр Знание",
+        "email": "artem.marshalkin@gmail.com"
+      },
+      "category": "education",
+      "tags": [
+        "education",
+        "facilitation",
+        "moderation",
+        "group-work",
+        "ksp",
+        "russian"
+      ]
+    }
+  ]
+}
