@@ -16,7 +16,7 @@
       "description": "Проектирование, ревью и пост-сессионный разбор групповой работы. 3 скилла (design-group-work, review-session-design, debrief-session), 3 slash-команды, заделы под расширение методологиями и ролями.",
       "version": "0.10.0",
       "author": {
-        "name": "Центр Знание",
+        "name": "Артём Маршалкин",
         "email": "artem.marshalkin@gmail.com"
       },
       "category": "education",
