@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<!--
+  АКТ II · ПУЛЬТ ЦИФРОВОЙ СРЕДЫ ШКОЛЫ
+  Лекция: Виктор Басюк
+  Mobile-first. Акцент: бирюза #35A2A8 на графите.
+  Механика: drag-ползунки, живой пересчёт 6 индикаторов, диагноз + дорожная карта.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>02 · Пульт цифровой среды школы</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:    #35A2A8;
+    --teal-d:  #2A8389;
+    --teal-soft: rgba(53,162,168,0.14);
+    --bg:      #1A1B1E;
+    --bg-2:    #232427;
+    --bg-3:    #2D2E32;
+    --paper:   #F8F8F7;
+    --line:    #3A3B3F;
+    --line-2:  #4A4B4F;
+    --ink:     #E8E8E5;
+    --ink-2:   #B0B0AC;
+    --ink-3:   #75767A;
+    --red:     #E25A6B;
+    --amber:   #E0A445;
+    --green:   #5FCAA0;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.45; font-size: 16px; overflow-x: hidden;
+  }
+  ::selection { background: var(--teal); color: var(--bg); }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(26,27,30,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-mark {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-2); font-weight: 600;
+  }
+  .topbar-mark::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal); box-shadow: 0 0 12px var(--teal);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse { 0%,100% {opacity:1} 50% {opacity:0.4} }
+  .topbar-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-3);
+  }
+  .topbar-counter b { color: var(--teal); }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 24px 20px 0; }
+
+  /* HERO */
+  .hero { padding: 16px 0 28px; }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--teal);
+    letter-spacing: 0.2em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(32px,8vw,48px);
+    line-height: 1.02; letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  .hero h1 em { font-style: normal; color: var(--teal); }
+  .hero-sub {
+    margin-top: 18px; color: var(--ink-2); font-size: 17px;
+    max-width: 32ch; line-height: 1.4;
+  }
+  .hero-meta {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-3);
+    letter-spacing: 0.06em;
+  }
+
+  /* TABS — переключение между «параметры» и «приборы» */
+  .tabs {
+    display: grid; grid-template-columns: 1fr 1fr;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 12px; padding: 4px; margin: 24px 0 18px;
+    position: sticky; top: 56px; z-index: 40;
+  }
+  .tab {
+    border: none; background: transparent; color: var(--ink-2);
+    font: inherit; font-weight: 600; font-size: 14px;
+    padding: 12px 8px; border-radius: 9px; cursor: pointer;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .tab.active { background: var(--teal); color: var(--bg); }
+  .tab .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; padding: 2px 6px; border-radius: 4px;
+    background: rgba(255,255,255,0.18);
+  }
+  .tab.active .badge { background: rgba(0,0,0,0.18); }
+
+  body[data-tab="params"] #panelParams { display: block; }
+  body[data-tab="indic"] #panelIndic { display: block; }
+  body[data-tab="params"] #panelIndic, body[data-tab="indic"] #panelParams { display: none; }
+
+  /* PARAM */
+  .param {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 16px; padding: 18px 18px 16px;
+    margin-bottom: 12px;
+  }
+  .param-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 6px;
+  }
+  .param-cat b { color: var(--ink-3); font-weight: 500; }
+  .param-label { font-size: 18px; font-weight: 600; line-height: 1.2; margin-bottom: 6px; }
+  .param-explain { font-size: 13px; color: var(--ink-3); margin-bottom: 14px; }
+
+  .slider-wrap { margin: 6px 0 8px; }
+  .slider {
+    -webkit-appearance: none; appearance: none;
+    width: 100%; height: 6px; background: var(--line);
+    border-radius: 3px; outline: none;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 26px; height: 26px;
+    border-radius: 50%; background: var(--teal);
+    border: 3px solid var(--paper); cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(53,162,168,0.18);
+  }
+  .slider::-moz-range-thumb {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--teal); border: 3px solid var(--paper);
+    cursor: pointer;
+  }
+  .slider-value-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    margin-top: 8px; gap: 8px;
+  }
+  .slider-value-row .v {
+    font-size: 22px; color: var(--teal); font-weight: 700;
+  }
+  .param-state {
+    margin-top: 10px; padding: 10px 12px;
+    background: var(--bg-3); border-left: 3px solid var(--teal);
+    border-radius: 8px; font-size: 14px; color: var(--ink);
+  }
+  .param-state b {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 4px; font-weight: 600;
+  }
+
+  /* INDICATORS */
+  .indic {
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 16px; padding: 18px; margin-bottom: 12px;
+    overflow: hidden; position: relative;
+  }
+  .indic-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 12px; margin-bottom: 8px;
+  }
+  .indic-label { font-size: 16px; font-weight: 600; line-height: 1.2; }
+  .indic-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px; font-weight: 700;
+  }
+  .indic-value.red { color: var(--red); }
+  .indic-value.amber { color: var(--amber); }
+  .indic-value.green { color: var(--green); }
+  .indic-explain { font-size: 13px; color: var(--ink-3); margin-bottom: 14px; }
+  .indic-bar {
+    height: 8px; background: var(--bg-3); border-radius: 4px;
+    overflow: hidden; position: relative;
+  }
+  .indic-bar::before, .indic-bar::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 1px;
+    background: var(--line-2);
+  }
+  .indic-bar::before { left: 40%; }
+  .indic-bar::after { left: 70%; }
+  .indic-fill {
+    height: 100%; transition: width 0.4s ease, background 0.2s;
+  }
+  .indic-fill.red { background: var(--red); }
+  .indic-fill.amber { background: var(--amber); }
+  .indic-fill.green { background: var(--green); }
+  .indic-thr {
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.06em; margin-top: 6px;
+  }
+  .indic-zone {
+    margin-top: 12px; padding: 10px 12px;
+    border-radius: 8px; font-size: 14px;
+  }
+  .indic-zone.red { background: rgba(226,90,107,0.10); color: #F2A0AB; border-left: 3px solid var(--red); }
+  .indic-zone.amber { background: rgba(224,164,69,0.10); color: #F2C786; border-left: 3px solid var(--amber); }
+  .indic-zone.green { background: rgba(95,202,160,0.10); color: #95E0BC; border-left: 3px solid var(--green); }
+  .indic-zone b { display: block; font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; opacity: 0.8; }
+
+  /* DIAG */
+  .diagnosis {
+    margin-top: 28px; padding: 22px 20px;
+    background: linear-gradient(135deg, rgba(53,162,168,0.10) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--teal);
+    border-radius: 18px;
+  }
+  .diagnosis-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); margin-bottom: 10px;
+  }
+  .diagnosis h3 {
+    font-size: 22px; font-weight: 700; line-height: 1.2;
+    margin-bottom: 8px;
+  }
+  .diagnosis p { color: var(--ink-2); font-size: 15px; }
+
+  /* ROADMAP */
+  .roadmap { margin-top: 28px; }
+  .roadmap-title {
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); font-weight: 600; margin-bottom: 4px;
+  }
+  .roadmap-sub { color: var(--ink-3); font-size: 13px; margin-bottom: 18px; }
+  .roadmap-item {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 14px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line);
+    position: relative;
+  }
+  .roadmap-item:last-child { border-bottom: 1px solid var(--line); }
+  .roadmap-month {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; line-height: 1.2;
+    color: var(--teal); letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding-top: 2px;
+  }
+  .roadmap-month b { display: block; color: var(--ink); font-weight: 700; font-size: 16px; }
+  .roadmap-body strong {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 6px;
+    border: 1px solid var(--line-2); padding: 2px 8px; border-radius: 4px;
+  }
+  .roadmap-body p { font-size: 14px; color: var(--ink); line-height: 1.45; }
+
+  /* ACTIONS */
+  .actions {
+    display: flex; gap: 10px; margin: 32px 0 0; flex-wrap: wrap;
+  }
+  .btn {
+    flex: 1; min-width: 140px;
+    padding: 14px 18px; border-radius: 12px;
+    font: inherit; font-size: 14px; font-weight: 600;
+    cursor: pointer; border: none;
+    transition: all 0.15s;
+  }
+  .btn-ghost { background: var(--bg-2); color: var(--ink); border: 1px solid var(--line-2); }
+  .btn-ghost:hover { background: var(--bg-3); }
+  .btn-primary { background: var(--teal); color: var(--bg); }
+  .btn-primary:hover { background: var(--teal-d); }
+
+  /* FAB-кнопка переключения на табе params — показывает «текущее главное» */
+  .fab-status {
+    position: fixed; right: 20px; bottom: 20px; z-index: 60;
+    background: var(--bg-2); border: 1px solid var(--line);
+    border-radius: 999px; padding: 10px 16px;
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-2);
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  }
+  .fab-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--teal); }
+  .fab-dot.red { background: var(--red); }
+  .fab-dot.amber { background: var(--amber); }
+  .fab-dot.green { background: var(--green); }
+
+  /* FOOTER */
+  .brand-foot {
+    border-top: 1px solid var(--line);
+    margin-top: 56px; padding: 28px 20px 36px;
+    color: var(--ink-3);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    text-align: center;
+  }
+  .brand-foot b { color: var(--ink-2); font-weight: 600; }
+  .brand-foot-row + .brand-foot-row { margin-top: 12px; }
+
+  /* DESKTOP DEMO */
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .container { max-width: 1200px; padding: 32px 40px 0; }
+    .topbar { padding: 16px 40px; }
+    .hero { padding: 32px 0 40px; }
+    .hero h1 { font-size: clamp(48px,5.5vw,80px); }
+    .hero-sub { font-size: 22px; max-width: 38ch; }
+    .tabs { display: none; }
+    .grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+      align-items: start;
+    }
+    body[data-tab="params"] #panelIndic, body[data-tab="indic"] #panelParams,
+    body[data-tab="params"] #panelParams, body[data-tab="indic"] #panelIndic { display: block; }
+    .param-label, .indic-label { font-size: 19px; }
+    .indic-value { font-size: 28px; }
+    .panel-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px; color: var(--teal); letter-spacing: 0.16em;
+      text-transform: uppercase; margin-bottom: 14px;
+    }
+    .fab-status { display: none; }
+    .diagnosis { padding: 32px 28px; }
+    .diagnosis h3 { font-size: 32px; }
+  }
+  @media (max-width: 979px) { .panel-title { display: none; } }
+</style>
+</head>
+<body data-tab="params">
+
+<div class="topbar">
+  <div class="topbar-mark">Акт <!-- evt:lecture-num -->II<!-- /evt --> · <!-- evt:act-title -->Пульт<!-- /evt --></div>
+  <div class="topbar-counter">диагноз: <b id="topZone">—</b></div>
+</div>
+
+<main class="container">
+
+  <section class="hero">
+    <div class="hero-eye">№ 02 · К лекции Виктора Басюка</div>
+    <h1>Где сейчас <em>цифровая среда</em><br>вашей школы</h1>
+    <p class="hero-sub">Шесть переключателей описывают школу. Шесть приборов считают живой диагноз.</p>
+    <div class="hero-meta" id="heroMeta">среда 29.04, 09:20–10:50 · большой зал</div>
+  </section>
+
+  <div class="tabs" role="tablist">
+    <button class="tab active" data-tab="params" role="tab">Параметры <span class="badge">06</span></button>
+    <button class="tab" data-tab="indic" role="tab">Приборы <span class="badge">06</span></button>
+  </div>
+
+  <div class="grid">
+
+    <section id="panelParams">
+      <div class="panel-title">Параметры школы — двигайте слайдеры</div>
+      <div id="paramsList"></div>
+    </section>
+
+    <section id="panelIndic">
+      <div class="panel-title">Приборы — пересчёт идёт вживую</div>
+      <div id="indicList"></div>
+    </section>
+
+  </div>
+
+  <section class="diagnosis">
+    <div class="diagnosis-tag">Диагноз / самое слабое место</div>
+    <h3 id="diagTitle">—</h3>
+    <p id="diagBody">…</p>
+  </section>
+
+  <section class="roadmap">
+    <div class="roadmap-title">Дорожная карта · 6 месяцев</div>
+    <div class="roadmap-sub">Параметры отсортированы по их вкладу в слабые приборы.</div>
+    <div id="roadmapList"></div>
+  </section>
+
+  <div class="actions">
+    <button class="btn btn-ghost" id="btnReset">↺ Сбросить</button>
+    <button class="btn btn-primary" id="btnPrint">⎙ Снимок дашборда</button>
+  </div>
+
+  <footer class="brand-foot">
+    <div class="brand-foot-row">при поддержке <b>Центра знаний Машук</b></div>
+    <div class="brand-foot-row"><!-- evt:event-name -->Весенний педсовет<!-- /evt --> · апрель <!-- evt:event-year -->2026<!-- /evt --> · акт <!-- evt:lecture-num -->II<!-- /evt --> из VII</div>
+  </footer>
+</main>
+
+<button class="fab-status" id="fabStatus" aria-label="Перейти к приборам">
+  <span class="fab-dot" id="fabDot"></span>
+  <span id="fabText">приборы</span>
+</button>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  lecturer: 'Виктор Басюк',
+  date: 'среда 29.04, 09:20–10:50 · большой зал',
+
+  /* 6 параметров: cat, label, explain, states[5] (с диапазонами), initial 0..100 */
+  parameters: [
+    { id:'p1', cat:'Инфраструктура', label:'Сеть, устройства, оборудование',
+      explain:'Что физически есть: Wi-Fi, проекторы, ноутбуки, доступные ученикам устройства.', initial:45,
+      states:[
+        {r:[0,20], t:'Ни Wi-Fi, ни проекторов. Ученики приходят со своими телефонами.'},
+        {r:[21,40],t:'Сеть — только в учительской. Треть кабинетов без проектора.'},
+        {r:[41,60],t:'Сеть в большинстве кабинетов, проекторы в учебных. Один мобильный класс.'},
+        {r:[61,80],t:'Полное покрытие, проекторы в каждом кабинете, доступ к ноутбукам.'},
+        {r:[81,100],t:'Каждый ученик имеет устройство. Сеть стабильна, есть подмена техники.'}]},
+    { id:'p2', cat:'Кадры', label:'Освоение цифры учителями',
+      explain:'Сколько учителей применяют цифровые инструменты регулярно, а не разово.', initial:40,
+      states:[
+        {r:[0,20], t:'Цифру использует один-два энтузиаста. Остальные ждут указаний.'},
+        {r:[21,40],t:'Половина записаны на курсы. Применение фрагментарное и под давлением.'},
+        {r:[41,60],t:'Большинство прошло обучение. Применяют в узких задачах.'},
+        {r:[61,80],t:'Регулярная практика у 70%+. Есть внутренние мастер-классы.'},
+        {r:[81,100],t:'Цифра — норма. Учителя сами создают и делятся практиками.'}]},
+    { id:'p3', cat:'Культура', label:'Цифровой этикет в школе',
+      explain:'Есть ли общие правила: как ведут себя в сети, в чатах, при работе с данными.', initial:35,
+      states:[
+        {r:[0,20], t:'Правил нет. Конфликты в чатах решаются по ситуации.'},
+        {r:[21,40],t:'Принципы есть, но не оформлены и не обсуждаются с детьми.'},
+        {r:[41,60],t:'Есть кодекс этикета. Знают, но не всегда соблюдают.'},
+        {r:[61,80],t:'Кодекс работает. Регулярные классные часы об этикете.'},
+        {r:[81,100],t:'Дети сами поддерживают культуру. Ученические инициативы.'}]},
+    { id:'p4', cat:'Защита', label:'Безопасность данных',
+      explain:'Как школа защищает персональные данные. Кто отвечает, как контролируется.', initial:55,
+      states:[
+        {r:[0,20], t:'Данные в excel-файлах, пересылаются в мессенджерах. Ответственного нет.'},
+        {r:[21,40],t:'Ответственный есть. Политика — в стол. Учителя её не помнят.'},
+        {r:[41,60],t:'Политика работает. Учителя проинструктированы. Контроля нет.'},
+        {r:[61,80],t:'Регулярные напоминания. Внутренний аудит раз в год.'},
+        {r:[81,100],t:'Все процессы оформлены и проверяются. План реагирования на инциденты.'}]},
+    { id:'p5', cat:'Контент', label:'Содержательное наполнение',
+      explain:'Качество цифровых материалов школы. Есть ли курируемая медиатека.', initial:45,
+      states:[
+        {r:[0,20], t:'Учителя качают из интернета случайное. Качество и авторство не контролируются.'},
+        {r:[21,40],t:'У отдельных есть подборки, но они не общие.'},
+        {r:[41,60],t:'Есть общая папка. Минимальный контроль качества.'},
+        {r:[61,80],t:'Курируемая медиатека. Новые материалы проходят редактуру.'},
+        {r:[81,100],t:'Медиатека — преимущество школы. Делятся с другими.'}]},
+    { id:'p6', cat:'Партнёрство', label:'Включение родителей',
+      explain:'Понимают ли родители, как школа работает с цифрой. Прозрачность и совместность.', initial:40,
+      states:[
+        {r:[0,20], t:'Родители не знают о цифровых процессах. Узнают по жалобам.'},
+        {r:[21,40],t:'Раз в год — собрание о цифре. Пассивная реакция, иногда претензии.'},
+        {r:[41,60],t:'Регулярная отчётность. Родители знают, что и зачем делается.'},
+        {r:[61,80],t:'Участвуют в обсуждении. Постоянная рабочая группа.'},
+        {r:[81,100],t:'Родители — соавторы политики цифровизации.'}]}
+  ],
+
+  /* 6 индикаторов: вес каждого параметра, тексты зон */
+  indicators: [
+    { id:'i1', label:'Готовность к ИИ-практикам',
+      explain:'Можно ли системно вводить ИИ-инструменты на уроках без рисков.',
+      weights:{p1:.3,p2:.4,p4:.3},
+      zones:{red:'Не хватает одного из трёх блоков: техники, кадров или защиты данных. Запускать ИИ-практики опасно.',
+             amber:'Возможны точечные пилоты — один-два класса, два-три учителя. Масштабировать рано.',
+             green:'Можно масштабировать ИИ-практики на основной коллектив.'}},
+    { id:'i2', label:'Информационная защищённость',
+      explain:'Насколько данные защищены от утечки или ошибочного использования.',
+      weights:{p4:.6,p1:.2,p3:.2},
+      zones:{red:'Данные могут утечь в любой момент. Школа не сможет показать проверке, кто их обработал.',
+             amber:'Базовая защита есть. Возможны нарушения по человеческому фактору.',
+             green:'Контролируемая среда. Инциденты возможны, но школа их обработает по протоколу.'}},
+    { id:'i3', label:'Цифровая зрелость педколлектива',
+      explain:'Какая часть учителей работает с цифрой как с обычным инструментом.',
+      weights:{p2:.7,p5:.3},
+      zones:{red:'Цифра — нагрузка для большинства. Качественные продукты делают единицы.',
+             amber:'Половина владеет на минимуме. Не хватает критической массы.',
+             green:'Цифра — общий язык коллектива. Взаимное обучение и обмен.'}},
+    { id:'i4', label:'Доверие родителей',
+      explain:'Готовы ли родители доверить школе работу с цифровой средой.',
+      weights:{p6:.6,p4:.2,p3:.2},
+      zones:{red:'Родители реагируют негативно или нейтрально. Любое изменение — риск конфликта.',
+             amber:'Родители принимают изменения, но осторожно. Поддержка требует объяснений.',
+             green:'Родители — союзники. Поддерживают изменения и предлагают идеи.'}},
+    { id:'i5', label:'Качество среды в целом',
+      explain:'Соответствует ли среда школы уровню современной школы.',
+      weights:{p1:.4,p5:.4,p3:.2},
+      zones:{red:'Среда отстаёт. Учителя и ученики работают вопреки, а не благодаря.',
+             amber:'Среда позволяет делать основное. Есть ограничения.',
+             green:'Среда не мешает, а помогает. Можно сосредоточиться на содержании.'}},
+    { id:'i6', label:'Способность к самообновлению',
+      explain:'Может ли школа сама развивать цифру — без постоянных консультантов.',
+      weights:{p2:.4,p3:.3,p6:.3},
+      zones:{red:'Без внешней поддержки среда деградирует за полгода. Новое не приживается.',
+             amber:'Школа поддерживает текущее, новое внедряет с трудом.',
+             green:'Школа сама обновляется, тестирует и масштабирует.'}}
+  ],
+
+  thresholds:{ red:40, amber:70 },
+
+  /* По одному стартовому действию на каждый параметр */
+  roadmap:{
+    p1:{label:'Инфраструктура', text:'Аудит инфраструктуры: пропускная способность, резервные каналы, точки слабости. План оснащения 2–3 кабинетов.'},
+    p2:{label:'Кадры', text:'Серия из 4 коротких мастер-классов для учителей: каждый ведёт коллега с реальным кейсом из практики.'},
+    p3:{label:'Культура', text:'Принять цифровой кодекс школы. Цикл из 3 классных часов по этике в сети для каждой параллели.'},
+    p4:{label:'Защита', text:'Назначить ответственного за защиту данных. Инвентаризация: где хранятся, кто имеет доступ, как удаляются.'},
+    p5:{label:'Контент', text:'Создать общую медиатеку проверенных материалов. Запустить ротацию редакторов из методистов.'},
+    p6:{label:'Партнёрство', text:'Родительское собрание с прозрачным отчётом. Сформировать постоянную рабочую группу 5–7 человек.'}
+  },
+
+  months:['Май 2026','Июнь 2026','Июль 2026','Август 2026','Сентябрь 2026','Октябрь 2026']
+};
+
+const state = { params:{} };
+DATA.parameters.forEach(p => state.params[p.id] = p.initial);
+
+function zoneOf(v){ return v < DATA.thresholds.red ? 'red' : v < DATA.thresholds.amber ? 'amber' : 'green'; }
+function zoneLbl(z){ return z==='red'?'Критическая':z==='amber'?'Внимание':'Устойчиво'; }
+function stateText(p,v){ return p.states.find(s=>v>=s.r[0]&&v<=s.r[1]).t; }
+function calcInd(ind){
+  let s=0,w=0; for(const k in ind.weights){ s += state.params[k]*ind.weights[k]; w += ind.weights[k]; }
+  return Math.round(s/w);
+}
+
+function renderParams(){
+  const root = document.getElementById('paramsList');
+  root.innerHTML = '';
+  DATA.parameters.forEach((p,i) => {
+    const el = document.createElement('div');
+    el.className = 'param';
+    el.innerHTML = `
+      <div class="param-cat"><b>0${i+1} ·</b> ${p.cat}</div>
+      <div class="param-label">${p.label}</div>
+      <div class="param-explain">${p.explain}</div>
+      <div class="slider-wrap">
+        <input type="range" class="slider" min="0" max="100" value="${state.params[p.id]}" data-id="${p.id}">
+        <div class="slider-value-row">
+          <span>${p.states[0].t.split('.')[0].toLowerCase().slice(0,18)}…</span>
+          <span class="v" id="v-${p.id}">${state.params[p.id]}</span>
+        </div>
+      </div>
+      <div class="param-state"><b>сейчас в школе</b><span id="s-${p.id}">${stateText(p,state.params[p.id])}</span></div>`;
+    root.appendChild(el);
+    el.querySelector('.slider').addEventListener('input', e => {
+      const v = +e.target.value;
+      state.params[p.id] = v;
+      document.getElementById('v-'+p.id).textContent = v;
+      document.getElementById('s-'+p.id).textContent = stateText(p,v);
+      updateIndic(); updateDiagAndRoad(); updateFab();
+    });
+  });
+}
+
+function renderIndic(){
+  const root = document.getElementById('indicList');
+  root.innerHTML = '';
+  DATA.indicators.forEach((ind,i) => {
+    const v = calcInd(ind), z = zoneOf(v);
+    const el = document.createElement('div');
+    el.className = 'indic';
+    el.innerHTML = `
+      <div class="indic-head">
+        <div class="indic-label">0${i+1} · ${ind.label}</div>
+        <div class="indic-value ${z}" id="iv-${ind.id}">${v}</div>
+      </div>
+      <div class="indic-explain">${ind.explain}</div>
+      <div class="indic-bar"><div class="indic-fill ${z}" id="if-${ind.id}" style="width:${v}%"></div></div>
+      <div class="indic-thr"><span>0</span><span>40</span><span>70</span><span>100</span></div>
+      <div class="indic-zone ${z}" id="iz-${ind.id}"><b>${zoneLbl(z)}</b><span id="izt-${ind.id}">${ind.zones[z]}</span></div>`;
+    root.appendChild(el);
+  });
+}
+
+function updateIndic(){
+  DATA.indicators.forEach(ind => {
+    const v = calcInd(ind), z = zoneOf(v);
+    const iv = document.getElementById('iv-'+ind.id);
+    iv.textContent = v; iv.className = 'indic-value '+z;
+    const f = document.getElementById('if-'+ind.id);
+    f.style.width = v+'%'; f.className = 'indic-fill '+z;
+    const zEl = document.getElementById('iz-'+ind.id);
+    zEl.className = 'indic-zone '+z;
+    zEl.querySelector('b').textContent = zoneLbl(z);
+    document.getElementById('izt-'+ind.id).textContent = ind.zones[z];
+  });
+}
+
+function rankWeak(){
+  const sc = {}; DATA.parameters.forEach(p => sc[p.id]=0);
+  DATA.indicators.forEach(ind => {
+    const def = 100 - calcInd(ind);
+    for(const k in ind.weights) sc[k] += ind.weights[k]*def;
+  });
+  return DATA.parameters.map(p => ({p, score:sc[p.id]})).sort((a,b)=>b.score-a.score);
+}
+
+function updateDiagAndRoad(){
+  const ranked = rankWeak();
+  const worst = ranked[0].p;
+  const v = state.params[worst.id], z = zoneOf(v);
+  document.getElementById('diagTitle').textContent =
+    z==='red' ? `Критика: «${worst.cat}»` :
+    z==='amber' ? `Слабое место: «${worst.cat}»` :
+    `Точка роста: «${worst.cat}»`;
+  document.getElementById('diagBody').textContent =
+    `Сейчас этот параметр тянет за собой больше всего слабостей в приборах. ${stateText(worst, v)} Начинать стоит отсюда.`;
+
+  const list = document.getElementById('roadmapList');
+  list.innerHTML = '';
+  ranked.slice(0,6).forEach((row,i) => {
+    const r = DATA.roadmap[row.p.id];
+    const el = document.createElement('div');
+    el.className = 'roadmap-item';
+    el.innerHTML = `
+      <div class="roadmap-month">мес. 0${i+1}<b>${DATA.months[i]}</b></div>
+      <div class="roadmap-body"><strong>${r.label}</strong><p>${r.text}</p></div>`;
+    list.appendChild(el);
+  });
+}
+
+function updateFab(){
+  /* Show worst zone in fab */
+  const worst = DATA.indicators.map(ind => zoneOf(calcInd(ind)));
+  const z = worst.includes('red') ? 'red' : worst.includes('amber') ? 'amber' : 'green';
+  document.getElementById('fabDot').className = 'fab-dot '+z;
+  const isParams = document.body.dataset.tab === 'params';
+  document.getElementById('fabText').textContent = isParams ? 'к приборам →' : '← к параметрам';
+  document.getElementById('topZone').textContent = zoneLbl(z);
+  document.getElementById('topZone').style.color =
+    z==='red'?'var(--red)':z==='amber'?'var(--amber)':'var(--green)';
+}
+
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  document.body.dataset.tab = t.dataset.tab;
+  updateFab();
+  window.scrollTo({top:0,behavior:'smooth'});
+}));
+
+document.getElementById('fabStatus').addEventListener('click', () => {
+  const next = document.body.dataset.tab === 'params' ? 'indic' : 'params';
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab===next));
+  document.body.dataset.tab = next;
+  updateFab();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+document.getElementById('btnReset').addEventListener('click', () => {
+  DATA.parameters.forEach(p => state.params[p.id] = p.initial);
+  renderParams(); renderIndic(); updateDiagAndRoad(); updateFab();
+});
+document.getElementById('btnPrint').addEventListener('click', () => window.print());
+
+document.getElementById('heroMeta').textContent = DATA.date;
+renderParams(); renderIndic(); updateDiagAndRoad(); updateFab();
+</script>
+</body>
+</html>

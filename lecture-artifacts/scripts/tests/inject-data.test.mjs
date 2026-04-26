@@ -93,3 +93,11 @@ test('golden: case-matcher template + example data', () => {
   const expected = fixture('case-matcher.expected.html');
   assert.equal(inject(tpl, data, event), expected);
 });
+
+test('golden: parameter-dashboard template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'parameter-dashboard', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'parameter-dashboard', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('parameter-dashboard.event.json'));
+  const expected = fixture('parameter-dashboard.expected.html');
+  assert.equal(inject(tpl, data, event), expected);
+});
