@@ -1,6 +1,6 @@
 {
   "name": "lecture-artifacts",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Превращает расшифровку лекции в HTML-страницу по одному из 7 функциональных шаблонов с опциональной публикацией через knottasoft:host-html.",
   "author": {
     "name": "Артём Маршалкин",

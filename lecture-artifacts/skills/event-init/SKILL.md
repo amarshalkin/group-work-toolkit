@@ -24,7 +24,10 @@ Idempotent. Running `/init` twice reuses existing values; missing fields are top
 5. **Top up event-level fields** via `AskUserQuestion`, **only if missing** in the merged object:
    - `event.name`
    - `event.month_year` (try to derive from `program[].date` first)
-   - `event.location` (optional; "—" to skip)
+   - `event.location` — где проходит (e.g. "Пятигорск, Центр знаний Машук"). Используется в манифесте и лендинге.
+   - `event.dates` — диапазон дат для вывода в шапке/футере (e.g. "28 апреля — 2 мая 2026"). Если есть `program[].date`, можно собрать из min/max.
+   - `event.participants` — кто участвует (e.g. "~280 педагогов из всех регионов России"). Используется в манифесте и лендинге.
+   - `event.content_summary` — что в программе крупными штрихами (e.g. "11 ключевых + 7 параллельных мастер-классов"). Можно посчитать по `program[]` если в нём отмечены типы лекций.
    - `event.output_dir` (default: transliterated event name + year, e.g. `lecture-artifacts/spring-2026`)
 6. **Top up program rows** via `AskUserQuestion` for each `program[i]` missing `template`. Show a multi-choice with the 7 functional template ids (`diagnostic-quiz`, `parameter-dashboard`, `case-matcher`, `pick-and-plan`, `scenario-cards`, `step-builder`, `manifesto`) and a description of each. Skip rows that already have `template` set.
 7. **Defaults for fresh rows**: `transcript: null`, `output: null`, `published_url: null`, `qr: null`, `built_at: null`.

@@ -24,9 +24,16 @@ This skill is the engine behind every template-specific slash command. The comma
 8. **Build the event.json.** Compute marker values from `event` and `program[i]`:
    - `event-name` ← `event.name`
    - `event-year` ← year extracted from `event.month_year` (e.g. "Апрель 2026" → "2026")
-   - `lecture-num` ← Roman numeral of `program[i].n`
-   - `act-title` ← `program[i].title` (this is the act/lecture title shown in the topbar — it can be a short word like "Манифест" or a longer phrase, depending on the template's marker placement)
-   And `title` (the `<title>` tag) ← `"<n> · <program[i].title>"`.
+   - `event-location` ← `event.location` (if defined; else omit)
+   - `event-dates` ← `event.dates` (if defined; else omit)
+   - `event-participants` ← `event.participants` (if defined; else omit)
+   - `event-content-summary` ← `event.content_summary` (if defined; else omit)
+   - `act-title` ← short act name for the topbar. By default `program[i].title`, but for templates where the program title is too long for a topbar (e.g. "ИИ — современный фронтир"), shorten to a 1–2 word label (e.g. "Самотест", "Манифест") matching the template's mechanic.
+   - `lecture-title` ← per the template's `schema.md` "Подзаголовок-эпиграф (lecture-title)" section. Different templates use different styles — see the schema. Skip for `event-landing`.
+   - `page-title` ← per the template's `schema.md` "Заголовок страницы (page-title)" section. Use lecture topic + actual data cardinality (e.g. `classes.length` числом прописью for pick-and-plan) + recommended inline tags (`<br>`, `<b>`, `<i>`, `<em>`, `<mark>`, `<span class="accent">`, `<span class="em">`). Skip for `step-builder`.
+   - And `title` (the `<title>` tag) ← `"<n> · <program[i].title>"`.
+
+   IMPORTANT: `lecture-num` marker no longer exists. Do not emit it.
 9. **Inject.** Run `node ${CLAUDE_PLUGIN_ROOT}/scripts/inject-data.mjs <template.html> <data.json> <event.json> <output.html>` where `<output.html>` = `<cwd>/<event.output_dir>/<n>-<template>.html`.
 10. **Sanity-check (try-call, optional).** Try invoking the `knotta-host-html:host-doctor` skill on the output file. On `not found` or any error: skip silently. See `references/host-integration.md`.
 11. **Publish (try-call, optional).** If `host_html.enabled` ≠ `"never"`: try invoking `knotta-host-html:host-html` with the output file. If it returns `{url, qr}`: capture them. If `not found`: do not publish, mention in final response that installing `knottasoft:host-html` enables auto-publish.

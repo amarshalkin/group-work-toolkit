@@ -5,7 +5,10 @@ event:
   name:           string                    # required
   short:          string?                   # optional, used in compact contexts
   month_year:     string                    # required, e.g. "Апрель 2026"
-  location:       string?                   # optional
+  location:       string?                   # optional, used in manifesto/landing signature
+  dates:                string?                # e.g. "28 апреля — 2 мая 2026"
+  participants:         string?                # e.g. "~280 педагогов из всех регионов России"
+  content_summary:      string?                # e.g. "11 ключевых + 7 параллельных мастер-классов"
   output_dir:     string                    # required, relative to <cwd>
   brand:
     primary:      string?                   # css color, optional, reserved for future

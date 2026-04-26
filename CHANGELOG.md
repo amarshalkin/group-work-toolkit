@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.1.0] — 2026-04-26
+
+- `lecture-artifacts` 0.1.0 → 0.2.0 (breaking marker contract change): динамические заголовки страниц, эпиграфы и статы события. Удалены hardcoded "Акт N", "№ NN".
+
 ## [1.0.0] — 2026-04-26
 
 - Маркетплейс переименован: `group-work-toolkit` → `pedsovet`.

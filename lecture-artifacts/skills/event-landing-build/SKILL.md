@@ -35,7 +35,12 @@ Idempotent. The command may be invoked any number of times — each run reflects
      "title": "<event.name> <year> · N артефактов",
      "markers": {
        "event-name": "<event.name>",
-       "event-year": "<year>"
+       "event-year": "<year>",
+       "event-dates": "<event.dates>",
+       "event-location": "<event.location>",
+       "event-participants": "<event.participants>",
+       "event-content-summary": "<event.content_summary>",
+       "page-title": "<generated per templates/event-landing/schema.md 'Заголовок страницы' style>"
      }
    }
    ```
