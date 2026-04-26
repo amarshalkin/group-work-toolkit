@@ -60,3 +60,12 @@ test('CLI --validate: fails when template has no DATA banner', () => {
   assert.equal(r.status, 1);
   assert.match(r.stderr, /DATA banner\+block not found/);
 });
+
+test('golden: manifesto template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'manifesto', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'manifesto', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('manifesto.event.json'));
+  const expected = fixture('manifesto.expected.html');
+  const actual = inject(tpl, data, event);
+  assert.equal(actual, expected);
+});
