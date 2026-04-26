@@ -69,3 +69,11 @@ test('golden: manifesto template + example data', () => {
   const actual = inject(tpl, data, event);
   assert.equal(actual, expected);
 });
+
+test('golden: pick-and-plan template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'pick-and-plan', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'pick-and-plan', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('pick-and-plan.event.json'));
+  const expected = fixture('pick-and-plan.expected.html');
+  assert.equal(inject(tpl, data, event), expected);
+});

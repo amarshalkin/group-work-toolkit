@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<!--
+  АКТ IV · СЕМЬ МАСТЕР-КЛАССОВ → ТРИ ПРАКТИКИ В ПОНЕДЕЛЬНИК
+  Mobile-first. Акцент: бирюза #35A2A8 + охра.
+  Механика: tap-карточки + drag-and-drop в три слота, итог — карточка-план.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>04 · Меню практик · Весенний педсовет 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:    #35A2A8;
+    --teal-d:  #2A8389;
+    --teal-soft: rgba(53,162,168,0.10);
+    --ochre:   #A2855F;
+    --blue:    #3E529B;
+    --ink:     #2C2B2B;
+    --ink-2:   #4A4845;
+    --ink-3:   #7A7670;
+    --line:    #E5E1D8;
+    --line-2:  #C9C4B8;
+    --bg:      #EDEAE2;
+    --bg-2:    #F8F8F7;
+    --bg-3:    #F2EFE7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--bg); color: var(--ink);
+    line-height: 1.45; font-size: 16px;
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0, transparent 31px, rgba(44,43,43,0.03) 31px, rgba(44,43,43,0.03) 32px),
+      repeating-linear-gradient(90deg, transparent 0, transparent 31px, rgba(44,43,43,0.03) 31px, rgba(44,43,43,0.03) 32px);
+  }
+  ::selection { background: var(--teal); color: var(--bg-2); }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(237,234,226,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700;
+  }
+  .topbar-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+  }
+  .topbar-step b { color: var(--ink); }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  /* HERO */
+  .hero { padding: 28px 20px 4px; max-width: 720px; margin: 0 auto; }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3); font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(34px,8.5vw,56px);
+    line-height: 0.98; letter-spacing: -0.022em;
+    font-weight: 800;
+  }
+  .hero h1 i {
+    font-style: normal;
+    border-bottom: 6px solid var(--teal);
+  }
+  .hero-sub {
+    margin-top: 18px; color: var(--ink-2); font-size: 17px;
+    max-width: 36ch;
+  }
+
+  /* SLOTS — sticky bottom bar */
+  .slots-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 40;
+    background: var(--ink);
+    color: var(--bg-2);
+    padding: 14px 20px 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    border-top: 2px solid var(--teal);
+    box-shadow: 0 -8px 24px rgba(0,0,0,0.16);
+  }
+  .slot {
+    background: rgba(255,255,255,0.06);
+    border: 1.5px dashed rgba(255,255,255,0.20);
+    border-radius: 10px;
+    padding: 10px 8px 8px;
+    min-height: 92px;
+    position: relative;
+    transition: all 0.15s;
+    display: flex; flex-direction: column;
+    cursor: pointer;
+  }
+  .slot[data-empty="0"] {
+    border: 1.5px solid var(--teal);
+    background: var(--teal-soft);
+  }
+  .slot[data-empty="0"][data-acc="ochre"] {
+    border-color: var(--ochre);
+    background: rgba(162,133,95,0.10);
+  }
+  .slot[data-empty="0"][data-acc="blue"] {
+    border-color: var(--blue);
+    background: rgba(62,82,155,0.10);
+  }
+  .slot.drag-over {
+    border-style: solid; border-color: var(--teal);
+    background: var(--teal-soft); transform: scale(1.04);
+  }
+  .slot-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; opacity: 0.5; letter-spacing: 0.12em;
+  }
+  .slot-empty-hint {
+    font-size: 11px; color: rgba(255,255,255,0.45);
+    margin-top: auto; line-height: 1.2;
+  }
+  .slot-name {
+    font-size: 13px; font-weight: 700; line-height: 1.15;
+    margin-top: 6px; color: var(--bg-2);
+    /* clamp 2 lines */
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .slot-lect {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; color: rgba(255,255,255,0.65);
+    margin-top: 4px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .slot-x {
+    position: absolute; right: 4px; top: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(255,255,255,0.20); border: none;
+    color: var(--bg-2); cursor: pointer; font: inherit; font-size: 11px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slot-x:hover { background: var(--teal); color: var(--ink); }
+
+  .slots-cta {
+    margin: 14px 20px 28px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    background: var(--teal);
+    color: var(--ink);
+    font-weight: 700; font-size: 15px;
+    border: none; cursor: pointer; width: calc(100% - 40px);
+    max-width: 680px; margin-left: auto; margin-right: auto;
+    display: block; transition: all 0.15s;
+  }
+  .slots-cta:disabled {
+    background: var(--bg-3); color: var(--ink-3);
+    cursor: not-allowed;
+  }
+  .slots-cta:not(:disabled):hover { background: var(--teal-d); color: var(--bg-2); }
+
+  /* PINBOARD — карточки */
+  .pin-eye {
+    padding: 22px 20px 6px; max-width: 720px; margin: 0 auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.1em;
+  }
+  .pin-eye b { color: var(--teal); }
+
+  .pinboard {
+    padding: 12px 20px 20px;
+    max-width: 720px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr; gap: 12px;
+  }
+  @media (min-width: 580px){
+    .pinboard { grid-template-columns: 1fr 1fr; }
+  }
+  .stick {
+    background: var(--bg-2);
+    border-radius: 14px;
+    padding: 18px 18px 16px;
+    box-shadow: 0 1px 0 var(--line-2), 0 6px 14px rgba(44,43,43,0.06);
+    cursor: grab; position: relative;
+    border-left: 4px solid var(--teal);
+    transition: transform 0.15s, box-shadow 0.15s;
+    user-select: none;
+  }
+  .stick[data-acc="ochre"] { border-left-color: var(--ochre); }
+  .stick[data-acc="blue"] { border-left-color: var(--blue); }
+  .stick[data-acc="ink"] { border-left-color: var(--ink); }
+  .stick:active { cursor: grabbing; transform: rotate(-1deg); }
+  .stick.dragging { opacity: 0.4; }
+  .stick.in-cart { opacity: 0.45; pointer-events: none; }
+
+  .stick-num {
+    position: absolute; right: 14px; top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.12em;
+  }
+  .stick-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--teal);
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .stick[data-acc="ochre"] .stick-tag { color: var(--ochre); }
+  .stick[data-acc="blue"] .stick-tag { color: var(--blue); }
+  .stick[data-acc="ink"] .stick-tag { color: var(--ink); }
+
+  .stick-title {
+    font-size: 19px; font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.014em; margin-bottom: 4px;
+  }
+  .stick-lect {
+    font-size: 13px; color: var(--ink-3); margin-bottom: 12px;
+  }
+  .stick-idea { font-size: 14px; color: var(--ink); line-height: 1.45; margin-bottom: 14px; }
+
+  .stick-meta {
+    display: flex; gap: 14px; flex-wrap: wrap;
+    padding-top: 10px; border-top: 1px solid var(--line);
+  }
+  .stick-meta-item {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.06em; color: var(--ink-3);
+    text-transform: uppercase;
+  }
+  .stick-meta-item b { color: var(--ink); margin-right: 4px; }
+
+  .stick-add {
+    margin-top: 14px; width: 100%;
+    background: transparent; border: 1.5px solid var(--line-2);
+    color: var(--ink); font: inherit; font-weight: 600; font-size: 13px;
+    padding: 10px; border-radius: 10px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .stick-add:hover { border-color: var(--teal); color: var(--teal); background: var(--teal-soft); }
+  .stick-add.added { background: var(--teal); color: var(--ink); border-color: var(--teal); }
+
+  .pin-tip {
+    text-align: center;
+    padding: 8px 20px 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.06em;
+  }
+
+  /* MODAL — план понедельника */
+  .modal-bg {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(44,43,43,0.7); backdrop-filter: blur(6px);
+    display: none;
+    align-items: flex-end; justify-content: center;
+    padding: 0;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: var(--bg-2); width: 100%; max-width: 600px;
+    border-radius: 22px 22px 0 0;
+    padding: 22px 22px 28px;
+    max-height: 92vh; overflow-y: auto;
+    animation: slideUp 0.3s cubic-bezier(0.2,0,0.2,1);
+  }
+  @media (min-width: 720px) {
+    .modal-bg { align-items: center; padding: 20px; }
+    .modal { border-radius: 22px; }
+  }
+  @keyframes slideUp { from {transform: translateY(100%)} to {transform: translateY(0)} }
+
+  .modal-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--teal); font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .modal h2 {
+    font-size: 28px; line-height: 1.05; letter-spacing: -0.02em;
+    font-weight: 800; margin-bottom: 18px;
+  }
+  .modal h2 b { color: var(--teal); }
+  .plan-item {
+    display: flex; gap: 14px; padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .plan-item:last-of-type { border-bottom: none; }
+  .plan-num {
+    flex: 0 0 32px; height: 32px; border-radius: 50%;
+    background: var(--teal); color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px; font-weight: 700;
+  }
+  .plan-item:nth-child(2) .plan-num { background: var(--ochre); }
+  .plan-item:nth-child(3) .plan-num { background: var(--blue); color: var(--bg-2); }
+  .plan-body {
+    flex: 1; display: flex; flex-direction: column; gap: 4px;
+  }
+  .plan-when {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--ink-3); font-weight: 600;
+  }
+  .plan-name { font-size: 17px; font-weight: 700; line-height: 1.2; }
+  .plan-lect { font-size: 13px; color: var(--ink-3); }
+  .plan-idea { font-size: 13px; color: var(--ink-2); line-height: 1.4; margin-top: 2px; }
+
+  .modal-actions {
+    display: flex; gap: 10px; margin-top: 20px;
+  }
+  .modal-actions button {
+    flex: 1; padding: 14px; border-radius: 12px;
+    font: inherit; font-weight: 600; font-size: 14px;
+    cursor: pointer; border: none;
+  }
+  .mb-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--line-2); }
+  .mb-ghost:hover { background: var(--bg-3); }
+  .mb-prim { background: var(--ink); color: var(--bg-2); }
+  .mb-prim:hover { background: var(--teal); color: var(--ink); }
+
+  .footer-brand {
+    border-top: 1px solid var(--line);
+    padding: 28px 20px 36px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer-brand b { color: var(--ink-2); font-weight: 600; }
+
+  /* DESKTOP DEMO */
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .container, .hero, .pinboard, .pin-eye { max-width: 1200px; }
+    .hero { padding: 56px 40px 8px; }
+    .hero h1 { font-size: clamp(60px,5.5vw,84px); }
+    .hero-sub { font-size: 22px; }
+    .pinboard { grid-template-columns: 1fr 1fr 1fr; gap: 18px; padding: 16px 40px 40px; }
+    .stick { padding: 24px; }
+    .stick-title { font-size: 22px; }
+    .slots-bar {
+      padding: 18px 40px 18px;
+    }
+    .slot { min-height: 110px; padding: 14px; }
+    .slot-name { font-size: 16px; }
+    .topbar, .pin-eye, .footer-brand { padding-left: 40px; padding-right: 40px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-mark">Акт <!-- evt:lecture-num -->IV<!-- /evt --> · <!-- evt:act-title -->7 → 3 → понедельник<!-- /evt --></div>
+  <div class="topbar-step"><b id="cartCount">0</b>/3 в плане</div>
+</div>
+
+<header class="hero">
+  <div class="hero-eye">№ 04 · 7 параллельных мастер-классов</div>
+  <h1>Семь практик.<br>Возьмёте <i>три</i><br>в понедельник.</h1>
+  <p class="hero-sub">На каждой карточке — суть мастер-класса. Тапните «в план», чтобы добавить, или удерживайте и тяните в нужный слот понедельника.</p>
+</header>
+
+<div class="pin-eye"><b>↓</b> 7 карточек · 3 слота · перетащите или нажмите «в план»</div>
+<div class="pinboard" id="pinboard"></div>
+<div class="pin-tip">плана нет — потяните карточку вниз</div>
+
+<div class="slots-bar" id="slotsBar">
+  <div class="slot" data-empty="1" data-idx="0">
+    <span class="slot-num">УТРО · 09:00</span>
+    <span class="slot-empty-hint">слот 1</span>
+  </div>
+  <div class="slot" data-empty="1" data-idx="1">
+    <span class="slot-num">ДЕНЬ · 13:00</span>
+    <span class="slot-empty-hint">слот 2</span>
+  </div>
+  <div class="slot" data-empty="1" data-idx="2">
+    <span class="slot-num">ВЕЧЕР · 17:00</span>
+    <span class="slot-empty-hint">слот 3</span>
+  </div>
+</div>
+
+<button class="slots-cta" id="cta" disabled>выберите 3 практики</button>
+
+<footer class="footer-brand">
+  при поддержке <b>Центра знаний Машук</b> · <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt --> · акт <!-- evt:lecture-num -->IV<!-- /evt --> из VII
+</footer>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-eye">Ваш понедельник</div>
+    <h2>Три <b>практики</b><br>на завтра</h2>
+    <div id="planList"></div>
+    <div class="modal-actions">
+      <button class="mb-ghost" id="mClose">← собрать заново</button>
+      <button class="mb-prim" id="mPrint">⎙ распечатать</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  "classes": [
+    {
+      "id": "mk1",
+      "acc": "teal",
+      "title": "Промпт по-итальянски",
+      "lecturer": "Маршалкин Артём",
+      "tag": "Практика",
+      "duration": "15 мин",
+      "diff": 3,
+      "idea": "Инструмент-агент — это контракт через промпт. Чат-бот ждёт вопроса, агент получает цель и сам строит путь. На практике это техзадание.",
+      "planLine": "Написать промпт для агента — собрать ТЗ из четырёх частей"
+    },
+    {
+      "id": "mk2",
+      "acc": "ochre",
+      "title": "Основы на хлеб",
+      "lecturer": "Калашников Юрий",
+      "tag": "Теория",
+      "duration": "20 мин",
+      "diff": 1,
+      "idea": "Большинство неудач с ИИ — не модель плохая, а вопрос плохой. Контекст, роль, формат, ограничения закрывают 80% ситуаций.",
+      "planLine": "Прописать структуру промпта для трёх своих обычных задач"
+    },
+    {
+      "id": "mk3",
+      "acc": "blue",
+      "title": "Восстановление à la carte",
+      "lecturer": "Брюзгина Ирина",
+      "tag": "Диалог",
+      "duration": "25 мин",
+      "diff": 2,
+      "idea": "Усталость педагога редко лечится сном. Её лечат три слоя: телесный, эмоциональный и смысловой. Без всех трёх — не получится.",
+      "planLine": "Дневник трёх слоёв — отметка вечером в течение недели"
+    },
+    {
+      "id": "mk4",
+      "acc": "ink",
+      "title": "Защита по-домашнему",
+      "lecturer": "Дмитриев Вадим",
+      "tag": "Метод",
+      "duration": "18 мин",
+      "diff": 2,
+      "idea": "Главная угроза в цифре — не технология, а сценарий, в который она вовлекает ребёнка: контентные, контактные, потребительские, психологические.",
+      "planLine": "Классный час: показать четыре класса угроз на реальных примерах"
+    },
+    {
+      "id": "mk5",
+      "acc": "teal",
+      "title": "Квантовая неопределённость",
+      "lecturer": "Пикалов Дмитрий",
+      "tag": "Разбор",
+      "duration": "22 мин",
+      "diff": 4,
+      "idea": "Современный учитель работает в среде без правильного ответа — только лучшее решение в данных условиях. Гипотезы вместо знаний, эксперимент вместо инструкции.",
+      "planLine": "Ввести «гипотезу урока»: что мы проверяем сегодня в этом классе"
+    },
+    {
+      "id": "mk6",
+      "acc": "ochre",
+      "title": "ИИ как собеседник",
+      "lecturer": "Завалина Анна",
+      "tag": "Практика",
+      "duration": "20 мин",
+      "diff": 2,
+      "idea": "ИИ полезен не как исполнитель, а как собеседник: он не делает работу за вас, он делает вас точнее. Диалог-рефлексия даёт больше, чем готовые материалы.",
+      "planLine": "Раз в день — рефлексия дня в чате с ИИ-собеседником на 10 минут"
+    },
+    {
+      "id": "mk7",
+      "acc": "blue",
+      "title": "Тайна Землекопа",
+      "lecturer": "Зуев Пётр",
+      "tag": "Метод",
+      "duration": "17 мин",
+      "diff": 1,
+      "idea": "Образ устойчивости в простом действии. В мире, где всё быстро, дети редко видят пример настойчивого труда. Воспитательная задача — показать, что копать достойно.",
+      "planLine": "Ритуал «земляного отчёта»: что я сегодня доделал до конца"
+    }
+  ]
+};
+
+const state = { cart: [null,null,null] };
+
+function renderPin() {
+  const root = document.getElementById('pinboard');
+  root.innerHTML = '';
+  DATA.classes.forEach((d,i) => {
+    const inCart = state.cart.some(s => s && s.id === d.id);
+    const stars = '★'.repeat(d.diff) + '<span style="opacity:0.25">' + '★'.repeat(5-d.diff) + '</span>';
+    const card = document.createElement('div');
+    card.className = 'stick' + (inCart ? ' in-cart' : '');
+    card.dataset.acc = d.acc;
+    card.dataset.id = d.id;
+    card.draggable = true;
+    card.innerHTML = `
+      <div class="stick-num">№${(i+1).toString().padStart(2,'0')}</div>
+      <div class="stick-tag">${d.tag}</div>
+      <div class="stick-title">${d.title}</div>
+      <div class="stick-lect">${d.lecturer}</div>
+      <div class="stick-idea">${d.idea}</div>
+      <div class="stick-meta">
+        <div class="stick-meta-item"><b>${d.duration}</b></div>
+        <div class="stick-meta-item">${stars}</div>
+      </div>
+      <button class="stick-add ${inCart?'added':''}">${inCart?'✓ в плане · убрать':'+ в план'}</button>`;
+    card.querySelector('.stick-add').addEventListener('click', () => toggle(d.id));
+
+    /* drag */
+    card.addEventListener('dragstart', e => {
+      card.classList.add('dragging');
+      e.dataTransfer.setData('id', d.id);
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    card.addEventListener('dragend', () => card.classList.remove('dragging'));
+
+    /* touch fallback — long-press to add */
+    let touchTimer = null;
+    card.addEventListener('touchstart', () => {
+      touchTimer = setTimeout(() => navigator.vibrate && navigator.vibrate(20), 200);
+    }, {passive:true});
+    card.addEventListener('touchend', () => clearTimeout(touchTimer));
+
+    root.appendChild(card);
+  });
+}
+
+function toggle(id){
+  const ex = state.cart.findIndex(s => s && s.id === id);
+  if (ex !== -1) { state.cart[ex] = null; }
+  else {
+    const empty = state.cart.findIndex(s => s === null);
+    if (empty === -1) return;
+    state.cart[empty] = DATA.classes.find(d => d.id === id);
+  }
+  renderAll();
+}
+function placeAt(id, idx){
+  /* убрать дубликат, поставить в idx, сдвиг при заполненности */
+  const old = state.cart.findIndex(s => s && s.id === id);
+  if (old !== -1) state.cart[old] = null;
+  state.cart[idx] = DATA.classes.find(d => d.id === id);
+  renderAll();
+}
+
+function renderSlots(){
+  document.querySelectorAll('.slot').forEach((sl,i) => {
+    const d = state.cart[i];
+    sl.dataset.empty = d ? '0' : '1';
+    sl.dataset.acc = d ? d.acc : '';
+    if (d) {
+      const slotLabels = ['УТРО · 09:00','ДЕНЬ · 13:00','ВЕЧЕР · 17:00'];
+      sl.innerHTML = `
+        <span class="slot-num">${slotLabels[i]}</span>
+        <span class="slot-name">${d.title}</span>
+        <span class="slot-lect">${d.lecturer.split(' ')[0]}</span>
+        <button class="slot-x" aria-label="убрать">×</button>`;
+      sl.querySelector('.slot-x').addEventListener('click', e => {
+        e.stopPropagation();
+        state.cart[i] = null; renderAll();
+      });
+    } else {
+      const slotLabels = ['УТРО · 09:00','ДЕНЬ · 13:00','ВЕЧЕР · 17:00'];
+      sl.innerHTML = `<span class="slot-num">${slotLabels[i]}</span><span class="slot-empty-hint">пусто · перетащите карточку</span>`;
+    }
+
+    sl.ondragover = e => { e.preventDefault(); sl.classList.add('drag-over'); };
+    sl.ondragleave = () => sl.classList.remove('drag-over');
+    sl.ondrop = e => {
+      e.preventDefault(); sl.classList.remove('drag-over');
+      const id = e.dataTransfer.getData('id');
+      placeAt(id, i);
+    };
+  });
+}
+
+function renderCount(){
+  const n = state.cart.filter(Boolean).length;
+  document.getElementById('cartCount').textContent = n;
+  const btn = document.getElementById('cta');
+  btn.disabled = n < 3;
+  btn.textContent = n < 3 ? `выберите ещё ${3-n} ${3-n===1?'практику':'практики'}` : '↗ открыть план понедельника';
+}
+
+function renderAll(){ renderPin(); renderSlots(); renderCount(); }
+
+document.getElementById('cta').addEventListener('click', () => {
+  if (state.cart.some(s => !s)) return;
+  const list = document.getElementById('planList');
+  const when = ['Понедельник, 09:00','Понедельник, 13:00','Понедельник, 17:00'];
+  list.innerHTML = state.cart.map((d,i) => `
+    <div class="plan-item">
+      <div class="plan-num">${i+1}</div>
+      <div class="plan-body">
+        <div class="plan-when">${when[i]}</div>
+        <div class="plan-name">${d.title}</div>
+        <div class="plan-lect">${d.lecturer}</div>
+        <div class="plan-idea">${d.planLine}</div>
+      </div>
+    </div>`).join('');
+  document.getElementById('modalBg').classList.add('show');
+});
+document.getElementById('mClose').addEventListener('click', () => {
+  document.getElementById('modalBg').classList.remove('show');
+});
+document.getElementById('modalBg').addEventListener('click', e => {
+  if (e.target.id === 'modalBg') e.currentTarget.classList.remove('show');
+});
+document.getElementById('mPrint').addEventListener('click', () => window.print());
+
+renderAll();
+</script>
+</body>
+</html>
