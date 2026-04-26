@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<!--
+  АКТ III · КАРТОТЕКА «ЦИФРА В МИРЕ»
+  Лекция: Константин Серёгин (ср 29.04 14:00–15:30)
+  Mobile-first. Акцент: охра #A2855F + графит на тёплой бумаге.
+  Механика: горизонтальный свайп карточек-стран + квиз-чек-листы.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>03 · Картотека: цифра в мире</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ochre:    #A2855F;
+    --ochre-d:  #8A6F4D;
+    --ochre-soft: rgba(162,133,95,0.10);
+    --ink:      #2C2B2B;
+    --ink-2:    #4A4845;
+    --ink-3:    #7A7670;
+    --line:     #D6CFC2;
+    --line-2:   #B8AE9C;
+    --paper:    #F5EFE3;
+    --paper-2:  #ECE3D0;
+    --paper-3:  #FBF7EE;
+    --blue:     #3E529B;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    line-height: 1.5; font-size: 16px;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(162,133,95,0.06), transparent 35%),
+      radial-gradient(circle at 80% 80%, rgba(62,82,155,0.04), transparent 40%);
+  }
+  ::selection { background: var(--ochre); color: var(--paper-3); }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(245,239,227,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ochre); font-weight: 600;
+  }
+  .topbar-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em;
+  }
+  .topbar-step b { color: var(--ink); }
+
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  /* HERO */
+  .hero { padding: 28px 0 24px; }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ochre); font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(34px,8.5vw,52px);
+    line-height: 1.0; letter-spacing: -0.022em;
+    font-weight: 800;
+  }
+  .hero h1 mark {
+    background: linear-gradient(180deg, transparent 65%, var(--ochre) 65%);
+    color: inherit; padding: 0 4px;
+  }
+  .hero-sub {
+    margin-top: 20px; color: var(--ink-2); font-size: 17px;
+    max-width: 36ch;
+  }
+
+  /* SCREEN SWITCHER */
+  .screens { padding-bottom: 60px; }
+  body[data-screen="cards"] #scrCards { display: block; }
+  body[data-screen="cards"] #scrCountry, body[data-screen="cards"] #scrQuiz { display: none; }
+  body[data-screen="country"] #scrCountry { display: block; }
+  body[data-screen="country"] #scrCards, body[data-screen="country"] #scrQuiz { display: none; }
+  body[data-screen="quiz"] #scrQuiz { display: block; }
+  body[data-screen="quiz"] #scrCards, body[data-screen="quiz"] #scrCountry { display: none; }
+
+  /* HORIZONTAL CARDS */
+  .deck-eye {
+    margin-top: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.1em; padding: 0 20px;
+  }
+  .deck-eye b { color: var(--ochre); }
+
+  .deck {
+    display: flex; gap: 12px;
+    padding: 16px 20px 28px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .deck::-webkit-scrollbar { display: none; }
+  .deck-card {
+    flex: 0 0 80%; max-width: 320px;
+    scroll-snap-align: start;
+    background: var(--paper-3);
+    border: 1px solid var(--line);
+    border-radius: 18px; padding: 22px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative; overflow: hidden;
+    min-height: 320px;
+    display: flex; flex-direction: column;
+  }
+  .deck-card:hover { border-color: var(--ochre); transform: translateY(-2px); }
+  .deck-card .glyph {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: var(--ochre);
+    color: var(--paper-3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 18px; font-weight: 700;
+    margin-bottom: 18px;
+    letter-spacing: -0.04em;
+  }
+  /* Каждой карточке — свой акцент */
+  .deck-card[data-acc="blue"] .glyph { background: var(--blue); }
+  .deck-card[data-acc="ink"] .glyph { background: var(--ink); }
+  .deck-card[data-acc="ochre-d"] .glyph { background: var(--ochre-d); }
+
+  .deck-card .name {
+    font-size: 26px; font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.02em; margin-bottom: 4px;
+  }
+  .deck-card .latin {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .deck-card .tag {
+    font-size: 14px; font-weight: 600; color: var(--ochre);
+    margin-top: auto; padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .deck-card .tag::after {
+    content: '→'; color: var(--ink-3); font-weight: 400;
+    transition: transform 0.2s;
+  }
+  .deck-card:hover .tag::after { transform: translateX(3px); color: var(--ochre); }
+
+  /* SCROLL DOTS */
+  .deck-dots {
+    display: flex; gap: 6px; justify-content: center;
+    padding: 4px 20px 22px;
+  }
+  .deck-dot {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--line-2);
+    transition: all 0.2s;
+  }
+  .deck-dot.active { background: var(--ochre); width: 22px; border-radius: 3px; }
+
+  .quiz-cta {
+    margin: 12px 20px 20px;
+    padding: 22px;
+    background: var(--ink); color: var(--paper-3);
+    border-radius: 18px;
+    display: flex; align-items: center; gap: 18px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .quiz-cta:hover { background: var(--blue); }
+  .quiz-cta .badge {
+    flex: 0 0 56px; height: 56px; border-radius: 50%;
+    background: var(--ochre); color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 700;
+  }
+  .quiz-cta .qtext { flex: 1; }
+  .quiz-cta .qtext strong { display: block; font-size: 17px; font-weight: 700; line-height: 1.2; }
+  .quiz-cta .qtext span { font-size: 13px; color: rgba(245,239,227,0.65); margin-top: 4px; display: block; }
+  .quiz-cta .arr { font-size: 22px; color: var(--ochre); }
+
+  /* COUNTRY DETAIL */
+  .country-back {
+    background: none; border: none; cursor: pointer;
+    font: inherit; color: var(--ink-3);
+    font-size: 13px; padding: 22px 20px 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .country-back:hover { color: var(--ochre); }
+
+  .country-head { padding: 8px 20px 22px; }
+  .country-head .glyph {
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--ochre); color: var(--paper-3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px; font-weight: 700;
+    margin-bottom: 18px;
+  }
+  .country-head[data-acc="blue"] .glyph { background: var(--blue); }
+  .country-head[data-acc="ink"] .glyph { background: var(--ink); }
+  .country-head[data-acc="ochre-d"] .glyph { background: var(--ochre-d); }
+
+  .country-head h2 {
+    font-size: clamp(38px,9vw,56px);
+    line-height: 1.0; letter-spacing: -0.02em;
+    font-weight: 800; margin-bottom: 8px;
+  }
+  .country-head .latin {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .country-head .tag {
+    display: inline-block;
+    background: var(--ochre); color: var(--paper-3);
+    font-size: 13px; font-weight: 600;
+    padding: 6px 12px; border-radius: 6px;
+  }
+
+  .section-block {
+    padding: 16px 20px;
+    border-top: 1px solid var(--line);
+  }
+  .section-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ochre);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 12px;
+  }
+  .section-block p { font-size: 16px; line-height: 1.5; color: var(--ink); }
+  .section-block ul { list-style: none; padding: 0; margin: 0; }
+  .section-block li {
+    font-size: 15px; line-height: 1.45; color: var(--ink);
+    padding: 10px 0 10px 22px; position: relative;
+    border-bottom: 1px dashed var(--line);
+  }
+  .section-block li:last-child { border-bottom: none; }
+  .section-block li::before {
+    content: '+'; position: absolute; left: 0; top: 10px;
+    font-family: 'JetBrains Mono', monospace; color: var(--ochre);
+    font-weight: 700;
+  }
+  .section-block.fails li::before { content: '−'; color: var(--ink-3); }
+  .section-block.transfer {
+    background: var(--paper-3);
+    margin: 0 0 0; border-top: 4px solid var(--ochre);
+  }
+  .section-block.transfer p {
+    font-size: 17px; line-height: 1.4; font-weight: 500;
+  }
+
+  .country-nav {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line);
+    border-top: 1px solid var(--line);
+    margin-top: 8px;
+  }
+  .country-nav button {
+    background: var(--paper); color: var(--ink);
+    border: none; cursor: pointer; font: inherit;
+    padding: 18px; font-size: 14px; font-weight: 600;
+    text-align: left; line-height: 1.2;
+  }
+  .country-nav button:hover { background: var(--paper-3); color: var(--ochre); }
+  .country-nav button:first-child { text-align: right; }
+  .country-nav small {
+    display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.12em; text-transform: uppercase;
+    margin-bottom: 4px; font-weight: 500;
+  }
+  .country-nav button:last-child small { color: var(--ochre); }
+
+  /* QUIZ — drag-cards */
+  .quiz-head { padding: 22px 20px 16px; }
+  .quiz-head .progress {
+    display: flex; gap: 4px; margin-bottom: 18px;
+  }
+  .quiz-head .pdot {
+    flex: 1; height: 4px; background: var(--line); border-radius: 2px;
+    transition: background 0.3s;
+  }
+  .quiz-head .pdot.done { background: var(--ochre); }
+  .quiz-head .pdot.cur { background: var(--ink); }
+  .quiz-head .qnum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.1em; margin-bottom: 14px;
+  }
+  .quiz-head h3 {
+    font-size: 26px; line-height: 1.1; font-weight: 700;
+    letter-spacing: -0.018em;
+  }
+
+  .quiz-options { padding: 8px 20px 20px; }
+  .opt {
+    display: block; width: 100%; text-align: left;
+    background: var(--paper-3); border: 1px solid var(--line);
+    border-radius: 14px; padding: 18px 20px;
+    cursor: pointer; transition: all 0.15s;
+    font: inherit; font-size: 16px; color: var(--ink); line-height: 1.35;
+    margin-bottom: 10px; position: relative;
+  }
+  .opt:hover { border-color: var(--ochre); background: var(--paper-2); }
+  .opt.sel { border-color: var(--ochre); background: var(--ochre-soft); }
+  .opt::before {
+    content: ''; position: absolute; right: 18px; top: 50%;
+    transform: translateY(-50%);
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid var(--line-2);
+    transition: all 0.15s;
+  }
+  .opt.sel::before { border-color: var(--ochre); background: var(--ochre); box-shadow: inset 0 0 0 3px var(--paper-3); }
+
+  .quiz-actions { padding: 10px 20px 20px; display: flex; gap: 10px; }
+  .qbtn {
+    flex: 1; padding: 16px; border-radius: 12px;
+    font: inherit; font-weight: 600; font-size: 14px;
+    cursor: pointer; border: none;
+  }
+  .qbtn.ghost { background: transparent; border: 1px solid var(--line-2); color: var(--ink-2); }
+  .qbtn.ghost:hover { background: var(--paper-2); }
+  .qbtn.primary { background: var(--ink); color: var(--paper-3); }
+  .qbtn.primary:hover { background: var(--blue); }
+  .qbtn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* RESULT */
+  .result-card {
+    margin: 20px; padding: 28px 24px;
+    background: linear-gradient(165deg, var(--ink) 0%, var(--blue) 140%);
+    color: var(--paper-3);
+    border-radius: 22px;
+  }
+  .result-card .eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ochre); font-weight: 600;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .result-card h3 {
+    font-size: 30px; line-height: 1.05; font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 16px;
+  }
+  .result-card p { font-size: 15px; line-height: 1.5; opacity: 0.9; }
+
+  .footer-brand {
+    border-top: 1px solid var(--line);
+    margin-top: 40px; padding: 28px 20px 36px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer-brand b { color: var(--ink-2); font-weight: 600; }
+
+  /* DESKTOP */
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .container { max-width: 1200px; }
+    .hero { padding: 56px 0 32px; }
+    .hero h1 { font-size: clamp(60px,6vw,96px); }
+    .hero-sub { font-size: 22px; }
+    .deck { padding: 24px 40px 36px; }
+    .deck-card { flex: 0 0 360px; min-height: 380px; }
+    .deck-card .name { font-size: 32px; }
+    .deck-eye, .topbar { padding-left: 40px; padding-right: 40px; }
+    .country-back, .country-head, .section-block, .quiz-head, .quiz-options, .quiz-actions { padding-left: 40px; padding-right: 40px; }
+    .country-head h2 { font-size: 96px; }
+    .quiz-head h3 { font-size: 42px; }
+    .result-card { margin: 40px; padding: 56px; }
+    .result-card h3 { font-size: 56px; }
+    .quiz-cta { margin: 20px 40px; padding: 32px; }
+    .quiz-cta .qtext strong { font-size: 22px; }
+  }
+</style>
+</head>
+<body data-screen="cards">
+
+<div class="topbar">
+  <div class="topbar-mark">Акт <!-- evt:lecture-num -->III<!-- /evt --> · <!-- evt:act-title -->Картотека<!-- /evt --></div>
+  <div class="topbar-step" id="topbarStep"><b>08</b> моделей</div>
+</div>
+
+<main class="screens">
+
+  <section id="scrCards">
+    <div class="container">
+      <div class="hero">
+        <div class="hero-eye">№ 03 · К лекции Константина Серёгина</div>
+        <h1>Восемь моделей.<br><mark>Один</mark> учитель.</h1>
+        <p class="hero-sub">Свайпайте карточки в сторону. Откройте любую — и узнайте, что в ней работает, а что ломается.</p>
+      </div>
+    </div>
+
+    <div class="deck-eye"><b>↔</b> 8 стран · свайпайте горизонтально</div>
+    <div class="deck" id="deck"></div>
+    <div class="deck-dots" id="deckDots"></div>
+
+    <div class="quiz-cta" id="goToQuiz">
+      <div class="badge">7Q</div>
+      <div class="qtext">
+        <strong>Какая модель ближе вашей школе?</strong>
+        <span>Семь коротких вопросов, две минуты</span>
+      </div>
+      <div class="arr">→</div>
+    </div>
+  </section>
+
+  <section id="scrCountry">
+    <button class="country-back" id="countryBack">← к картотеке</button>
+    <div id="countryBody"></div>
+  </section>
+
+  <section id="scrQuiz">
+    <div class="quiz-head">
+      <div class="progress" id="quizProg"></div>
+      <div class="qnum" id="quizNum"></div>
+      <h3 id="quizQ"></h3>
+    </div>
+    <div class="quiz-options" id="quizOpts"></div>
+    <div class="quiz-actions">
+      <button class="qbtn ghost" id="qBack">← назад</button>
+      <button class="qbtn primary" id="qNext">далее →</button>
+    </div>
+  </section>
+
+</main>
+
+<div class="footer-brand">
+  при поддержке <b>Центра знаний Машук</b> · <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt --> · акт <!-- evt:lecture-num -->III<!-- /evt --> из VII
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  countries: [
+    { id:'fi', name:'Финляндия', latin:'Finlandia', code:'FI', acc:'ochre',
+      tag:'Доверие учителю',
+      modelLong:'Минимальная стандартизация, максимум профессиональной автономии. Государство даёт инструменты, не предписывает их. Цифра — продолжение свободы учителя.',
+      works:['Учителя сами выбирают цифровую среду в классе','Доверие к профессионалу даёт мотивацию','Гибкость при адаптации к локальным потребностям'],
+      fails:['Падение в международных рейтингах с 2010 года: свобода без рамок усиливает разрыв между сильными и слабыми учителями'],
+      transferable:'Доверие к учителю нужно, но не означает «можно всё». Нужны рамки, в пределах которых свобода работает.'},
+    { id:'ee', name:'Эстония', latin:'Estonia', code:'EE', acc:'blue',
+      tag:'Цифровое государство',
+      modelLong:'Полная цифровизация как стратегия. Электронные журналы, цифровая идентичность, цифровые учебники как стандарт. Государство строит платформу, школы её используют.',
+      works:['Базовая платформа от государства снимает с учителя то, что не должно быть его задачей','Единая инфраструктура — справедливый доступ для всех регионов','Стандарт позволяет масштабировать инновации'],
+      fails:['Зависимость от единой инфраструктуры: сбой одной системы парализует обучение во всей стране'],
+      transferable:'Государственная платформа — хорошая основа, но её нужно дополнять локальной педагогикой, а не заменять её.'},
+    { id:'sg', name:'Сингапур', latin:'Singapura', code:'SG', acc:'ink',
+      tag:'Цифра как метод',
+      modelLong:'Каждое внедрение цифры обосновывается педагогически. Если технология не двигает учебный результат — она не закупается. Сначала методика, потом инструмент.',
+      works:['Привязка цифры к учебному результату дисциплинирует закупки','Высокие образовательные показатели благодаря целевому использованию','Минимум на гаджеты, максимум на педагогический эффект'],
+      fails:['Высокий уровень тревожности и выгорания учителей и учеников — цена постоянного измерения эффективности'],
+      transferable:'Перед закупкой инструмента: какой педагогический результат мы хотим? Без ответа — не покупаем.'},
+    { id:'kr', name:'Южная Корея', latin:'Corea Australis', code:'KR', acc:'ochre-d',
+      tag:'Тотальная гонка',
+      modelLong:'Раннее освоение технологий — норма. Частные «академии» встраивают ИИ в подготовку к экзаменам. Государство активно продвигает edtech.',
+      works:['Быстрое внедрение новых технологий','Высокие международные результаты в тестировании','ИИ-репетиторы для индивидуализации'],
+      fails:['Цифра удлиняет учебный день, а не делает его эффективнее. Высочайшая тревожность у школьников'],
+      transferable:'Гонка с помощью цифры — самый быстрый путь к высоким баллам, но цена в благополучии слишком высока.'},
+    { id:'cn', name:'Китай', latin:'Sina', code:'CN', acc:'blue',
+      tag:'Государственная архитектура',
+      modelLong:'Единая платформа, цифровое равенство по регионам, ИИ-репетиторы для миллионов, государственный контроль. Цифра — инструмент масштабирования равенства.',
+      works:['Единая платформа — справедливый доступ во все регионы','Масштабные инвестиции в ИИ-образование доступны всем','Контроль предотвращает манипуляции через алгоритмы'],
+      fails:['Жёсткие меры порождают теневую школу частного репетиторства, которую государство пытается запретить'],
+      transferable:'Масштаб без зазора для родительского запроса создаёт давление, которое выходит наружу через серый рынок.'},
+    { id:'us', name:'США', latin:'Civitates Foed.', code:'US', acc:'ink',
+      tag:'Рынок инноваций',
+      modelLong:'Тысячи частных edtech-стартапов. Школы выбирают сами, государство почти не вмешивается. Сильнейшая в мире индустрия образовательных продуктов.',
+      works:['Рынок генерирует инновации: лучшие ИИ-инструменты часто появляются в США','Богатые школы получают доступ к передовым решениям','Свобода выбора даёт учителям гибкость'],
+      fails:['Огромное цифровое неравенство: богатые получают ИИ-тьюторов, бедные — заблокированные планшеты'],
+      transferable:'Рынок порождает инновации, но без государства не выравнивает доступ. Нужна поддержка слабых регионов.'},
+    { id:'ae', name:'ОАЭ', latin:'Aetatem Unita', code:'AE', acc:'ochre',
+      tag:'Скорость инвестиций',
+      modelLong:'Государство массово инвестирует в ИИ в школах и вузах, привлекает лучших экспертов, создаёт суперинфраструктуру. ИИ — национальная стратегия.',
+      works:['Скорость инвестиций и амбициозный горизонт','Привлечение лучших мировых экспертов','Суперинфраструктура ИИ в школах'],
+      fails:['Импортированная инфраструктура не всегда срастается с локальным педагогическим контекстом'],
+      transferable:'Скорость даёт фору, но без врастания в местную педагогику инвестиции остаются витриной.'},
+    { id:'ru', name:'Россия', latin:'Rossia', code:'RU', acc:'ochre-d',
+      tag:'Сборка опыта',
+      modelLong:'Большая страна, сильное наследие фундаментального образования, государственные платформы и одновременно живой запрос школ снизу. Активный поиск своей модели.',
+      works:['Уникальная позиция наблюдателя — можно собрать своё лучшее','Сильное наследие фундаментального образования','Госплатформы плюс инициатива школ снизу'],
+      fails:['Разрыв между декларируемой стратегией и реальной готовностью школ. Перегрузка учителей.'],
+      transferable:'Россия может не повторить ошибок других — но только если сядет и честно их разберёт. Это и есть смысл лекции.'}
+  ],
+  matchQuestions: [
+    { q:'Какая роль государства в вашей школе сейчас?', options:[
+      {text:'Минимальная — мы решаем сами',weights:{fi:2,us:2}},
+      {text:'Поставщик платформы и инструментов',weights:{ee:2,ru:1}},
+      {text:'Жёсткий регулятор и заказчик',weights:{cn:2,ae:1}},
+      {text:'Партнёр в долгом проектировании',weights:{sg:2,ru:1}}
+    ]},
+    { q:'Что для вас важнее — результат или процесс?', options:[
+      {text:'Только результат: баллы и достижения',weights:{kr:2,sg:1}},
+      {text:'Процесс: как ребёнок думает',weights:{fi:2,ru:1}},
+      {text:'Равные возможности для всех',weights:{cn:2,ee:1}},
+      {text:'Инновация и эксперимент',weights:{us:2,ae:1}}
+    ]},
+    { q:'Кто решает, какие инструменты использовать?', options:[
+      {text:'Каждый учитель сам',weights:{fi:2,us:1}},
+      {text:'Школа централизованно',weights:{sg:2,ee:1}},
+      {text:'Регион или государство',weights:{cn:2,ae:1}},
+      {text:'Сочетание уровней с гибкостью',weights:{ru:2}}
+    ]},
+    { q:'Какой главный риск цифровизации?', options:[
+      {text:'Падение качества и гуманизма',weights:{fi:2,ru:1}},
+      {text:'Цифровое неравенство школ',weights:{us:2,cn:1}},
+      {text:'Перегрузка учителей и детей',weights:{kr:2,sg:1}},
+      {text:'Зависимость от поставщиков',weights:{ae:1,ru:2}}
+    ]},
+    { q:'Как относитесь к ИИ в учебном процессе?', options:[
+      {text:'Осторожно, по решению учителя',weights:{fi:2,ru:1}},
+      {text:'Как стандарт государства',weights:{ee:2,cn:1}},
+      {text:'Как методический усилитель',weights:{sg:2,ae:1}},
+      {text:'Как конкурентное преимущество',weights:{kr:2,us:1}}
+    ]},
+    { q:'Главная ценность образования для вас?', options:[
+      {text:'Свобода выбора пути',weights:{fi:2,us:1}},
+      {text:'Равный доступ для всех',weights:{cn:2,ee:1}},
+      {text:'Качество и эффективность',weights:{sg:2,kr:1}},
+      {text:'Глубина и преемственность',weights:{ru:2}}
+    ]},
+    { q:'Когда школа меняется быстрее всего?', options:[
+      {text:'Когда учителя сами хотят',weights:{fi:2,us:1}},
+      {text:'Когда государство задаёт курс',weights:{ee:2,cn:1}},
+      {text:'Когда есть деньги и план',weights:{ae:2,kr:1}},
+      {text:'Когда складываются все три',weights:{ru:2,sg:1}}
+    ]}
+  ],
+  matchProfiles: {
+    fi:{title:'Финляндия — ближе вашей школе',body:'Вы верите в учителя и его автономию. Цифра для вас — инструмент в его руках, а не замена. Главное — доверие. Риск: без рамок свобода усиливает разрыв между сильными и слабыми. Решение: установить мягкие границы, внутри которых учителя экспериментируют.'},
+    ee:{title:'Эстония — ближе вашей школе',body:'Вас привлекает системность и единая платформа. Базовые задачи решаются государством, учителя занимаются педагогикой. Риск: зависимость от одной инфраструктуры. Решение: предусмотреть аналоговые бэкапы.'},
+    sg:{title:'Сингапур — ближе вашей школе',body:'Вы верите: цифра — только если она двигает результат. Это эффективно, но дорого по силам. Риск: выгорание от постоянного измерения. Решение: праздновать малые победы, не сводить успех к цифрам.'},
+    kr:{title:'Южная Корея — ближе вашей школе',body:'Вас мотивирует скорость и конкуренция. ИИ — инструмент выигрыша. Риск: гонка выгорает детей. Решение: ввести благополучие в метрики успеха.'},
+    cn:{title:'Китай — ближе вашей школе',body:'Вас привлекает масштаб и равенство: одна платформа для всех. Риск: жёсткость создаёт серый рынок. Решение: оставлять щели для родительского запроса.'},
+    us:{title:'США — ближе вашей школе',body:'Вас вдохновляет рынок и инновация. Вы выбираете лучшие инструменты сами. Риск: неравенство школ. Решение: искать гранты, открытые ресурсы для коллег.'},
+    ae:{title:'ОАЭ — ближе вашей школе',body:'Вас мотивирует масштабное инвестирование в будущее. Риск: импортированные решения не врастают в культуру. Решение: после закупки — обучать учителей и адаптировать.'},
+    ru:{title:'Россия (свой путь) — ближе вашей школе',body:'Вы видите опыт всех семи моделей и собираете свой. Не копируете слепо — адаптируете. Главное: разбираться, спрашивать себя — что подходит именно нам.'}
+  }
+};
+
+const state = {
+  cur: 0,
+  countryId: null,
+  qIdx: 0,
+  qAns: new Array(DATA.matchQuestions.length).fill(null)
+};
+
+function setScreen(s){ document.body.dataset.screen = s; window.scrollTo({top:0,behavior:'smooth'}); }
+
+/* CARDS DECK */
+const deck = document.getElementById('deck');
+const dotsRoot = document.getElementById('deckDots');
+DATA.countries.forEach((c,i) => {
+  const card = document.createElement('div');
+  card.className = 'deck-card';
+  card.dataset.acc = c.acc === 'ochre' ? '' : c.acc;
+  card.innerHTML = `
+    <div class="glyph">${c.code}</div>
+    <div class="name">${c.name}</div>
+    <div class="latin">${c.latin}</div>
+    <div class="tag">${c.tag}</div>`;
+  card.addEventListener('click', () => openCountry(c.id));
+  deck.appendChild(card);
+
+  const dot = document.createElement('div');
+  dot.className = 'deck-dot' + (i===0 ? ' active' : '');
+  dotsRoot.appendChild(dot);
+});
+deck.addEventListener('scroll', () => {
+  const i = Math.round(deck.scrollLeft / (deck.children[0].offsetWidth + 12));
+  document.querySelectorAll('.deck-dot').forEach((d,k) => d.classList.toggle('active', k===i));
+  document.getElementById('topbarStep').innerHTML = `<b>${String(i+1).padStart(2,'0')}</b>/08`;
+}, {passive:true});
+
+/* COUNTRY */
+function openCountry(id){
+  state.countryId = id;
+  const c = DATA.countries.find(x=>x.id===id);
+  const idx = DATA.countries.findIndex(x=>x.id===id);
+  const prev = DATA.countries[(idx - 1 + 8) % 8];
+  const next = DATA.countries[(idx + 1) % 8];
+  const accAttr = c.acc === 'ochre' ? '' : c.acc;
+  document.getElementById('countryBody').innerHTML = `
+    <div class="country-head" data-acc="${accAttr}">
+      <div class="glyph">${c.code}</div>
+      <div class="latin">${c.latin}</div>
+      <h2>${c.name}</h2>
+      <div class="tag">${c.tag}</div>
+    </div>
+    <div class="section-block">
+      <div class="section-eye">Модель</div>
+      <p>${c.modelLong}</p>
+    </div>
+    <div class="section-block works">
+      <div class="section-eye">Что работает</div>
+      <ul>${c.works.map(w=>`<li>${w}</li>`).join('')}</ul>
+    </div>
+    <div class="section-block fails">
+      <div class="section-eye">Что ломается</div>
+      <ul>${c.fails.map(f=>`<li>${f}</li>`).join('')}</ul>
+    </div>
+    <div class="section-block transfer">
+      <div class="section-eye">Что переносимо в нашу школу</div>
+      <p>${c.transferable}</p>
+    </div>
+    <div class="country-nav">
+      <button onclick="openCountry('${prev.id}')"><small>← предыдущая</small>${prev.name}</button>
+      <button onclick="openCountry('${next.id}')"><small>следующая →</small>${next.name}</button>
+    </div>`;
+  setScreen('country');
+}
+document.getElementById('countryBack').addEventListener('click', () => setScreen('cards'));
+
+/* QUIZ */
+function renderQuiz(){
+  const q = DATA.matchQuestions[state.qIdx];
+  const total = DATA.matchQuestions.length;
+  document.getElementById('quizProg').innerHTML = DATA.matchQuestions.map((_,i)=>{
+    const cls = i < state.qIdx ? 'done' : i === state.qIdx ? 'cur' : '';
+    return `<span class="pdot ${cls}"></span>`;
+  }).join('');
+  document.getElementById('quizNum').textContent = `Вопрос ${state.qIdx+1} из ${total}`;
+  document.getElementById('quizQ').textContent = q.q;
+  const optsRoot = document.getElementById('quizOpts');
+  optsRoot.innerHTML = '';
+  q.options.forEach((o,i) => {
+    const b = document.createElement('button');
+    b.className = 'opt' + (state.qAns[state.qIdx] === i ? ' sel' : '');
+    b.textContent = o.text;
+    b.addEventListener('click', () => { state.qAns[state.qIdx] = i; renderQuiz(); });
+    optsRoot.appendChild(b);
+  });
+  document.getElementById('qBack').disabled = state.qIdx === 0;
+  const isLast = state.qIdx === total - 1;
+  document.getElementById('qNext').textContent = isLast ? 'результат →' : 'далее →';
+  document.getElementById('qNext').disabled = state.qAns[state.qIdx] === null;
+}
+document.getElementById('goToQuiz').addEventListener('click', () => {
+  state.qIdx = 0; state.qAns.fill(null);
+  setScreen('quiz'); renderQuiz();
+});
+document.getElementById('qBack').addEventListener('click', () => {
+  if (state.qIdx > 0){ state.qIdx--; renderQuiz(); }
+});
+document.getElementById('qNext').addEventListener('click', () => {
+  if (state.qIdx < DATA.matchQuestions.length - 1){ state.qIdx++; renderQuiz(); }
+  else showResult();
+});
+
+function showResult(){
+  const sc = {};
+  state.qAns.forEach((idx,qi) => {
+    if (idx === null) return;
+    const w = DATA.matchQuestions[qi].options[idx].weights;
+    for (const k in w) sc[k] = (sc[k]||0) + w[k];
+  });
+  const winner = Object.entries(sc).sort((a,b)=>b[1]-a[1])[0][0];
+  const p = DATA.matchProfiles[winner];
+  const c = DATA.countries.find(x=>x.id===winner);
+  document.querySelector('.quiz-head').innerHTML = '';
+  document.getElementById('quizOpts').innerHTML = `
+    <div class="result-card">
+      <div class="eye">Результат</div>
+      <h3>${p.title}</h3>
+      <p>${p.body}</p>
+    </div>`;
+  document.getElementById('qBack').textContent = '← к вопросам';
+  document.getElementById('qBack').disabled = false;
+  document.getElementById('qBack').onclick = () => {
+    state.qIdx = 0; state.qAns.fill(null); renderQuiz();
+    document.querySelector('.quiz-head').innerHTML = `
+      <div class="progress" id="quizProg"></div>
+      <div class="qnum" id="quizNum"></div>
+      <h3 id="quizQ"></h3>`;
+    renderQuiz();
+  };
+  document.getElementById('qNext').textContent = 'к стране →';
+  document.getElementById('qNext').disabled = false;
+  document.getElementById('qNext').onclick = () => openCountry(winner);
+}
+</script>
+</body>
+</html>

@@ -85,3 +85,11 @@ test('golden: scenario-cards template + example data', () => {
   const expected = fixture('scenario-cards.expected.html');
   assert.equal(inject(tpl, data, event), expected);
 });
+
+test('golden: case-matcher template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'case-matcher', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'case-matcher', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('case-matcher.event.json'));
+  const expected = fixture('case-matcher.expected.html');
+  assert.equal(inject(tpl, data, event), expected);
+});
