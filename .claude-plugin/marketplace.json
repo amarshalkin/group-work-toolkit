@@ -1,33 +1,32 @@
 {
-  "name": "group-work-toolkit",
+  "name": "pedsovet",
   "owner": {
     "name": "Artem Marshalkin",
     "email": "artem.marshalkin@gmail.com",
     "url": "https://github.com/amarshalkin"
   },
   "metadata": {
-    "description": "Claude Code плагин для полного цикла работы с групповой работой в неформальном образовании: проектирование → ревью → разбор. Методологическая база — КСП (Конструкторы сообществ практики).",
-    "version": "0.10.0"
+    "description": "Маркетплейс плагинов для подготовки и проведения педагогических событий: проектирование групповой работы (group-work-toolkit) и сборка HTML-артефактов из расшифровок лекций (lecture-artifacts).",
+    "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "group-work-toolkit",
-      "source": "./",
-      "description": "Проектирование, ревью и пост-сессионный разбор групповой работы. 3 скилла (design-group-work, review-session-design, debrief-session), 3 slash-команды, заделы под расширение методологиями и ролями.",
-      "version": "0.10.0",
-      "author": {
-        "name": "Артём Маршалкин",
-        "email": "artem.marshalkin@gmail.com"
-      },
+      "source": "./group-work-toolkit",
+      "description": "Проектирование, ревью и пост-сессионный разбор групповой работы. 3 скилла (design-group-work, review-session-design, debrief-session), 3 slash-команды.",
+      "version": "0.10.1",
+      "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
       "category": "education",
-      "tags": [
-        "education",
-        "facilitation",
-        "moderation",
-        "group-work",
-        "ksp",
-        "russian"
-      ]
+      "tags": ["education", "facilitation", "moderation", "group-work", "ksp", "russian"]
+    },
+    {
+      "name": "lecture-artifacts",
+      "source": "./lecture-artifacts",
+      "description": "Превращает расшифровку лекции в готовую HTML-страницу-артефакт по одному из 7 функциональных шаблонов (квиз, дашборд, кейсы, манифест и т. д.) с опциональной автопубликацией через knottasoft:host-html.",
+      "version": "0.1.0",
+      "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
+      "category": "education",
+      "tags": ["education", "lectures", "html", "templates", "russian", "knotta"]
     }
   ]
 }
