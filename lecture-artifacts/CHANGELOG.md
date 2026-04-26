@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.5] — 2026-04-26
+
+- Event-landing timeline pill: вместо римской цифры/`String(artifactN)` (что приводило к `→ diagnostic-quiz` при ошибочном string-artifactN) теперь рендерится короткое название артефакта из `DATA.artifacts[].title` через lookup по `n === artifactN`. Fallback на Roman сохранён.
+- `event-landing-build/SKILL.md` step 4 ужесточен: `row.text` СТРОГО `"<lecturer-short> · <lecture-title>"` без template-id; `artifactN` ОБЯЗАТЕЛЬНО integer 1..7.
+- Schema event-landing дополнена секцией «Timeline pill».
+
 ## [0.3.4] — 2026-04-26
 
 - `step-builder` шаблон: hardcoded `VOICES_META` (3 конкретных людей: Сиденко, Чернова, Антонова) удалён, заменён на `DATA.voicesMeta` (обязательное поле).

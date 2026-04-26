@@ -538,7 +538,11 @@ function renderTimeline() {
         const pill = document.createElement('span');
         pill.className = 'pill';
         pill.style.background = 'var(--' + (COLOR_BY_N[r.artifactN] || 'blue') + ')';
-        pill.textContent = '→ ' + (ROMAN_BY_N[r.artifactN] || String(r.artifactN));
+        const artifactObj = Array.isArray(DATA.artifacts) ? DATA.artifacts.find(a => a.n === r.artifactN) : null;
+        const pillLabel = (artifactObj && artifactObj.title)
+          ? artifactObj.title
+          : (ROMAN_BY_N[r.artifactN] || String(r.artifactN));
+        pill.textContent = '→ ' + pillLabel;
         l.appendChild(pill);
       } else {
         l.textContent = r.text;

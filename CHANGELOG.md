@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.2.5] — 2026-04-26
+
+- `lecture-artifacts` 0.3.4 → 0.3.5: timeline pill показывает короткое название артефакта; ужесточён формат row для orchestrator.
+
 ## [1.2.4] — 2026-04-26
 
 - `lecture-artifacts` 0.3.3 → 0.3.4: универсализация step-builder voices+summary; рендеры переведены на safe DOM.

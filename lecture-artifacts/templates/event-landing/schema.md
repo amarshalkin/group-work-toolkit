@@ -76,6 +76,16 @@
 
 `N1` = `artifacts.length`; `N2` = число актов программы (обычно равно N1, может отличаться). Числа прописью.
 
+## Timeline pill (как рендерится `→ <название>`)
+
+В каждой строке расписания, если `row.artifactN` — целое 1..7 и в `DATA.artifacts` есть запись с `n === artifactN`, после текста рисуется pill с короткой подписью `→ <artifact.title>`. Цвет pill берётся из `COLOR_BY_N[artifactN]`.
+
+Пример: row `{time: "17:00", text: "Бризицкий · ИИ: современный фронтир", artifactN: 1}` + `DATA.artifacts[0].title = "Карта ИИ-фронтира"` → pill «→ Карта ИИ-фронтира».
+
+**Контракт `artifactN`:** только integer 1..7 или `null`. Не строка, не template-id. Контракт `row.text`: ровно `"<lecturer-short> · <lecture-title>"` через ` · `, без template-id и без дат.
+
+Если `artifactObj` не найден (typo / `artifactN` не integer) — fallback на Roman numeral, потом на String. Это не блокирует рендер, но указывает на ошибку в DATA.
+
 ## Event-маркеры, которые подменяет движок
 
 - `event-name` ← `event.name`

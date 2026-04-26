@@ -26,7 +26,11 @@ Idempotent. The command may be invoked any number of times — each run reflects
      - `"вторник 28.04 15:00"` → парсится напрямую.
      - При невалидной дате fallback: `day_name = "?"`, `day_date_short = program[i].date`, `time = ""`.
    - Группировать по дню (по уникальному `day_date_short`).
-   - Для каждой записи `program[i]`: row = `{time, text: "<lecturer-short> · <title>", artifactN: i.n}`. `lecturer-short` — фамилия (или первое слово `lecturer` если фамилия не выделяется).
+   - Для каждой записи `program[i]`: row = `{time, text, artifactN}` где:
+     - `time` — строка вида `"HH:MM"` (24-часовой формат).
+     - `text` — СТРОГО `"<lecturer-short> · <lecture-title>"`. НЕ включать `template-id`, НЕ включать дату/время, НЕ дублировать заголовок. Например: `"Бризицкий · ИИ: современный фронтир"`. Ровно две части через ` · `. `lecturer-short` — фамилия (или первое слово `lecturer` если фамилия не выделяется).
+     - `artifactN` — ЦЕЛОЕ ЧИСЛО (integer) равное `program[i].n` (1..7). Никогда не строка, никогда не template-id, никогда не Roman.
+   - Если `program[i].n` не задано или не целое — пропустить запись (или поставить `artifactN: null` — она отрендерится без pill, как обычная не-артефактная строка timeline).
    - Если в `event.timeline_extras` есть `[{day_date, time, text}]` — вмешать как row с `artifactN: null`. Сортировать по `time` внутри каждого дня.
    - Если `program[]` пустое И `timeline_extras` пустое → `timeline = []`.
 5. **Build `event.json`**:
