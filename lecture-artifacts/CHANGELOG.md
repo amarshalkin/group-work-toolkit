@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.1] — 2026-04-26
+
+- Новый helper `scripts/validate-counts.mjs` ловит расхождения между русскими числительными в маркерах и длинами массивов в DATA. Soft warning (не блокирует, но видно в логе).
+- `lecture-artifact-build/SKILL.md` дополнен дисциплиной числовых маркеров: page-title генерируется ПОСЛЕ DATA, числа берутся из реальных длин массивов.
+- Schemas 4 шаблонов (parameter-dashboard, scenario-cards, diagnostic-quiz, manifesto) дополнены пунктом «Дисциплина чисел».
+- Тесты validateCounts: 7 кейсов.
+
 ## [0.3.0] — 2026-04-26
 
 Conditional rendering. Breaking change в нескольких UI-аспектах шаблонов.

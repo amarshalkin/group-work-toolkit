@@ -14,13 +14,19 @@ This skill is the engine behind every template-specific slash command. The comma
 
 ## Process
 
+**КОНТРАКТ числовых маркеров:** все числовые слова («шесть», «семь», «два») в маркерах (особенно `page-title`, `lecture-title`, `act-title`, `artifact-count`) должны соответствовать длине реального массива в DATA. Не выдумывайте числа из памяти лекции. Сначала генерируйте DATA, посчитайте `data.parameters.length` (или другой релевантный массив), затем подставляйте именно это число в page-title прописью. Программная проверка `scripts/validate-counts.mjs` ловит расхождения постфактум.
+
 1. **Read event config.** Open `.claude/lecture-artifacts.local.md` from the user's CWD. Parse the YAML frontmatter into `event` and `program[]`. If the file is missing, follow §Fallback below.
 2. **Pick the lecture.** Filter `program[]` where `template == <input template>`. If exactly one — use it. If many — ask the user which one via `AskUserQuestion`. If none — ask the user to pick a lecture number from the program; bind that lecture to this template.
 3. **Read the transcript** with the `Read` tool. Verify it is non-empty.
 4. **Read the template artefacts**: `templates/<template>/template.html`, `templates/<template>/schema.md`, `templates/<template>/example-data.json`.
 5. **Generate DATA JSON.** Read the schema thoroughly. Use the example as a shape reference. Extract content from the transcript that satisfies the schema. Pin general fields (`lecturer`, `lectureTitle`, `date`) from `program[i]` — never invent. For arrays with strict cardinality (e.g. "exactly 12 questions"), match exactly; if the transcript doesn't cover all entries, fill remaining ones with conservative typical content and add a note in the user-facing summary.
 6. **Special case for `manifesto`.** Build `links[]` from `.local.md`: every `program[i]` (excluding the manifesto's own entry) with non-null `published_url` becomes one link `{num: roman(i.n), title: defaultTitleFor(i.template), desc: defaultDescFor(i.template), href: i.published_url}`. The mapping `(template) → (default title, default desc)` is defined in `${CLAUDE_PLUGIN_ROOT}/references/template-mapping.md`. If a sister artefact has no `published_url` yet, omit it from `links[]`.
-7. **Validate.** Write the generated JSON to a temp file (`/tmp/lecture-artifact-<template>-<timestamp>.json`). Run `node ${CLAUDE_PLUGIN_ROOT}/scripts/inject-data.mjs --validate <data.json> ${CLAUDE_PLUGIN_ROOT}/templates/<template>/template.html`. If exit code ≠ 0, fix the JSON (one retry) and re-validate. If still failing, report the error to the user and stop.
+7. **Validate.** Write the generated JSON to a temp file (`/tmp/lecture-artifact-<template>-<timestamp>.json`). Run two checks:
+
+   (a) **Schema/inject validation:** `node ${CLAUDE_PLUGIN_ROOT}/scripts/inject-data.mjs --validate <data.json> ${CLAUDE_PLUGIN_ROOT}/templates/<template>/template.html`. If exit code ≠ 0, fix the JSON (one retry) and re-validate. If still failing, report the error to the user and stop.
+
+   (b) **Count-consistency validation** (после построения event.json в шаге 8): сверяет числительные в маркерах с длинами массивов в DATA — `node ${CLAUDE_PLUGIN_ROOT}/scripts/validate-counts.mjs <data.json> <event.json>`. Если возвращает WARN — пересмотреть `page-title` (и другие маркеры) и привести числа в соответствие с фактическими длинами массивов. Это soft check (warning), не блокирующая ошибка, но игнорировать нельзя — пользователь видит расхождение «Шесть переключателей» при `parameters.length === 4` как баг.
 8. **Build the event.json.** Compute marker values from `event` and `program[i]`:
    - `event-name` ← `event.name`
    - `event-year` ← year extracted from `event.month_year`

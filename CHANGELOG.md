@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.2.1] — 2026-04-26
+
+- `lecture-artifacts` 0.3.0 → 0.3.1: счётчик-валидация (`validate-counts.mjs`); дисциплина числовых маркеров в SKILL.md и schemas.
+
 ## [1.2.0] — 2026-04-26
 
 - `lecture-artifacts` 0.2.0 → 0.3.0: conditional rendering через директиву `evt-if`; удалён дублирующий lecture-title eyebrow; landing timeline теперь DATA-driven.
