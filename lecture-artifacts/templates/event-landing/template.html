@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<!--
+  ВЕСЕННИЙ ПЕДСОВЕТ 2026 · ГЛАВНАЯ
+  Лендинг для всего комплекта из 7 артефактов.
+  Mobile-first. Палитра: айвори фон + графит + 7 акцентов на артефакт.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Весенний педсовет 2026 · 7 артефактов</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #2C2B2B;
+    --ink-2:   #4A4845;
+    --ink-3:   #7A7670;
+    --paper:   #F8F8F7;
+    --paper-2: #EDEAE2;
+    --paper-3: #E2DFD7;
+    --line:    #E2DFD7;
+    --blue:    #3E529B;
+    --teal:    #35A2A8;
+    --ochre:   #A2855F;
+    --rose:    #B85C7A;
+    --olive:   #8B9D6E;
+    --plum:    #9670A8;
+    --amber:   #D9A046;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    font-size: 16px; line-height: 1.5;
+  }
+  a { color: inherit; text-decoration: none; }
+  ::selection { background: var(--ink); color: var(--paper); }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(248,248,247,0.96); backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .topbar b { color: var(--ink); font-weight: 700; }
+  .topbar .right { color: var(--ink-3); }
+
+  /* HERO */
+  .hero {
+    padding: 56px 20px 16px; max-width: 760px; margin: 0 auto;
+  }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--blue); font-weight: 700;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 22px;
+  }
+  .hero-eye::before { content:''; width:24px; height:1px; background: var(--blue); }
+  .hero h1 {
+    font-size: clamp(44px,12vw,84px);
+    line-height: 0.94; letter-spacing: -0.028em; font-weight: 900;
+    text-wrap: balance;
+  }
+  .hero h1 b { color: var(--blue); font-weight: 900; }
+  .hero h1 i { color: var(--ochre); font-style: italic; font-weight: 800; }
+  .hero-lede {
+    margin-top: 26px; font-size: 18px; line-height: 1.5;
+    color: var(--ink-2); max-width: 38ch;
+  }
+  .hero-lede b { color: var(--ink); font-weight: 600; }
+
+  .hero-meta {
+    margin-top: 28px;
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.06em;
+  }
+  .hero-meta div {
+    padding: 12px 14px;
+    background: var(--paper-2);
+    border-radius: 10px;
+  }
+  .hero-meta b { display: block; color: var(--ink); font-weight: 700; margin-bottom: 4px; }
+
+  /* SECTION HEAD */
+  .section-eye {
+    max-width: 760px; margin: 56px auto 0;
+    padding: 0 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.18em; text-transform: uppercase;
+    font-weight: 700;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-eye::after { content:''; flex: 1; height: 1px; background: var(--line); }
+
+  /* TIMELINE */
+  .timeline {
+    max-width: 760px; margin: 14px auto 0;
+    padding: 0 20px;
+  }
+  .day {
+    border-top: 1px solid var(--line);
+    padding: 22px 0 10px;
+  }
+  .day:first-child { border-top: none; }
+  .day-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .day-name {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.014em;
+  }
+  .day-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-3); letter-spacing: 0.06em;
+  }
+  .day-rows { display: flex; flex-direction: column; gap: 4px; }
+  .day-row {
+    display: grid; grid-template-columns: 80px 1fr;
+    gap: 12px;
+    padding: 8px 0;
+    align-items: baseline;
+    font-size: 14px; line-height: 1.35;
+  }
+  .day-row .t {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-3); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .day-row.has-artifact .t { color: var(--ink); font-weight: 600; }
+  .day-row .l {
+    color: var(--ink-2);
+  }
+  .day-row.has-artifact .l { color: var(--ink); }
+  .day-row.has-artifact .l b { font-weight: 700; }
+  .day-row .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    margin-left: 8px;
+    border-radius: 999px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase;
+    font-weight: 700; color: var(--paper);
+    vertical-align: middle;
+  }
+
+  /* ARTIFACTS GRID */
+  .arts {
+    max-width: 760px; margin: 14px auto 0;
+    padding: 0 20px 16px;
+  }
+  .art {
+    display: block;
+    border-top: 1px solid var(--line);
+    padding: 26px 0;
+    transition: padding 0.2s;
+    cursor: pointer;
+  }
+  .art:last-child { border-bottom: 1px solid var(--line); }
+  .art:hover { padding-left: 8px; }
+  .art-head {
+    display: grid; grid-template-columns: 56px 1fr 28px;
+    gap: 14px; align-items: flex-start;
+  }
+  .art-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 6px 0; text-align: center;
+    border: 1.5px solid; border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .art[data-c="blue"]  .art-num { color: var(--blue);  border-color: var(--blue); }
+  .art[data-c="teal"]  .art-num { color: var(--teal);  border-color: var(--teal); }
+  .art[data-c="ochre"] .art-num { color: var(--ochre); border-color: var(--ochre); }
+  .art[data-c="rose"]  .art-num { color: var(--rose);  border-color: var(--rose); }
+  .art[data-c="olive"] .art-num { color: var(--olive); border-color: var(--olive); }
+  .art[data-c="plum"]  .art-num { color: var(--plum);  border-color: var(--plum); }
+  .art[data-c="amber"] .art-num { color: var(--amber); border-color: var(--amber); }
+  .art:hover[data-c="blue"]  .art-num { background: var(--blue);  color: var(--paper); }
+  .art:hover[data-c="teal"]  .art-num { background: var(--teal);  color: var(--paper); }
+  .art:hover[data-c="ochre"] .art-num { background: var(--ochre); color: var(--paper); }
+  .art:hover[data-c="rose"]  .art-num { background: var(--rose);  color: var(--paper); }
+  .art:hover[data-c="olive"] .art-num { background: var(--olive); color: var(--paper); }
+  .art:hover[data-c="plum"]  .art-num { background: var(--plum);  color: var(--paper); }
+  .art:hover[data-c="amber"] .art-num { background: var(--amber); color: var(--paper); }
+
+  .art-title {
+    font-size: clamp(22px,5.4vw,30px);
+    font-weight: 800; line-height: 1.08;
+    letter-spacing: -0.018em;
+  }
+  .art-sub {
+    margin-top: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.08em;
+    font-weight: 500;
+  }
+  .art-arrow {
+    font-size: 22px; color: var(--ink-3);
+    text-align: right; padding-top: 4px;
+    transition: transform 0.18s, color 0.18s;
+  }
+  .art:hover .art-arrow { transform: translateX(4px); color: var(--ink); }
+  .art-meta {
+    margin: 14px 0 0 70px;
+    display: flex; gap: 16px; flex-wrap: wrap;
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+  .art-meta span {
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .art-meta span b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600;
+  }
+  .art-mech {
+    margin: 12px 0 0 70px;
+    font-size: 14px; line-height: 1.4;
+    color: var(--ink);
+  }
+  .art-mech b { color: var(--ink); font-weight: 700; }
+
+  /* PROCESS */
+  .process {
+    background: var(--ink); color: var(--paper);
+    margin-top: 60px;
+    padding: 56px 0;
+  }
+  .process-eye {
+    max-width: 760px; margin: 0 auto;
+    padding: 0 20px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700;
+  }
+  .process-h {
+    max-width: 760px; margin: 0 auto;
+    padding: 0 20px 28px;
+    font-size: clamp(28px,7vw,42px);
+    line-height: 1.04; letter-spacing: -0.022em; font-weight: 800;
+    text-wrap: balance;
+  }
+  .process-h b { color: var(--teal); font-weight: 800; }
+  .process-steps {
+    max-width: 760px; margin: 0 auto;
+    padding: 0 20px;
+    counter-reset: pstep;
+    list-style: none;
+  }
+  .pstep {
+    counter-increment: pstep;
+    padding: 18px 0 18px 50px;
+    border-top: 1px solid rgba(248,248,247,0.14);
+    position: relative;
+  }
+  .pstep::before {
+    content: counter(pstep,decimal-leading-zero);
+    position: absolute; left: 0; top: 21px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--teal);
+    letter-spacing: 0.1em; font-weight: 700;
+  }
+  .pstep b { display: block; font-weight: 700; font-size: 17px; margin-bottom: 4px; line-height: 1.3; }
+  .pstep span { display: block; color: rgba(248,248,247,0.78); font-size: 14px; line-height: 1.45; }
+
+  /* CTA */
+  .cta-block {
+    max-width: 760px; margin: 0 auto;
+    padding: 56px 20px;
+    text-align: center;
+  }
+  .cta-block h2 {
+    font-size: clamp(32px,8vw,52px);
+    line-height: 0.98; letter-spacing: -0.024em; font-weight: 900;
+    text-wrap: balance;
+  }
+  .cta-block h2 b { color: var(--blue); }
+  .cta-block p {
+    margin-top: 18px; font-size: 17px; color: var(--ink-2);
+    max-width: 38ch; margin-left: auto; margin-right: auto;
+  }
+  .cta-button {
+    display: inline-flex; align-items: center; gap: 12px;
+    margin-top: 30px;
+    padding: 18px 26px;
+    background: var(--ink); color: var(--paper);
+    border: none; cursor: pointer;
+    font: inherit; font-weight: 700; font-size: 16px;
+    border-radius: 14px;
+    transition: background 0.18s;
+  }
+  .cta-button:hover { background: var(--blue); }
+  .cta-button .arr { font-size: 20px; }
+
+  /* FOOTER */
+  .footer-brand {
+    border-top: 1px solid var(--line);
+    padding: 28px 20px 40px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer-brand b { color: var(--ink-2); font-weight: 600; }
+
+  /* DESKTOP */
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .topbar, .hero, .section-eye, .timeline, .arts, .process-eye, .process-h, .process-steps, .cta-block, .footer-brand {
+      max-width: 1100px;
+    }
+    .topbar { padding: 16px 40px; }
+    .hero { padding: 100px 40px 24px; }
+    .hero h1 { font-size: clamp(80px,9vw,140px); }
+    .hero-lede { font-size: 22px; }
+    .hero-meta { grid-template-columns: repeat(4, 1fr); }
+    .section-eye, .timeline, .arts, .cta-block, .footer-brand { padding-left: 40px; padding-right: 40px; }
+    .section-eye { margin-top: 80px; }
+
+    .day-row { grid-template-columns: 110px 1fr; font-size: 15px; }
+    .art-head { grid-template-columns: 70px 1fr 40px; }
+    .art-title { font-size: 36px; }
+    .art-meta, .art-mech { margin-left: 84px; }
+
+    .process { padding: 80px 0; }
+    .process-eye, .process-h, .process-steps { padding-left: 40px; padding-right: 40px; }
+    .process-h { font-size: 56px; }
+    .pstep { padding-left: 70px; }
+    .pstep::before { top: 22px; font-size: 12px; }
+    .pstep b { font-size: 20px; }
+
+    .cta-block { padding: 100px 40px; }
+    .cta-block h2 { font-size: 72px; }
+    .footer-brand { padding-bottom: 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><b>Знание · Машук</b> &nbsp;·&nbsp; педсовет '26</div>
+  <div class="right">7 артефактов</div>
+</div>
+
+<header class="hero">
+  <div class="hero-eye"><!-- evt:event-name -->Весенний педсовет<!-- /evt --> · 28 апреля — 2 мая <!-- evt:event-year -->2026<!-- /evt --></div>
+  <h1>Семь <b>артефактов</b> на семь актов <i>программы</i>.</h1>
+  <p class="hero-lede">
+    Каждая ключевая лекция превращается в <b>интерактивный инструмент</b>, который педагог берёт с собой в свой класс. Не статья, не конспект — рабочее окно, где можно выбрать, попробовать, увидеть результат.
+  </p>
+  <div class="hero-meta">
+    <div><b>Где</b>Пятигорск</div>
+    <div><b>Когда</b>5 дней</div>
+    <div><b>Кто</b>~280 педагогов</div>
+    <div><b>Что</b>11+7 лекций</div>
+  </div>
+</header>
+
+<div class="section-eye">Программа · 5 дней</div>
+
+<section class="timeline">
+  <div class="day">
+    <div class="day-head"><div class="day-name">Вторник</div><div class="day-date">28 апреля</div></div>
+    <div class="day-rows">
+      <div class="day-row"><div class="t">15:00</div><div class="l">Заезд, размещение, регистрация</div></div>
+      <div class="day-row has-artifact"><div class="t">17:00</div><div class="l"><b>Бризицкий · ИИ: современный фронтир</b><span class="pill" style="background: var(--blue);">→ артефакт I</span></div></div>
+      <div class="day-row"><div class="t">19:30</div><div class="l">Командообразование · Осмысление дня</div></div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="day-head"><div class="day-name">Среда</div><div class="day-date">29 апреля</div></div>
+    <div class="day-rows">
+      <div class="day-row has-artifact"><div class="t">09:20</div><div class="l"><b>Басюк · Образовательное пространство</b><span class="pill" style="background: var(--teal);">→ II</span></div></div>
+      <div class="day-row has-artifact"><div class="t">14:00</div><div class="l"><b>Серёгин · Цифра в мировом образовании</b><span class="pill" style="background: var(--ochre);">→ III</span></div></div>
+      <div class="day-row has-artifact"><div class="t">15:40</div><div class="l"><b>7 параллельных мастер-классов</b><span class="pill" style="background: var(--rose);">→ IV</span></div></div>
+      <div class="day-row"><div class="t">17:00</div><div class="l">Обсуждение лекций и МК</div></div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="day-head"><div class="day-name">Четверг</div><div class="day-date">30 апреля</div></div>
+    <div class="day-rows">
+      <div class="day-row has-artifact"><div class="t">09:20</div><div class="l"><b>Палитай · Ценности государственности</b><span class="pill" style="background: var(--olive);">→ V</span></div></div>
+      <div class="day-row has-artifact"><div class="t">11:00</div><div class="l"><b>Сиденко · Чернова · Антонова</b><span class="pill" style="background: var(--plum);">→ VI</span></div></div>
+      <div class="day-row"><div class="t">14:10</div><div class="l">Практика практик · 9 малых аудиторий</div></div>
+    </div>
+  </div>
+  <div class="day">
+    <div class="day-head"><div class="day-name">Пятница</div><div class="day-date">2 мая</div></div>
+    <div class="day-rows">
+      <div class="day-row has-artifact"><div class="t">09:10</div><div class="l"><b>мИИтинг · Презентация результатов</b><span class="pill" style="background: var(--amber);">→ VII</span></div></div>
+      <div class="day-row"><div class="t">10:30</div><div class="l">Закрытие · отъезд</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="section-eye">Семь артефактов</div>
+
+<section class="arts" id="artifacts"></section>
+
+<section class="process">
+  <div class="process-eye">Производственный конвейер</div>
+  <h2 class="process-h">От лекции до <b>работающего инструмента</b> — за 90 минут.</h2>
+  <ol class="process-steps">
+    <li class="pstep"><b>Лекция читается</b><span>спикер выходит на сцену, аудитория записывает.</span></li>
+    <li class="pstep"><b>Расшифровка готова через 15 минут</b><span>автотранскрибация + пометки методиста.</span></li>
+    <li class="pstep"><b>Сотрудник + ИИ переписывают placeholder в DATA</b><span>тексты, цитаты, вопросы — внутри рабочего прототипа.</span></li>
+    <li class="pstep"><b>Публикация по QR через сервис hosting</b><span>короткая ссылка, доступ с любого телефона.</span></li>
+    <li class="pstep"><b>Демонстрация в назначенном слоте программы</b><span>педагог видит инструмент в работе ровно тогда, когда лекция ещё свежа.</span></li>
+  </ol>
+</section>
+
+<section class="cta-block">
+  <h2>Возьмите <b>в понедельник</b>.</h2>
+  <p>Все семь артефактов работают на телефоне и проекторе. После педсовета — остаются с педагогами навсегда.</p>
+  <a class="cta-button" href="https://p.knotta.ru/yw2hpv">
+    Открыть Манифест <span class="arr">→</span>
+  </a>
+</section>
+
+<footer class="footer-brand">
+  при поддержке <b>Центра знаний Машук</b> · <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt -->
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  event: { name: "Весенний педсовет", year: "2026", dates: "28.04 – 02.05", location: "Пятигорск" },
+  artifacts: [
+    { n: 1, template: "diagnostic-quiz",     title: "Карта ИИ-фронтира",   lecturer: "Дмитрий Бризицкий",            date: "28.04", href: "https://p.knotta.ru/ga9x9m", qr: null, status: "published" },
+    { n: 2, template: "parameter-dashboard", title: "Пульт цифровой среды", lecturer: "Виктор Басюк",                 date: "29.04", href: "https://p.knotta.ru/3szmdq", qr: null, status: "published" },
+    { n: 3, template: "case-matcher",        title: "Атлас цифры в мире",   lecturer: "Константин Серёгин",           date: "29.04", href: "https://p.knotta.ru/sfp9pz", qr: null, status: "published" },
+    { n: 4, template: "pick-and-plan",       title: "Меню 3 практик",       lecturer: "7 параллельных мастер-классов", date: "29.04", href: "https://p.knotta.ru/gezhqs", qr: null, status: "published" },
+    { n: 5, template: "scenario-cards",      title: "Атлас ценностей",      lecturer: "Иван Палитай",                 date: "30.04", href: "https://p.knotta.ru/ywdpy2", qr: null, status: "published" },
+    { n: 6, template: "step-builder",        title: "Урок-конструктор",     lecturer: "Сиденко · Чернова · Антонова", date: "30.04", href: "https://p.knotta.ru/jbzdnd", qr: null, status: "published" },
+    { n: 7, template: "manifesto",           title: "Манифест Педсовета",   lecturer: "синтез всех 5 дней",           date: "02.05", href: "https://p.knotta.ru/yw2hpv", qr: null, status: "published" }
+  ]
+};
+
+const STATUS_LABEL = { published: 'опубликовано', local: 'локально', pending: 'в работе' };
+const COLOR_BY_N   = { 1: 'blue', 2: 'teal', 3: 'ochre', 4: 'rose', 5: 'olive', 6: 'plum', 7: 'amber' };
+const ROMAN_BY_N   = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII' };
+
+function renderCard(a) {
+  const card = document.createElement('a');
+  card.className = 'art card card-' + a.template;
+  card.dataset.c = COLOR_BY_N[a.n] || 'blue';
+  card.dataset.status = a.status;
+  if (a.href) card.setAttribute('href', a.href);
+
+  const head = document.createElement('div');
+  head.className = 'art-head';
+
+  const num = document.createElement('div');
+  num.className = 'art-num card-num';
+  num.textContent = ROMAN_BY_N[a.n] || String(a.n);
+  head.appendChild(num);
+
+  const mid = document.createElement('div');
+  const title = document.createElement('div');
+  title.className = 'art-title card-title';
+  title.textContent = a.title;
+  mid.appendChild(title);
+  const sub = document.createElement('div');
+  sub.className = 'art-sub';
+  sub.textContent = 'к лекции · ' + a.lecturer;
+  mid.appendChild(sub);
+  head.appendChild(mid);
+
+  const arrow = document.createElement('div');
+  arrow.className = 'art-arrow';
+  arrow.textContent = '→';
+  head.appendChild(arrow);
+
+  card.appendChild(head);
+
+  const meta = document.createElement('div');
+  meta.className = 'art-meta card-meta';
+  const metaWho = document.createElement('span');
+  const metaWhoB = document.createElement('b');
+  metaWhoB.textContent = 'лектор:';
+  metaWho.appendChild(metaWhoB);
+  metaWho.appendChild(document.createTextNode(' ' + a.lecturer));
+  meta.appendChild(metaWho);
+  const metaDate = document.createElement('span');
+  const metaDateB = document.createElement('b');
+  metaDateB.textContent = 'дата:';
+  metaDate.appendChild(metaDateB);
+  metaDate.appendChild(document.createTextNode(' ' + a.date));
+  meta.appendChild(metaDate);
+  card.appendChild(meta);
+
+  const status = document.createElement('div');
+  status.className = 'art-mech card-status';
+  status.textContent = STATUS_LABEL[a.status] || a.status;
+  card.appendChild(status);
+
+  return card;
+}
+
+const grid = document.getElementById('artifacts');
+DATA.artifacts.forEach(function (a) { grid.appendChild(renderCard(a)); });
+
+/* Event metadata is the source of truth — evt-markers in the static HTML
+   are pre-rendered server-side, but we expose the values for JS readers. */
+if (DATA.event) {
+  document.documentElement.dataset.eventName = DATA.event.name;
+  document.documentElement.dataset.eventYear = DATA.event.year;
+}
+</script>
+</body>
+</html>

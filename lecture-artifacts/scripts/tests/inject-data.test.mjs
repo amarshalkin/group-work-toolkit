@@ -117,3 +117,11 @@ test('golden: diagnostic-quiz template + example data', () => {
   const expected = fixture('diagnostic-quiz.expected.html');
   assert.equal(inject(tpl, data, event), expected);
 });
+
+test('golden: event-landing template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'event-landing', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'event-landing', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('event-landing.event.json'));
+  const expected = fixture('event-landing.expected.html');
+  assert.equal(inject(tpl, data, event), expected);
+});

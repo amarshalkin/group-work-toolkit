@@ -1,0 +1,80 @@
+{
+  "event": {
+    "name": "Весенний педсовет",
+    "year": "2026",
+    "dates": "28.04 – 02.05",
+    "location": "Пятигорск"
+  },
+  "artifacts": [
+    {
+      "n": 1,
+      "template": "diagnostic-quiz",
+      "title": "Карта ИИ-фронтира",
+      "lecturer": "Дмитрий Бризицкий",
+      "date": "28.04",
+      "href": "https://p.knotta.ru/ga9x9m",
+      "qr": null,
+      "status": "published"
+    },
+    {
+      "n": 2,
+      "template": "parameter-dashboard",
+      "title": "Пульт цифровой среды",
+      "lecturer": "Виктор Басюк",
+      "date": "29.04",
+      "href": "https://p.knotta.ru/3szmdq",
+      "qr": null,
+      "status": "published"
+    },
+    {
+      "n": 3,
+      "template": "case-matcher",
+      "title": "Атлас цифры в мире",
+      "lecturer": "Константин Серёгин",
+      "date": "29.04",
+      "href": "https://p.knotta.ru/sfp9pz",
+      "qr": null,
+      "status": "published"
+    },
+    {
+      "n": 4,
+      "template": "pick-and-plan",
+      "title": "Меню 3 практик",
+      "lecturer": "7 параллельных мастер-классов",
+      "date": "29.04",
+      "href": "https://p.knotta.ru/gezhqs",
+      "qr": null,
+      "status": "published"
+    },
+    {
+      "n": 5,
+      "template": "scenario-cards",
+      "title": "Атлас ценностей",
+      "lecturer": "Иван Палитай",
+      "date": "30.04",
+      "href": "https://p.knotta.ru/ywdpy2",
+      "qr": null,
+      "status": "published"
+    },
+    {
+      "n": 6,
+      "template": "step-builder",
+      "title": "Урок-конструктор",
+      "lecturer": "Сиденко · Чернова · Антонова",
+      "date": "30.04",
+      "href": "https://p.knotta.ru/jbzdnd",
+      "qr": null,
+      "status": "published"
+    },
+    {
+      "n": 7,
+      "template": "manifesto",
+      "title": "Манифест Педсовета",
+      "lecturer": "синтез всех 5 дней",
+      "date": "02.05",
+      "href": "https://p.knotta.ru/yw2hpv",
+      "qr": null,
+      "status": "published"
+    }
+  ]
+}
