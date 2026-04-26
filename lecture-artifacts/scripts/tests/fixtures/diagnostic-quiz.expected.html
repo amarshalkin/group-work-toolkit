@@ -1,0 +1,1323 @@
+<!DOCTYPE html>
+<!--
+  АКТ I · КАРТА ИИ-ФРОНТИРА 2026
+  Лекция: Дмитрий Бризицкий «ИИ: современный фронтир»
+  Mobile-first. Акцент: синий #3E529B на айвори #F8F8F7.
+  Механика: свайп между 12 вопросами, шкала-термометр результата,
+  тапаемая радиальная карта 8 территорий, чек-лист трека.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>01 · Карта ИИ-фронтира · Весенний педсовет 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:      #3E529B;
+    --blue-d:    #2D3F7E;
+    --blue-soft: #E8ECF6;
+    --blue-tint: #F2F4FB;
+    --ink:       #1F1F22;
+    --ink-2:     #4A4A50;
+    --ink-3:     #8A8A92;
+    --paper:     #F8F8F7;
+    --paper-2:   #FFFFFF;
+    --line:      #E2E2DD;
+    --ochre:     #A2855F;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.45;
+    font-size: 16px;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+  ::selection { background: var(--blue); color: var(--paper); }
+
+  /* ──── ШАПКА (sticky) ──── */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .topbar-mark {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-2); font-weight: 600;
+  }
+  .topbar-mark::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--blue);
+  }
+  .topbar-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-3);
+  }
+  .topbar-counter b { color: var(--ink); font-weight: 500; }
+
+  /* ──── ОБЩИЙ КОНТЕЙНЕР ──── */
+  .container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+  /* ──── ЭКРАНЫ ──── */
+  .screen { display: none; }
+  body[data-screen="intro"]  #screenIntro  { display: block; }
+  body[data-screen="quiz"]   #screenQuiz   { display: block; }
+  body[data-screen="result"] #screenResult { display: block; }
+
+  /* ──── ЭКРАН: ВВЕДЕНИЕ ──── */
+  .intro { padding: 32px 0 40px; }
+  .intro-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 24px;
+    display: flex; gap: 12px; align-items: baseline;
+  }
+  .intro-eyebrow b { font-weight: 500; color: var(--ink); }
+  .intro h1 {
+    font-size: clamp(34px, 9vw, 56px);
+    line-height: 1; letter-spacing: -0.02em;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .intro h1 .accent { color: var(--blue); font-weight: 800; }
+  .intro h1 .num {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500; font-size: 0.32em;
+    color: var(--ink-3); letter-spacing: 0;
+    margin-bottom: 12px;
+  }
+  .intro-tagline {
+    font-size: 18px; color: var(--ink-2); margin: 24px 0 32px;
+    max-width: 32ch; line-height: 1.4;
+  }
+  .intro-card {
+    background: var(--paper-2); border: 1px solid var(--line);
+    padding: 24px 20px; border-radius: 16px;
+    margin-bottom: 28px;
+  }
+  .intro-card h3 {
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 12px; font-weight: 600;
+  }
+  .intro-card p { color: var(--ink-2); }
+  .intro-card p + p { margin-top: 10px; }
+  .intro-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin: 28px 0;
+  }
+  .intro-stat {
+    padding: 18px 8px; text-align: center;
+    border-right: 1px solid var(--line);
+  }
+  .intro-stat:last-child { border-right: none; }
+  .intro-stat-num {
+    font-size: 36px; line-height: 1;
+    font-weight: 700; color: var(--blue);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .intro-stat-lbl {
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-3); margin-top: 6px;
+  }
+
+  /* кнопка ─ */
+  .btn-primary {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; gap: 12px; padding: 20px 24px;
+    background: var(--blue); color: var(--paper);
+    border: none; border-radius: 14px;
+    font: inherit; font-size: 17px; font-weight: 600;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: var(--blue-d); }
+  .btn-primary:active { transform: scale(0.99); }
+  .btn-primary svg { width: 22px; height: 22px; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 14px 22px; background: transparent;
+    color: var(--ink); border: 1px solid var(--ink);
+    border-radius: 14px; font: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all 0.15s;
+  }
+  .btn-ghost:hover { background: var(--ink); color: var(--paper); }
+
+  /* ──── ЭКРАН: КВИЗ ──── */
+  .quiz { padding: 24px 0 48px; }
+
+  /* Прогресс — линейная шкала-сегменты */
+  .quiz-progress {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 4px;
+    margin-bottom: 36px;
+  }
+  .quiz-progress-seg {
+    height: 4px; background: var(--line); border-radius: 2px;
+    transition: background 0.3s;
+  }
+  .quiz-progress-seg.done { background: var(--blue); }
+  .quiz-progress-seg.current { background: var(--ink); }
+
+  /* Карточка вопроса с возможностью свайпа */
+  .quiz-deck { position: relative; touch-action: pan-y; }
+  .quiz-card {
+    background: var(--paper-2); border: 1px solid var(--line);
+    border-radius: 20px; padding: 28px 22px 22px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+  }
+  .quiz-card.swipe-out-left {
+    transform: translateX(-110%) rotate(-2deg); opacity: 0;
+  }
+  .quiz-card.swipe-out-right {
+    transform: translateX(110%) rotate(2deg); opacity: 0;
+  }
+  .quiz-card.enter {
+    transform: translateX(20%); opacity: 0;
+  }
+  .question-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 14px;
+  }
+  .question-text {
+    font-size: clamp(22px, 5vw, 28px);
+    line-height: 1.2; font-weight: 600;
+    margin-bottom: 26px; letter-spacing: -0.01em;
+  }
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .option {
+    background: var(--blue-tint);
+    border: 1px solid transparent;
+    border-radius: 14px; padding: 16px 18px;
+    text-align: left; font: inherit; font-size: 16px;
+    color: var(--ink); cursor: pointer;
+    display: flex; align-items: flex-start; gap: 14px;
+    transition: all 0.12s;
+  }
+  .option:hover, .option:focus-visible {
+    background: var(--blue-soft);
+    border-color: var(--blue);
+    outline: none;
+  }
+  .option-key {
+    flex-shrink: 0;
+    width: 26px; height: 26px;
+    border-radius: 8px;
+    background: var(--paper-2);
+    display: grid; place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 600;
+    color: var(--blue);
+    border: 1px solid var(--line);
+  }
+  .option:hover .option-key {
+    background: var(--blue); color: var(--paper); border-color: var(--blue);
+  }
+
+  /* Подсказка о свайпе */
+  .swipe-hint {
+    text-align: center;
+    font-size: 12px; color: var(--ink-3);
+    margin-top: 18px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.08em;
+  }
+  .swipe-hint .arrow { color: var(--blue); }
+
+  /* ──── ЭКРАН: РЕЗУЛЬТАТ ──── */
+  .result { padding: 28px 0 56px; }
+
+  /* Шкала-термометр (горизонтальная) */
+  .scale-block { margin-bottom: 40px; }
+  .scale-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 12px;
+  }
+  .scale-bar {
+    position: relative; height: 56px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    margin: 14px 0 8px;
+    overflow: hidden;
+  }
+  .scale-segments {
+    position: absolute; inset: 0;
+    display: grid; grid-template-columns: repeat(5, 1fr);
+  }
+  .scale-segments span {
+    border-right: 1px dashed var(--line);
+  }
+  .scale-segments span:last-child { border-right: none; }
+  .scale-fill {
+    position: absolute; left: 0; top: 0; bottom: 0;
+    background: linear-gradient(90deg, var(--blue) 0%, var(--blue-d) 100%);
+    border-radius: 0 14px 14px 0;
+    transition: width 1.2s cubic-bezier(0.7, 0, 0.2, 1);
+    width: 0;
+  }
+  .scale-marker {
+    position: absolute; top: -8px; bottom: -8px;
+    width: 3px; background: var(--ink);
+    transform: translateX(-50%);
+    transition: left 1.2s cubic-bezier(0.7, 0, 0.2, 1);
+    left: 0;
+  }
+  .scale-marker::after {
+    content: ''; position: absolute;
+    top: -6px; left: 50%; transform: translateX(-50%);
+    width: 14px; height: 14px;
+    background: var(--ink); border-radius: 50%;
+    border: 3px solid var(--paper);
+  }
+  .scale-labels {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--ink-3); text-transform: uppercase;
+  }
+  .scale-labels span { text-align: center; padding: 0 2px; }
+  .scale-labels span.is-current { color: var(--blue); font-weight: 600; }
+
+  .level-headline {
+    margin-top: 28px;
+    border-left: 4px solid var(--blue);
+    padding-left: 16px;
+  }
+  .level-headline-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--blue);
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .level-headline h2 {
+    font-size: clamp(28px, 6vw, 38px);
+    font-weight: 700; line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+  .level-desc {
+    margin-top: 16px;
+    color: var(--ink-2);
+    font-size: 17px; line-height: 1.5;
+  }
+
+  /* Трек — чек-лист */
+  .track {
+    margin-top: 36px;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 22px 20px 6px;
+  }
+  .track-title {
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 18px; font-weight: 600;
+  }
+  .track-step {
+    display: flex; gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+    cursor: pointer; user-select: none;
+  }
+  .track-step:first-of-type { border-top: none; }
+  .track-step-check {
+    flex-shrink: 0; width: 24px; height: 24px;
+    border-radius: 8px; border: 1.5px solid var(--ink-3);
+    display: grid; place-items: center;
+    transition: all 0.15s;
+    margin-top: 2px;
+  }
+  .track-step.done .track-step-check {
+    background: var(--blue); border-color: var(--blue);
+  }
+  .track-step.done .track-step-check::after {
+    content: ''; width: 8px; height: 4px;
+    border-left: 2px solid var(--paper);
+    border-bottom: 2px solid var(--paper);
+    transform: translateY(-1px) rotate(-45deg);
+  }
+  .track-step-body strong {
+    display: block; font-size: 16px; font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .track-step-body span { color: var(--ink-2); font-size: 15px; }
+  .track-step.done .track-step-body strong { text-decoration: line-through; color: var(--ink-3); }
+  .track-step.done .track-step-body span { color: var(--ink-3); }
+
+  /* Радиальная карта 8 территорий */
+  .frontier {
+    margin-top: 40px;
+  }
+  .frontier-title {
+    font-size: 22px; font-weight: 700; margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+  .frontier-sub {
+    color: var(--ink-3); font-size: 14px; margin-bottom: 20px;
+  }
+  .radial-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    max-width: 380px; margin: 0 auto;
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    padding: 0;
+    overflow: visible;
+  }
+  .radial-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+  .radial-svg .ring { fill: none; stroke: var(--line); stroke-width: 1; }
+  .radial-svg .axis { stroke: var(--line); stroke-width: 1; stroke-dasharray: 2 4; }
+  .radial-svg .pin {
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  .radial-svg .pin-dot {
+    fill: var(--paper-2);
+    stroke: var(--blue);
+    stroke-width: 2;
+    transition: all 0.15s;
+  }
+  .radial-svg .pin:hover .pin-dot,
+  .radial-svg .pin.active .pin-dot {
+    fill: var(--blue); stroke: var(--blue);
+  }
+  .radial-svg .pin-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 7px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    fill: var(--ink-2);
+    font-weight: 500;
+    pointer-events: none;
+  }
+  .radial-svg .pin.active .pin-label { fill: var(--blue); font-weight: 700; }
+  .radial-center {
+    position: absolute;
+    inset: 50% 0 0 50%;
+    transform: translate(-50%, -50%);
+    width: 32%;
+    text-align: center;
+    pointer-events: none;
+  }
+  .radial-center-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--ink-3);
+  }
+  .radial-center-name {
+    font-size: clamp(13px, 3.5vw, 16px);
+    font-weight: 700;
+    color: var(--blue);
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+
+  .territory-detail {
+    margin-top: 16px;
+    background: var(--blue-tint);
+    border-radius: 16px;
+    padding: 20px;
+    min-height: 120px;
+  }
+  .territory-detail.empty {
+    color: var(--ink-3); text-align: center;
+    padding: 32px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .territory-detail-name {
+    font-size: 18px; font-weight: 700; color: var(--blue);
+    margin-bottom: 8px;
+  }
+  .territory-detail-desc { color: var(--ink-2); font-size: 15px; margin-bottom: 14px; }
+  .territory-detail-action {
+    background: var(--paper-2);
+    border-radius: 10px; padding: 12px 14px;
+    font-size: 14px; color: var(--ink);
+    border-left: 3px solid var(--blue);
+  }
+  .territory-detail-action b {
+    display: block; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--blue); margin-bottom: 4px; font-weight: 600;
+  }
+
+  .result-actions { margin-top: 32px; display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ──── БРЕНД-ФУТЕР ──── */
+  .brand-foot {
+    border-top: 1px solid var(--line);
+    margin-top: 56px; padding: 28px 20px 36px;
+    display: flex; flex-direction: column; gap: 18px;
+    align-items: center;
+    color: var(--ink-3);
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .brand-foot-row {
+    display: flex; gap: 18px; align-items: center; flex-wrap: wrap;
+    justify-content: center;
+  }
+  .brand-foot-row b { color: var(--ink-2); font-weight: 600; }
+
+  /* ──── ДЕМО-РЕЖИМ для большого экрана ──── */
+  @media (min-width: 900px) {
+    body { font-size: 18px; }
+    .container { max-width: 1080px; padding: 0 40px; }
+    .topbar { padding: 16px 40px; }
+    .intro { padding: 56px 0 64px; }
+    .intro-tagline { font-size: 24px; max-width: 36ch; }
+    .intro-stats { margin: 40px 0; }
+    .intro-stat { padding: 28px 12px; }
+    .intro-stat-num { font-size: 56px; }
+    .quiz { padding: 40px 0 80px; }
+    .quiz-card { padding: 56px 48px 48px; }
+    .question-text { font-size: clamp(34px, 4.5vw, 48px); }
+    .options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .option { padding: 22px 24px; font-size: 18px; }
+    .scale-bar { height: 80px; }
+    .level-headline h2 { font-size: clamp(40px, 5.5vw, 64px); }
+    .level-desc { font-size: 22px; max-width: 60ch; }
+    .frontier-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+      align-items: start;
+    }
+    .radial-wrap { max-width: 520px; }
+    .track-step-body strong { font-size: 18px; }
+    .btn-primary { font-size: 19px; padding: 24px 28px; }
+  }
+  @media (max-width: 899px) {
+    .frontier-grid { display: block; }
+  }
+
+  /* keyboard focus */
+  :focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+</style>
+</head>
+<body data-screen="intro">
+
+<div class="topbar">
+  <div class="topbar-mark">Акт <!-- evt:lecture-num -->I<!-- /evt --> · <!-- evt:act-title -->Самотест<!-- /evt --></div>
+  <div class="topbar-counter" id="topCounter"></div>
+</div>
+
+<main class="container">
+
+  <!-- ВВЕДЕНИЕ -->
+  <section class="screen intro" id="screenIntro">
+    <div class="intro-eyebrow">№ 01<span></span><b>Карта ИИ-фронтира 2026</b></div>
+    <h1>
+      <span class="num">12 вопросов · 5 уровней · 8 территорий</span>
+      Где вы<br>
+      на карте <span class="accent">ИИ&#8209;фронтира</span>
+    </h1>
+    <p class="intro-tagline">Самотест без правильных ответов. На выходе — точка на шкале и трек на эту неделю.</p>
+
+    <div class="intro-card">
+      <h3>К лекции</h3>
+      <p id="lecturerLine">Дмитрий Бризицкий · «ИИ: современный фронтир»</p>
+      <p style="color: var(--ink-3); font-size: 14px;">Вторник 28.04, 17:00 · Большой зал</p>
+    </div>
+
+    <div class="intro-stats">
+      <div class="intro-stat"><div class="intro-stat-num">12</div><div class="intro-stat-lbl">вопросов</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">5</div><div class="intro-stat-lbl">уровней</div></div>
+      <div class="intro-stat"><div class="intro-stat-num">8</div><div class="intro-stat-lbl">территорий</div></div>
+    </div>
+
+    <button class="btn-primary" id="btnStart">
+      <span>Начать самотест</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12h14M13 5l7 7-7 7"/>
+      </svg>
+    </button>
+  </section>
+
+  <!-- КВИЗ -->
+  <section class="screen quiz" id="screenQuiz">
+    <div class="quiz-progress" id="quizProgress" role="progressbar"></div>
+    <div class="quiz-deck" id="quizDeck">
+      <article class="quiz-card" id="quizCard">
+        <div class="question-num" id="qNum"></div>
+        <h2 class="question-text" id="qText">…</h2>
+        <div class="options" id="qOptions" role="radiogroup"></div>
+      </article>
+      <div class="swipe-hint" id="swipeHint">
+        <span class="arrow">←</span>&nbsp;свайп назад&nbsp;·&nbsp;тап для ответа
+      </div>
+    </div>
+  </section>
+
+  <!-- РЕЗУЛЬТАТ -->
+  <section class="screen result" id="screenResult">
+    <div class="scale-block">
+      <div class="scale-eyebrow">Ваша позиция · <span id="scoreNum">0</span> / 36</div>
+      <div class="scale-bar">
+        <div class="scale-segments"><span></span><span></span><span></span><span></span><span></span></div>
+        <div class="scale-fill" id="scaleFill"></div>
+        <div class="scale-marker" id="scaleMarker"></div>
+      </div>
+      <div class="scale-labels" id="scaleLabels"></div>
+
+      <div class="level-headline">
+        <div class="level-headline-tag" id="levelTag">Уровень III</div>
+        <h2 id="levelName">Картограф</h2>
+      </div>
+      <p class="level-desc" id="levelDesc">…</p>
+    </div>
+
+    <div class="frontier-grid">
+      <div>
+        <div class="frontier">
+          <div class="frontier-title">Карта фронтира</div>
+          <div class="frontier-sub">8 территорий — тапните, чтобы прочитать.</div>
+          <div class="radial-wrap">
+                <svg class="radial-svg" viewBox="-115 -115 230 230" id="radialMap" aria-label="Радиальная карта 8 территорий"></svg>
+            <div class="radial-center">
+              <div class="radial-center-num" id="centerNum">— · —</div>
+              <div class="radial-center-name" id="centerName">Выберите</div>
+            </div>
+          </div>
+          <div class="territory-detail empty" id="territoryDetail">
+            Тапните на любую точку
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="track">
+          <div class="track-title">Трек на эту неделю</div>
+          <div id="trackSteps"></div>
+        </div>
+        <div class="result-actions">
+          <button class="btn-ghost" id="btnReset">↺ Пройти заново</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- БРЕНД-ФУТЕР -->
+  <footer class="brand-foot">
+    <div class="brand-foot-row"><b>при поддержке</b></div>
+    <div class="brand-foot-row" style="font-size: 13px; letter-spacing: 0.1em;">
+      <b>Центр знаний Машук</b> × <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt -->
+    </div>
+    <div class="brand-foot-row">апрель <!-- evt:event-year -->2026<!-- /evt --> · акт <!-- evt:lecture-num -->I<!-- /evt --> из VII</div>
+  </footer>
+</main>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   Вёрстка не меняется. Поля помечены подсказками для Claude.
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  "lecturer": "Дмитрий Бризицкий",
+  "lectureTitle": "ИИ: современный фронтир",
+  "date": "вторник 28.04, 17:00",
+  "scale": [
+    {
+      "roman": "I",
+      "short": "Терра",
+      "name": "Терра инкогнита",
+      "range": [
+        0,
+        7
+      ],
+      "desc": "Вы на пороге территории. Слышали об ИИ, может быть пробовали раз-другой, но систематической практики нет. Это не плохо — это исходная точка карты."
+    },
+    {
+      "roman": "II",
+      "short": "Берег",
+      "name": "Береговая линия",
+      "range": [
+        8,
+        15
+      ],
+      "desc": "Освоили близкое побережье. ИИ — инструмент в нескольких знакомых задачах. Дальше карты пока не уходите."
+    },
+    {
+      "roman": "III",
+      "short": "Карто­граф",
+      "name": "Картограф",
+      "range": [
+        16,
+        23
+      ],
+      "desc": "Свободно перемещаетесь по знакомой местности и сами рисуете её для других. Знаете границы и риски."
+    },
+    {
+      "roman": "IV",
+      "short": "Поселе­нец",
+      "name": "Поселенец",
+      "range": [
+        24,
+        31
+      ],
+      "desc": "Вы не путешествуете по фронтиру — вы на нём живёте. ИИ встроен в большинство ваших процессов."
+    },
+    {
+      "roman": "V",
+      "short": "Архи­тектор",
+      "name": "Архитектор фронтира",
+      "range": [
+        32,
+        36
+      ],
+      "desc": "Создаёте новые маршруты и ставите точки на карте. ИИ — материал, из которого вы строите практику для других."
+    }
+  ],
+  "questions": [
+    {
+      "q": "Когда вы в последний раз сами использовали ИИ-инструмент в работе?",
+      "options": [
+        {
+          "text": "Не использовал/а ни разу",
+          "score": 0
+        },
+        {
+          "text": "Несколько месяцев назад, разово",
+          "score": 1
+        },
+        {
+          "text": "На прошлой неделе",
+          "score": 2
+        },
+        {
+          "text": "Использую ежедневно",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Какой ваш основной способ взаимодействия с ИИ?",
+      "options": [
+        {
+          "text": "Никакой — ещё не сложился",
+          "score": 0
+        },
+        {
+          "text": "Спросил-получил, как в поисковике",
+          "score": 1
+        },
+        {
+          "text": "Веду диалог, уточняю, прошу переделать",
+          "score": 2
+        },
+        {
+          "text": "Конструирую промпты под задачу, использую разные роли",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Что для вас «промпт»?",
+      "options": [
+        {
+          "text": "Незнакомое слово",
+          "score": 0
+        },
+        {
+          "text": "Запрос, который пишу в чат",
+          "score": 1
+        },
+        {
+          "text": "Структура: контекст + задача + формат + ограничения",
+          "score": 2
+        },
+        {
+          "text": "Многошаговый сценарий с разделением на роли и итерациями",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Где вы сталкивались с галлюцинациями ИИ?",
+      "options": [
+        {
+          "text": "Не знаю, что это",
+          "score": 0
+        },
+        {
+          "text": "Слышал/а, но сам не сталкивался",
+          "score": 1
+        },
+        {
+          "text": "Видел/а несколько раз, теперь проверяю факты",
+          "score": 2
+        },
+        {
+          "text": "Есть рабочий протокол проверки и я учу ему других",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Как вы проверяете факты в ответах ИИ?",
+      "options": [
+        {
+          "text": "Не проверяю — доверяю",
+          "score": 0
+        },
+        {
+          "text": "Только если что-то выглядит подозрительно",
+          "score": 1
+        },
+        {
+          "text": "Всегда сверяюсь с одним внешним источником",
+          "score": 2
+        },
+        {
+          "text": "Использую инструмент с источниками в каждом ответе",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Сколько разных ИИ-инструментов попробовали за год?",
+      "options": [
+        {
+          "text": "Ни одного",
+          "score": 0
+        },
+        {
+          "text": "Один-два",
+          "score": 1
+        },
+        {
+          "text": "Три-пять",
+          "score": 2
+        },
+        {
+          "text": "Шесть и больше — сравниваю под задачи",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Какие задачи вы делегируете ИИ?",
+      "options": [
+        {
+          "text": "Никакие",
+          "score": 0
+        },
+        {
+          "text": "Поиск информации",
+          "score": 1
+        },
+        {
+          "text": "Поиск + черновики писем, планов, объяснений",
+          "score": 2
+        },
+        {
+          "text": "Креатив, генерация альтернатив, ассистент в обучении",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Что для вас «контекст» в работе с ИИ?",
+      "options": [
+        {
+          "text": "Не уверен/а",
+          "score": 0
+        },
+        {
+          "text": "То, что я написал/а в окне чата",
+          "score": 1
+        },
+        {
+          "text": "Загруженные документы и история диалога",
+          "score": 2
+        },
+        {
+          "text": "Системная роль, рабочая память, файлы — управляю всем",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Применяете ли вы ИИ-генерацию изображений, голоса, видео?",
+      "options": [
+        {
+          "text": "Нет, только текст",
+          "score": 0
+        },
+        {
+          "text": "Видел/а у других, не пробовал",
+          "score": 1
+        },
+        {
+          "text": "Иногда генерирую картинки или голос для уроков",
+          "score": 2
+        },
+        {
+          "text": "Системно: озвучка, иллюстрации, монтаж",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Применяете ли ИИ для подготовки учебных материалов?",
+      "options": [
+        {
+          "text": "Нет",
+          "score": 0
+        },
+        {
+          "text": "Изредка — пара уроков для пробы",
+          "score": 1
+        },
+        {
+          "text": "Регулярно — планы, задания, тесты",
+          "score": 2
+        },
+        {
+          "text": "Системно: ИИ — соавтор моей рабочей программы",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Обсуждаете ли ИИ с учениками — этику, риски, возможности?",
+      "options": [
+        {
+          "text": "Не обсуждали",
+          "score": 0
+        },
+        {
+          "text": "Один-два раза заходила речь",
+          "score": 1
+        },
+        {
+          "text": "Регулярно поднимаю тему на уроках",
+          "score": 2
+        },
+        {
+          "text": "Веду отдельный модуль или практику с детьми",
+          "score": 3
+        }
+      ]
+    },
+    {
+      "q": "Что важнее в ИИ-инструменте — результат или процесс?",
+      "options": [
+        {
+          "text": "Не задумывался",
+          "score": 0
+        },
+        {
+          "text": "Только результат — что выдаёт",
+          "score": 1
+        },
+        {
+          "text": "Процесс важен — понимаю, как идёт диалог",
+          "score": 2
+        },
+        {
+          "text": "Различаю задачи: где результат, где соразмышление",
+          "score": 3
+        }
+      ]
+    }
+  ],
+  "frontier": [
+    {
+      "id": "t1",
+      "name": "Промпт",
+      "desc": "Вход на территорию для большинства. Здесь живёт умение задавать запрос так, чтобы ИИ услышал намерение, а не буквы.",
+      "action": "Возьмите одну рабочую задачу и переформулируйте её по схеме: контекст → задача → формат → ограничения."
+    },
+    {
+      "id": "t2",
+      "name": "Контекст",
+      "desc": "Архипелаг прикреплённых файлов, системных ролей, долгой памяти. Кто освоил, получает результат в разы точнее.",
+      "action": "Подготовьте один документ-«контекст» (программа, методичка) и работайте с ИИ только с ним."
+    },
+    {
+      "id": "t3",
+      "name": "Источники",
+      "desc": "Ссылки и сноски, которым можно доверять. Без проводника заблудиться легко, но именно здесь живёт доверие.",
+      "action": "Перейдите на инструмент, который показывает источники в каждом ответе. Привыкайте читать сноски."
+    },
+    {
+      "id": "t4",
+      "name": "Этика",
+      "desc": "Здесь решается: что говорить детям про ИИ, где граница помощи и обмана, чему передавать машине.",
+      "action": "Проведите 15-минутный разговор с классом про правила использования ИИ. Запишите, что они скажут."
+    },
+    {
+      "id": "t5",
+      "name": "Сотрудни­чество",
+      "desc": "Точка обмена. Здесь вы перестаёте использовать ИИ в одиночку — и начинаете передавать находки коллегам.",
+      "action": "Соберите 3 ваших лучших промпта и опубликуйте их в чате методобъединения."
+    },
+    {
+      "id": "t6",
+      "name": "Понимание",
+      "desc": "Понимание того, как модель «думает», где её слабые места и какие задачи никогда не нужно ей отдавать.",
+      "action": "Изучите одну техническую статью про устройство языковых моделей. Без неё дальше не пройти."
+    },
+    {
+      "id": "t7",
+      "name": "Мульти­модаль­ность",
+      "desc": "Текст, картинки, голос, видео, код — всё в одной модели. Сначала кажется лишним, потом обязательным.",
+      "action": "Выберите задачу, где сейчас текст — и сделайте её через генерацию картинки или озвучки."
+    },
+    {
+      "id": "t8",
+      "name": "Галлюци­нации",
+      "desc": "Опасные воды. ИИ выдумывает источники, факты, цитаты — и делает это уверенно.",
+      "action": "Введите правило: после любого фактического утверждения — один внешний источник перед публикацией."
+    }
+  ],
+  "tracks": [
+    [
+      {
+        "title": "Откройте дверь",
+        "body": "Зарегистрируйтесь в одном бесплатном ИИ-инструменте и задайте 3 вопроса о вашей работе."
+      },
+      {
+        "title": "Выберите одну задачу",
+        "body": "Найдите рабочую задачу этой недели, которую можно делегировать. Лучше — мелкую и не критичную."
+      },
+      {
+        "title": "Сравните с собой",
+        "body": "Сделайте задачу и сами, и через ИИ. Зафиксируйте, что отличается."
+      }
+    ],
+    [
+      {
+        "title": "Углубите промпт",
+        "body": "Возьмите три обычных запроса и перепишите их по схеме «контекст → задача → формат → ограничения»."
+      },
+      {
+        "title": "Прикрепите контекст",
+        "body": "Загрузите длинный рабочий документ и попросите ИИ поработать с ним."
+      },
+      {
+        "title": "Заведите фолдер находок",
+        "body": "Сохраняйте 1 хороший промпт в неделю. Через месяц у вас будет 4 — это уже arsenal."
+      }
+    ],
+    [
+      {
+        "title": "Расширьте арсенал",
+        "body": "Попробуйте 2 новых инструмента, которых ещё не использовали. Сравните под одной задачей."
+      },
+      {
+        "title": "Войдите в мультимодальность",
+        "body": "Сделайте один продукт через генерацию картинки или голоса. Не рутинный — экспериментальный."
+      },
+      {
+        "title": "Передайте знание",
+        "body": "Поделитесь 3 лучшими промптами с одним коллегой. Объясните, почему они работают."
+      }
+    ],
+    [
+      {
+        "title": "Поднимите этику",
+        "body": "Проведите классный час о работе с ИИ — что детям можно, что нельзя и почему."
+      },
+      {
+        "title": "Соберите практику",
+        "body": "Опишите 5 проверенных сценариев работы с ИИ как мини-методичку для коллег."
+      },
+      {
+        "title": "Дайте детям в руки",
+        "body": "Запустите учебную задачу, в которой ИИ — рабочий инструмент детей под вашим руководством."
+      }
+    ],
+    [
+      {
+        "title": "Постройте программу",
+        "body": "Соберите практику в курс или модуль, который можно передать другому педагогу."
+      },
+      {
+        "title": "Выйдите за стены",
+        "body": "Опубликуйте методику в профессиональном сообществе. Соберите обратную связь."
+      },
+      {
+        "title": "Поставьте новую точку",
+        "body": "Найдите задачу, для которой ИИ-инструментов ещё нет. Опишите её — это ваш фронтир."
+      }
+    ]
+  ]
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   ЛОГИКА
+   ════════════════════════════════════════════════════════════════════════ */
+const state = { screen:'intro', q:0, answers:[], total:0, level:null, active:null, trackDone:new Set() };
+
+function setScreen(name) {
+  state.screen = name;
+  document.body.dataset.screen = name;
+  window.scrollTo({ top: 0, behavior:'smooth' });
+  updateTopCounter();
+}
+
+function updateTopCounter() {
+  const el = document.getElementById('topCounter');
+  if (state.screen === 'intro') el.innerHTML = '<b>00</b> / 12';
+  else if (state.screen === 'quiz') el.innerHTML = `<b>${String(state.q+1).padStart(2,'0')}</b> / 12`;
+  else el.innerHTML = `<b>${state.total}</b> / 36`;
+}
+
+/* Прогресс */
+function renderProgress() {
+  const el = document.getElementById('quizProgress');
+  el.innerHTML = '';
+  for (let i = 0; i < DATA.questions.length; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'quiz-progress-seg';
+    if (i < state.q) seg.classList.add('done');
+    else if (i === state.q) seg.classList.add('current');
+    el.appendChild(seg);
+  }
+}
+
+/* Рендер вопроса */
+function renderQuestion(direction) {
+  const q = DATA.questions[state.q];
+  const card = document.getElementById('quizCard');
+  document.getElementById('qNum').textContent =
+    `Вопрос ${String(state.q+1).padStart(2,'0')} · ${DATA.questions.length}`;
+  document.getElementById('qText').textContent = q.q;
+  const opts = document.getElementById('qOptions');
+  opts.innerHTML = '';
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option';
+    btn.innerHTML = `<span class="option-key">${i+1}</span><span>${opt.text}</span>`;
+    btn.addEventListener('click', () => answer(opt.score));
+    opts.appendChild(btn);
+  });
+  renderProgress();
+  updateTopCounter();
+  if (direction) {
+    card.classList.add('enter');
+    requestAnimationFrame(() => requestAnimationFrame(() => card.classList.remove('enter')));
+  }
+}
+
+function answer(score) {
+  state.answers[state.q] = score;
+  const card = document.getElementById('quizCard');
+  card.classList.add('swipe-out-left');
+  setTimeout(() => {
+    card.classList.remove('swipe-out-left');
+    state.q++;
+    if (state.q < DATA.questions.length) renderQuestion('next');
+    else finish();
+  }, 220);
+}
+
+function back() {
+  if (state.q === 0) return;
+  const card = document.getElementById('quizCard');
+  card.classList.add('swipe-out-right');
+  setTimeout(() => {
+    card.classList.remove('swipe-out-right');
+    state.q--;
+    state.answers.pop();
+    renderQuestion('prev');
+  }, 220);
+}
+
+function finish() {
+  state.total = state.answers.reduce((a,b)=>a+b, 0);
+  state.level = DATA.scale.find(s => state.total >= s.range[0] && state.total <= s.range[1]) || DATA.scale[0];
+  renderResult();
+  setScreen('result');
+}
+
+/* Результат */
+function renderResult() {
+  const lvl = state.level;
+  const idx = DATA.scale.indexOf(lvl);
+  document.getElementById('scoreNum').textContent = state.total;
+  const pct = Math.min(100, Math.round((state.total/36)*100));
+  setTimeout(() => {
+    document.getElementById('scaleFill').style.width = pct + '%';
+    document.getElementById('scaleMarker').style.left = pct + '%';
+  }, 80);
+
+  /* Метки шкалы (5 коротких имён) */
+  const labels = document.getElementById('scaleLabels');
+  labels.innerHTML = '';
+  DATA.scale.forEach((s, i) => {
+    const sp = document.createElement('span');
+    sp.textContent = s.short;
+    if (i === idx) sp.classList.add('is-current');
+    labels.appendChild(sp);
+  });
+
+  document.getElementById('levelTag').textContent = `Уровень ${lvl.roman}`;
+  document.getElementById('levelName').textContent = lvl.name;
+  document.getElementById('levelDesc').textContent = lvl.desc;
+
+  /* Трек */
+  const trackEl = document.getElementById('trackSteps');
+  trackEl.innerHTML = '';
+  state.trackDone = new Set();
+  DATA.tracks[idx].forEach((step, i) => {
+    const row = document.createElement('div');
+    row.className = 'track-step';
+    row.innerHTML = `<div class="track-step-check"></div><div class="track-step-body"><strong>${step.title}</strong><span>${step.body}</span></div>`;
+    row.addEventListener('click', () => {
+      if (state.trackDone.has(i)) { state.trackDone.delete(i); row.classList.remove('done'); }
+      else { state.trackDone.add(i); row.classList.add('done'); }
+    });
+    trackEl.appendChild(row);
+  });
+
+  /* Радиальная карта */
+  renderRadial();
+}
+
+function renderRadial() {
+  const svg = document.getElementById('radialMap');
+  svg.innerHTML = '';
+  const NS = 'http://www.w3.org/2000/svg';
+  /* Кольца */
+  [80, 60, 40].forEach(r => {
+    const c = document.createElementNS(NS, 'circle');
+    c.setAttribute('class', 'ring');
+    c.setAttribute('cx', 0); c.setAttribute('cy', 0); c.setAttribute('r', r);
+    svg.appendChild(c);
+  });
+  /* Оси (8 направлений) */
+  for (let i = 0; i < 8; i++) {
+    const a = (i / 8) * Math.PI * 2 - Math.PI / 2;
+    const x = Math.cos(a) * 80, y = Math.sin(a) * 80;
+    const ln = document.createElementNS(NS, 'line');
+    ln.setAttribute('class', 'axis');
+    ln.setAttribute('x1', 0); ln.setAttribute('y1', 0);
+    ln.setAttribute('x2', x); ln.setAttribute('y2', y);
+    svg.appendChild(ln);
+  }
+  /* 8 точек по часовой стрелке от 12 ч. */
+  DATA.frontier.forEach((t, i) => {
+    const a = (i / 8) * Math.PI * 2 - Math.PI / 2;
+    const r = 70;
+    const x = Math.cos(a) * r, y = Math.sin(a) * r;
+    const g = document.createElementNS(NS, 'g');
+    g.setAttribute('class', 'pin');
+    g.setAttribute('transform', `translate(${x.toFixed(2)}, ${y.toFixed(2)})`);
+    g.setAttribute('data-id', t.id);
+    g.setAttribute('tabindex', '0');
+    /* Метки размещаются всегда по вертикали над/под точкой */
+    const above = y < 0;
+    const ly = above ? -10 : 16;
+    /* разбивка на 2 строки для длинных названий (>11 симв.) */
+    const fullLabel = `${(i+1).toString().padStart(2,'0')} ${t.name}`;
+    let labelLines = [fullLabel];
+    if (fullLabel.length > 13) {
+      const words = t.name.split(' ');
+      if (words.length > 1) {
+        const half = Math.ceil(words.length / 2);
+        labelLines = [
+          `${(i+1).toString().padStart(2,'0')} ${words.slice(0, half).join(' ')}`,
+          words.slice(half).join(' ')
+        ];
+      }
+    }
+    /* если метка сверху — выравниваем от нижней строки */
+    if (above && labelLines.length > 1) {
+      // первая строка выше второй
+      labelLines = labelLines.map((l,k) => l); // no-op
+    }
+    g.innerHTML = `
+      <circle class="pin-dot" r="5"/>
+      ${labelLines.map((line, ln) => `<text class="pin-label" x="0" y="${(ly + ln*8).toFixed(1)}" text-anchor="middle">${line}</text>`).join('')}
+    `;
+    g.addEventListener('click', () => selectTerritory(t.id));
+    g.addEventListener('keydown', (e) => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); selectTerritory(t.id); } });
+    svg.appendChild(g);
+  });
+}
+
+function selectTerritory(id) {
+  state.active = id;
+  document.querySelectorAll('.radial-svg .pin').forEach(p => {
+    p.classList.toggle('active', p.getAttribute('data-id') === id);
+  });
+  const t = DATA.frontier.find(x => x.id === id);
+  const idx = DATA.frontier.indexOf(t);
+  document.getElementById('centerNum').textContent = `0${idx+1} · 08`;
+  document.getElementById('centerName').textContent = t.name;
+  const det = document.getElementById('territoryDetail');
+  det.classList.remove('empty');
+  det.innerHTML = `
+    <div class="territory-detail-name">${t.name}</div>
+    <div class="territory-detail-desc">${t.desc}</div>
+    <div class="territory-detail-action"><b>Шаг на эту неделю</b>${t.action}</div>
+  `;
+}
+
+function reset() {
+  state.q = 0; state.answers = []; state.total = 0; state.level = null; state.active = null;
+  document.getElementById('territoryDetail').className = 'territory-detail empty';
+  document.getElementById('territoryDetail').textContent = 'Тапните на любую точку';
+  document.getElementById('centerName').textContent = 'Выберите';
+  document.getElementById('centerNum').textContent = '— · —';
+  document.getElementById('scaleFill').style.width = '0%';
+  document.getElementById('scaleMarker').style.left = '0%';
+  setScreen('intro');
+}
+
+/* Свайп */
+function attachSwipe() {
+  const deck = document.getElementById('quizDeck');
+  let sx = 0, sy = 0, dx = 0;
+  deck.addEventListener('touchstart', e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; dx = 0; }, {passive:true});
+  deck.addEventListener('touchmove', e => {
+    const cx = e.touches[0].clientX, cy = e.touches[0].clientY;
+    dx = cx - sx;
+    if (Math.abs(dx) > Math.abs(cy - sy) && Math.abs(dx) > 10) {
+      const card = document.getElementById('quizCard');
+      card.style.transform = `translateX(${dx*0.6}px) rotate(${dx*0.02}deg)`;
+    }
+  }, {passive:true});
+  deck.addEventListener('touchend', () => {
+    const card = document.getElementById('quizCard');
+    card.style.transform = '';
+    if (dx > 80) back();
+  });
+}
+
+/* Init */
+document.getElementById('btnStart').addEventListener('click', () => {
+  renderQuestion(); setScreen('quiz');
+});
+document.getElementById('btnReset').addEventListener('click', reset);
+document.addEventListener('keydown', e => {
+  if (state.screen !== 'quiz') return;
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= 4) {
+    const q = DATA.questions[state.q];
+    if (q && q.options[n-1]) answer(q.options[n-1].score);
+  } else if (e.key === 'ArrowLeft') back();
+});
+document.getElementById('lecturerLine').textContent = `${DATA.lecturer} · «${DATA.lectureTitle}»`;
+attachSwipe();
+renderProgress();
+updateTopCounter();
+</script>
+</body>
+</html>

@@ -109,3 +109,11 @@ test('golden: step-builder template + example data', () => {
   const expected = fixture('step-builder.expected.html');
   assert.equal(inject(tpl, data, event), expected);
 });
+
+test('golden: diagnostic-quiz template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'diagnostic-quiz', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'diagnostic-quiz', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('diagnostic-quiz.event.json'));
+  const expected = fixture('diagnostic-quiz.expected.html');
+  assert.equal(inject(tpl, data, event), expected);
+});
