@@ -6,6 +6,8 @@ event:
   short:          string?                   # optional, used in compact contexts
   month_year:     string                    # required, e.g. "Апрель 2026"
   location:       string?                   # optional, used in manifesto/landing signature
+  duration:             string?                # короткая форма продолжительности, e.g. "5 дней"
+  timeline_extras:      array?                 # [{day_date, time, text}] не-лекционные строки timeline
   dates:                string?                # e.g. "28 апреля — 2 мая 2026"
   participants:         string?                # e.g. "~280 педагогов из всех регионов России"
   content_summary:      string?                # e.g. "11 ключевых + 7 параллельных мастер-классов"
@@ -22,6 +24,8 @@ program:
     title:        string                    # required
     date:         string                    # required, free-form (e.g. "2026-04-28 17:00")
     hall:         string?                   # optional
+    slot:               string?                # формат, e.g. "мИИтинг + презентация"
+    when:               string?                # готовая строка времени, alternative to date+hall
     transcript:   string|null               # absolute path, set by template command
     output:       string|null               # absolute path, set by template command
     published_url: string|null              # set by host-html

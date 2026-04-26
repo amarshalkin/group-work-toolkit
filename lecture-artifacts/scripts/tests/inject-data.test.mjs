@@ -125,3 +125,51 @@ test('golden: event-landing template + example data', () => {
   const expected = fixture('event-landing.expected.html');
   assert.equal(inject(tpl, data, event), expected);
 });
+
+// === evt-if directive (v0.3.0) ===
+
+test('evt-if: block removed when marker missing or empty', () => {
+  const banner = `<title>t</title>\n` +
+    `/* ════════\n   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).\n   ════════ */\n` +
+    `const DATA = {\n};\n`;
+  const tplFragment = `prefix <!-- evt-if:k -->KEEP <!-- evt:k -->old<!-- /evt --> END<!-- /evt-if --> suffix`;
+  // marker missing entirely
+  let out = inject(banner + tplFragment, {}, {});
+  assert.match(out, /prefix\s+suffix/);
+  assert.doesNotMatch(out, /KEEP/);
+  // marker empty string
+  out = inject(banner + tplFragment, {}, { markers: { k: '' } });
+  assert.doesNotMatch(out, /KEEP/);
+  // marker null
+  out = inject(banner + tplFragment, {}, { markers: { k: null } });
+  assert.doesNotMatch(out, /KEEP/);
+});
+
+test('evt-if: block kept when marker present, evt-if delimiters stripped', () => {
+  const banner = `<title>t</title>\n` +
+    `/* ════════\n   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).\n   ════════ */\n` +
+    `const DATA = {\n};\n`;
+  const tpl = banner + `<!-- evt-if:k -->KEEP_THIS<!-- /evt-if -->`;
+  const out = inject(tpl, {}, { markers: { k: 'value' } });
+  assert.match(out, /KEEP_THIS/);
+  assert.doesNotMatch(out, /<!-- evt-if:/);
+  assert.doesNotMatch(out, /<!-- \/evt-if/);
+});
+
+test('evt-if: nested evt:KEY inside surviving block gets replaced', () => {
+  const banner = `<title>t</title>\n` +
+    `/* ════════\n   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).\n   ════════ */\n` +
+    `const DATA = {\n};\n`;
+  const tpl = banner + `<!-- evt-if:k --><span><!-- evt:k -->old<!-- /evt --></span><!-- /evt-if -->`;
+  const out = inject(tpl, {}, { markers: { k: 'NEW' } });
+  assert.match(out, /<span><!-- evt:k -->NEW<!-- \/evt --><\/span>/);
+});
+
+test('golden: manifesto template + example data + rich event (all evt-if kept)', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'manifesto', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'manifesto', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('manifesto.event-rich.json'));
+  const expected = fixture('manifesto.expected-rich.html');
+  const actual = inject(tpl, data, event);
+  assert.equal(actual, expected);
+});

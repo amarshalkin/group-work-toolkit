@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.2.0] — 2026-04-26
+
+- `lecture-artifacts` 0.2.0 → 0.3.0: conditional rendering через директиву `evt-if`; удалён дублирующий lecture-title eyebrow; landing timeline теперь DATA-driven.
+
 ## [1.1.0] — 2026-04-26
 
 - `lecture-artifacts` 0.1.0 → 0.2.0 (breaking marker contract change): динамические заголовки страниц, эпиграфы и статы события. Удалены hardcoded "Акт N", "№ NN".

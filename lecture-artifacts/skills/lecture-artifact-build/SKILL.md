@@ -23,17 +23,19 @@ This skill is the engine behind every template-specific slash command. The comma
 7. **Validate.** Write the generated JSON to a temp file (`/tmp/lecture-artifact-<template>-<timestamp>.json`). Run `node ${CLAUDE_PLUGIN_ROOT}/scripts/inject-data.mjs --validate <data.json> ${CLAUDE_PLUGIN_ROOT}/templates/<template>/template.html`. If exit code ≠ 0, fix the JSON (one retry) and re-validate. If still failing, report the error to the user and stop.
 8. **Build the event.json.** Compute marker values from `event` and `program[i]`:
    - `event-name` ← `event.name`
-   - `event-year` ← year extracted from `event.month_year` (e.g. "Апрель 2026" → "2026")
-   - `event-location` ← `event.location` (if defined; else omit)
-   - `event-dates` ← `event.dates` (if defined; else omit)
-   - `event-participants` ← `event.participants` (if defined; else omit)
-   - `event-content-summary` ← `event.content_summary` (if defined; else omit)
-   - `act-title` ← short act name for the topbar. By default `program[i].title`, but for templates where the program title is too long for a topbar (e.g. "ИИ — современный фронтир"), shorten to a 1–2 word label (e.g. "Самотест", "Манифест") matching the template's mechanic.
-   - `lecture-title` ← per the template's `schema.md` "Подзаголовок-эпиграф (lecture-title)" section. Different templates use different styles — see the schema. Skip for `event-landing`.
-   - `page-title` ← per the template's `schema.md` "Заголовок страницы (page-title)" section. Use lecture topic + actual data cardinality (e.g. `classes.length` числом прописью for pick-and-plan) + recommended inline tags (`<br>`, `<b>`, `<i>`, `<em>`, `<mark>`, `<span class="accent">`, `<span class="em">`). Skip for `step-builder`.
-   - And `title` (the `<title>` tag) ← `"<n> · <program[i].title>"`.
+   - `event-year` ← year extracted from `event.month_year`
+   - `event-location` ← `event.location` (передавать ТОЛЬКО если задано в `.local.md`; иначе omit — `evt-if` блок исчезнет)
+   - `event-dates` ← `event.dates` (передавать ТОЛЬКО если задано)
+   - `event-participants` ← `event.participants` (передавать ТОЛЬКО если задано)
+   - `event-content-summary` ← `event.content_summary` (передавать ТОЛЬКО если задано)
+   - `act-title` ← short act name for the topbar (per-template default; can be overridden in program[].title shortening)
+   - `page-title` ← per the template's `schema.md` "Заголовок страницы (page-title)" section. Skip for `step-builder`.
+   - `lecture-when` ← компонуется из `program[i].when` ИЛИ `program[i].date` (+ опционально `program[i].hall`). Формат: `"<день> <дата>, <время> · <зал>"`. Любая часть отсутствует — пропускается. Если ни одной — НЕ передаётся (блок `evt-if:lecture-when` исчезнет).
+   - `lecture-slot` ← `program[i].slot` (e.g. "мИИтинг + презентация"). Релевантно для шаблонов где этот маркер используется (manifesto). Не передаётся если поле отсутствует.
+   - `lecture-title` ← НЕ передаётся в стандартном flow (eyebrow удалён в v0.3.0). Только для manifesto, где он опционально оборачивает «итог»-тэг в hero-eye. Передавать только если шаблон явно его использует.
+   - И `title` (тэг `<title>`) ← `"<n> · <program[i].title>"`.
 
-   IMPORTANT: `lecture-num` marker no longer exists. Do not emit it.
+   КОНТРАКТ: передавать маркер ТОЛЬКО если у него есть значение. Пустая строка/`null`/`undefined` означают «блок исчезает». Это поведение реализовано в движке через `evt-if:KEY` директиву (см. `references/injection-protocol.md`).
 9. **Inject.** Run `node ${CLAUDE_PLUGIN_ROOT}/scripts/inject-data.mjs <template.html> <data.json> <event.json> <output.html>` where `<output.html>` = `<cwd>/<event.output_dir>/<n>-<template>.html`.
 10. **Sanity-check (try-call, optional).** Try invoking the `knotta-host-html:host-doctor` skill on the output file. On `not found` or any error: skip silently. See `references/host-integration.md`.
 11. **Publish (try-call, optional).** If `host_html.enabled` ≠ `"never"`: try invoking `knotta-host-html:host-html` with the output file. If it returns `{url, qr}`: capture them. If `not found`: do not publish, mention in final response that installing `knottasoft:host-html` enables auto-publish.

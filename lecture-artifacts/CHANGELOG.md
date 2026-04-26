@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.0] — 2026-04-26
+
+Conditional rendering. Breaking change в нескольких UI-аспектах шаблонов.
+
+- Новая директива движка: `<!-- evt-if:KEY -->...<!-- /evt-if -->`. При пустом/null/undefined значении в `event.markers[KEY]` весь блок удаляется на этапе сборки. Иначе блок остаётся, внутренние `evt:KEY` подменяются как обычно.
+- Удалён дублирующий eyebrow `evt:lecture-title` с per-artifact страниц (5 шаблонов: diagnostic-quiz, parameter-dashboard, case-matcher, pick-and-plan, scenario-cards). На этих страницах лектор отображается ниже через DATA.lecturer; eyebrow дублировал.
+- Hardcoded даты/время в hero-meta обёрнуты в `evt-if:lecture-when` (3 шаблона). Manifesto: `evt-if:lecture-when` + `evt-if:lecture-slot` для двух своих rows.
+- Manifesto signature (4 stat-rows) обёрнуты в индивидуальные `evt-if:event-*`.
+- Event-landing: топбар-счётчик через `evt:artifact-count` (генерируется); hero-stats rows в `evt-if:event-*`; section-eye+timeline в `evt-if:program-has-content`; артефакт-карточки лишены дублирующего «к лекции · X»; дата показывается условно (`if (a.date)`).
+- Event-landing timeline теперь DATA-driven: `DATA.timeline` массив дней с rows. Рендер safe-DOM API (createElement/textContent), без innerHTML.
+- Новые опциональные поля в `.local.md`: `event.duration`, `event.timeline_extras`, `program[i].slot`, `program[i].when`.
+- `lecture-artifact-build` и `event-landing-build` обновлены: пробрасывают маркеры только при наличии значения.
+- `event-init` опросник расширен новыми полями (все опциональные).
+
 ## [0.2.0] — 2026-04-26
 
 Breaking change в контракте маркеров.

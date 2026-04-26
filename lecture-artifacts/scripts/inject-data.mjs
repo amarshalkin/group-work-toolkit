@@ -34,8 +34,19 @@ export function replaceTitle(html, title) {
   return html.replace(/<title>[\s\S]*?<\/title>/, `<title>${title}</title>`);
 }
 
+const EVT_IF_RE = /<!-- evt-if:([a-z-]+) -->[\s\S]*?<!-- \/evt-if -->/g;
+
+export function applyConditionals(html, markers = {}) {
+  return html.replace(EVT_IF_RE, (block, key) => {
+    const val = markers && markers[key];
+    if (val == null || val === '') return '';
+    return block.replace(/<!-- evt-if:[a-z-]+ -->|<!-- \/evt-if -->/g, '');
+  });
+}
+
 export function inject(template, data, event = {}) {
   let out = template;
+  out = applyConditionals(out, event.markers);
   out = replaceTitle(out, event.title);
   out = replaceEvtMarkers(out, event.markers);
   out = replaceDataBlock(out, data);

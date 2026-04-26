@@ -352,10 +352,9 @@
 <main class="container">
 
   <section class="hero">
-    <div class="hero-eye"><!-- evt:lecture-title -->К лекции Виктора Басюка<!-- /evt --></div>
     <h1><!-- evt:page-title -->Где сейчас <em>цифровая среда</em><br>вашей школы<!-- /evt --></h1>
     <p class="hero-sub">Шесть переключателей описывают школу. Шесть приборов считают живой диагноз.</p>
-    <div class="hero-meta" id="heroMeta">среда 29.04, 09:20–10:50 · большой зал</div>
+    <!-- evt-if:lecture-when --><div class="hero-meta" id="heroMeta"><!-- evt:lecture-when -->среда 29.04, 09:20–10:50 · большой зал<!-- /evt --></div><!-- /evt-if -->
   </section>
 
   <div class="tabs" role="tablist">

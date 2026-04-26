@@ -24,12 +24,22 @@ Idempotent. Running `/init` twice reuses existing values; missing fields are top
 5. **Top up event-level fields** via `AskUserQuestion`, **only if missing** in the merged object:
    - `event.name`
    - `event.month_year` (try to derive from `program[].date` first)
-   - `event.location` — где проходит (e.g. "Пятигорск, Центр знаний Машук"). Используется в манифесте и лендинге.
-   - `event.dates` — диапазон дат для вывода в шапке/футере (e.g. "28 апреля — 2 мая 2026"). Если есть `program[].date`, можно собрать из min/max.
-   - `event.participants` — кто участвует (e.g. "~280 педагогов из всех регионов России"). Используется в манифесте и лендинге.
-   - `event.content_summary` — что в программе крупными штрихами (e.g. "11 ключевых + 7 параллельных мастер-классов"). Можно посчитать по `program[]` если в нём отмечены типы лекций.
-   - `event.output_dir` (default: transliterated event name + year, e.g. `lecture-artifacts/spring-2026`)
-6. **Top up program rows** via `AskUserQuestion` for each `program[i]` missing `template`. Show a multi-choice with the 7 functional template ids (`diagnostic-quiz`, `parameter-dashboard`, `case-matcher`, `pick-and-plan`, `scenario-cards`, `step-builder`, `manifesto`) and a description of each. Skip rows that already have `template` set.
+   - `event.location` — где проходит. Используется в манифесте и лендинге.
+   - `event.dates` — диапазон дат (e.g. "28 апреля — 2 мая 2026"). Если есть `program[].date`, можно собрать из min/max.
+   - `event.duration` — короткая форма продолжительности (e.g. "5 дней"). Можно посчитать по числу уникальных дат в `program[]` или спросить.
+   - `event.participants` — кто участвует (e.g. "~280 педагогов из всех регионов России").
+   - `event.content_summary` — что в программе крупными штрихами (e.g. "11+7 лекций"). Опционально.
+   - `event.timeline_extras` — необязательно. Не-лекционные строки расписания (заезд, обсуждение). Список `{day_date, time, text}`. Если пользователь не вводит — оставить пустым массивом.
+   - `event.output_dir` (default: транслит названия)
+
+   Все поля кроме `event.name` и `event.month_year` опциональны. Если пользователь пропускает — поле остаётся `null`/отсутствует, что и нужно для `evt-if`.
+
+6. **Top up program rows**:
+   - Для каждой `program[i]` без `template` — спросить какой шаблон использовать (multi-choice).
+   - НОВЫЕ опциональные поля (опросить только если пользователь явно соглашается дополнить):
+     - `program[i].slot` — формат лекции ("мИИтинг + презентация", "лекция + Q&A"). Опционально.
+     - `program[i].when` — готовая человекочитаемая строка времени (alternative to `date`+`hall`). Опционально.
+   - Если пользователь не задаёт `slot`/`when` — поля остаются `null`, что приводит к скрытию соответствующих блоков в финальной странице.
 7. **Defaults for fresh rows**: `transcript: null`, `output: null`, `published_url: null`, `qr: null`, `built_at: null`.
 8. **Defaults for `host_html`**: `enabled: auto` (only if creating fresh).
 9. **Write** the YAML frontmatter back to `.claude/lecture-artifacts.local.md`. Preserve any free-form markdown body that exists. If creating fresh, the body is empty except for an `# <event.name> <year>` heading.

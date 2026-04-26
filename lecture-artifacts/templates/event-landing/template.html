@@ -348,7 +348,7 @@
 
 <div class="topbar">
   <div><b>Знание · Машук</b> &nbsp;·&nbsp; педсовет '26</div>
-  <div class="right">7 артефактов</div>
+  <div class="right"><!-- evt:artifact-count -->7 артефактов<!-- /evt --></div>
 </div>
 
 <header class="hero">
@@ -358,49 +358,18 @@
     Каждая ключевая лекция превращается в <b>интерактивный инструмент</b>, который педагог берёт с собой в свой класс. Не статья, не конспект — рабочее окно, где можно выбрать, попробовать, увидеть результат.
   </p>
   <div class="hero-meta">
-    <div><b>Где</b>Пятигорск</div>
-    <div><b>Когда</b>5 дней</div>
-    <div><b>Кто</b>~280 педагогов</div>
-    <div><b>Что</b>11+7 лекций</div>
+    <!-- evt-if:event-location --><div><b>Где</b><!-- evt:event-location -->Пятигорск<!-- /evt --></div><!-- /evt-if -->
+    <!-- evt-if:event-duration --><div><b>Когда</b><!-- evt:event-duration -->5 дней<!-- /evt --></div><!-- /evt-if -->
+    <!-- evt-if:event-participants --><div><b>Кто</b><!-- evt:event-participants -->~280 педагогов<!-- /evt --></div><!-- /evt-if -->
+    <!-- evt-if:event-content-summary --><div><b>Что</b><!-- evt:event-content-summary -->11+7 лекций<!-- /evt --></div><!-- /evt-if -->
   </div>
 </header>
 
-<div class="section-eye">Программа · 5 дней</div>
+<!-- evt-if:program-has-content -->
+<div class="section-eye"><!-- evt:program-section-title -->Программа · 5 дней<!-- /evt --></div>
 
-<section class="timeline">
-  <div class="day">
-    <div class="day-head"><div class="day-name">Вторник</div><div class="day-date">28 апреля</div></div>
-    <div class="day-rows">
-      <div class="day-row"><div class="t">15:00</div><div class="l">Заезд, размещение, регистрация</div></div>
-      <div class="day-row has-artifact"><div class="t">17:00</div><div class="l"><b>Бризицкий · ИИ: современный фронтир</b><span class="pill" style="background: var(--blue);">→ артефакт I</span></div></div>
-      <div class="day-row"><div class="t">19:30</div><div class="l">Командообразование · Осмысление дня</div></div>
-    </div>
-  </div>
-  <div class="day">
-    <div class="day-head"><div class="day-name">Среда</div><div class="day-date">29 апреля</div></div>
-    <div class="day-rows">
-      <div class="day-row has-artifact"><div class="t">09:20</div><div class="l"><b>Басюк · Образовательное пространство</b><span class="pill" style="background: var(--teal);">→ II</span></div></div>
-      <div class="day-row has-artifact"><div class="t">14:00</div><div class="l"><b>Серёгин · Цифра в мировом образовании</b><span class="pill" style="background: var(--ochre);">→ III</span></div></div>
-      <div class="day-row has-artifact"><div class="t">15:40</div><div class="l"><b>7 параллельных мастер-классов</b><span class="pill" style="background: var(--rose);">→ IV</span></div></div>
-      <div class="day-row"><div class="t">17:00</div><div class="l">Обсуждение лекций и МК</div></div>
-    </div>
-  </div>
-  <div class="day">
-    <div class="day-head"><div class="day-name">Четверг</div><div class="day-date">30 апреля</div></div>
-    <div class="day-rows">
-      <div class="day-row has-artifact"><div class="t">09:20</div><div class="l"><b>Палитай · Ценности государственности</b><span class="pill" style="background: var(--olive);">→ V</span></div></div>
-      <div class="day-row has-artifact"><div class="t">11:00</div><div class="l"><b>Сиденко · Чернова · Антонова</b><span class="pill" style="background: var(--plum);">→ VI</span></div></div>
-      <div class="day-row"><div class="t">14:10</div><div class="l">Практика практик · 9 малых аудиторий</div></div>
-    </div>
-  </div>
-  <div class="day">
-    <div class="day-head"><div class="day-name">Пятница</div><div class="day-date">2 мая</div></div>
-    <div class="day-rows">
-      <div class="day-row has-artifact"><div class="t">09:10</div><div class="l"><b>мИИтинг · Презентация результатов</b><span class="pill" style="background: var(--amber);">→ VII</span></div></div>
-      <div class="day-row"><div class="t">10:30</div><div class="l">Закрытие · отъезд</div></div>
-    </div>
-  </div>
-</section>
+<section class="timeline" id="timeline"></section>
+<!-- /evt-if -->
 
 <div class="section-eye">Семь артефактов</div>
 
@@ -444,6 +413,27 @@ const DATA = {
     { n: 5, template: "scenario-cards",      title: "Атлас ценностей",      lecturer: "Иван Палитай",                 date: "30.04", href: "https://p.knotta.ru/ywdpy2", qr: null, status: "published" },
     { n: 6, template: "step-builder",        title: "Урок-конструктор",     lecturer: "Сиденко · Чернова · Антонова", date: "30.04", href: "https://p.knotta.ru/jbzdnd", qr: null, status: "published" },
     { n: 7, template: "manifesto",           title: "Манифест Педсовета",   lecturer: "синтез всех 5 дней",           date: "02.05", href: "https://p.knotta.ru/yw2hpv", qr: null, status: "published" }
+  ],
+  timeline: [
+    { name: "Вторник", date: "28 апреля", rows: [
+      { time: "15:00", text: "Заезд, размещение, регистрация", artifactN: null },
+      { time: "17:00", text: "Бризицкий · ИИ: современный фронтир", artifactN: 1 },
+      { time: "19:30", text: "Командообразование · Осмысление дня", artifactN: null }
+    ]},
+    { name: "Среда", date: "29 апреля", rows: [
+      { time: "09:20", text: "Басюк · Образовательное пространство", artifactN: 2 },
+      { time: "14:00", text: "Серёгин · Цифра в мировом образовании", artifactN: 3 },
+      { time: "15:40", text: "7 параллельных мастер-классов", artifactN: 4 },
+      { time: "17:00", text: "Обсуждение лекций и МК", artifactN: null }
+    ]},
+    { name: "Четверг", date: "30 апреля", rows: [
+      { time: "09:20", text: "Палитай · Ценности государственности", artifactN: 5 },
+      { time: "11:00", text: "Сиденко · Чернова · Антонова", artifactN: 6 },
+      { time: "14:10", text: "Практика практик · 9 малых аудиторий", artifactN: null }
+    ]},
+    { name: "Пятница", date: "2 мая", rows: [
+      { time: "09:10", text: "Манифест · итог 5 дней", artifactN: 7 }
+    ]}
   ]
 };
 
@@ -471,10 +461,6 @@ function renderCard(a) {
   title.className = 'art-title card-title';
   title.textContent = a.title;
   mid.appendChild(title);
-  const sub = document.createElement('div');
-  sub.className = 'art-sub';
-  sub.textContent = 'к лекции · ' + a.lecturer;
-  mid.appendChild(sub);
   head.appendChild(mid);
 
   const arrow = document.createElement('div');
@@ -492,12 +478,14 @@ function renderCard(a) {
   metaWho.appendChild(metaWhoB);
   metaWho.appendChild(document.createTextNode(' ' + a.lecturer));
   meta.appendChild(metaWho);
-  const metaDate = document.createElement('span');
-  const metaDateB = document.createElement('b');
-  metaDateB.textContent = 'дата:';
-  metaDate.appendChild(metaDateB);
-  metaDate.appendChild(document.createTextNode(' ' + a.date));
-  meta.appendChild(metaDate);
+  if (a.date) {
+    const metaDate = document.createElement('span');
+    const metaDateB = document.createElement('b');
+    metaDateB.textContent = 'дата:';
+    metaDate.appendChild(metaDateB);
+    metaDate.appendChild(document.createTextNode(' ' + a.date));
+    meta.appendChild(metaDate);
+  }
   card.appendChild(meta);
 
   const status = document.createElement('div');
@@ -510,6 +498,59 @@ function renderCard(a) {
 
 const grid = document.getElementById('artifacts');
 DATA.artifacts.forEach(function (a) { grid.appendChild(renderCard(a)); });
+
+// Timeline render — populates #timeline if DATA.timeline is non-empty.
+// Built using safe DOM API only.
+function renderTimeline() {
+  const root = document.getElementById('timeline');
+  if (!root || !Array.isArray(DATA.timeline) || DATA.timeline.length === 0) return;
+  const COLOR_BY_N = { 1: 'blue', 2: 'teal', 3: 'ochre', 4: 'rose', 5: 'olive', 6: 'plum', 7: 'amber' };
+  const ROMAN_BY_N = { 1: 'I', 2: 'II', 3: 'III', 4: 'IV', 5: 'V', 6: 'VI', 7: 'VII' };
+  for (const day of DATA.timeline) {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day';
+    const head = document.createElement('div');
+    head.className = 'day-head';
+    const name = document.createElement('div');
+    name.className = 'day-name';
+    name.textContent = day.name;
+    head.appendChild(name);
+    const date = document.createElement('div');
+    date.className = 'day-date';
+    date.textContent = day.date;
+    head.appendChild(date);
+    dayDiv.appendChild(head);
+    const rows = document.createElement('div');
+    rows.className = 'day-rows';
+    for (const r of (day.rows || [])) {
+      const row = document.createElement('div');
+      row.className = 'day-row' + (r.artifactN ? ' has-artifact' : '');
+      const t = document.createElement('div');
+      t.className = 't';
+      t.textContent = r.time;
+      row.appendChild(t);
+      const l = document.createElement('div');
+      l.className = 'l';
+      if (r.artifactN) {
+        const b = document.createElement('b');
+        b.textContent = r.text;
+        l.appendChild(b);
+        const pill = document.createElement('span');
+        pill.className = 'pill';
+        pill.style.background = 'var(--' + (COLOR_BY_N[r.artifactN] || 'blue') + ')';
+        pill.textContent = '→ ' + (ROMAN_BY_N[r.artifactN] || String(r.artifactN));
+        l.appendChild(pill);
+      } else {
+        l.textContent = r.text;
+      }
+      row.appendChild(l);
+      rows.appendChild(row);
+    }
+    dayDiv.appendChild(rows);
+    root.appendChild(dayDiv);
+  }
+}
+renderTimeline();
 
 /* Event metadata is the source of truth — evt-markers in the static HTML
    are pre-rendered server-side, but we expose the values for JS readers. */
