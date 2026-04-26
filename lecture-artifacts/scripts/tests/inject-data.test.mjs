@@ -77,3 +77,11 @@ test('golden: pick-and-plan template + example data', () => {
   const expected = fixture('pick-and-plan.expected.html');
   assert.equal(inject(tpl, data, event), expected);
 });
+
+test('golden: scenario-cards template + example data', () => {
+  const tpl = readFileSync(join(__dirname, '..', '..', 'templates', 'scenario-cards', 'template.html'), 'utf8');
+  const data = JSON.parse(readFileSync(join(__dirname, '..', '..', 'templates', 'scenario-cards', 'example-data.json'), 'utf8'));
+  const event = JSON.parse(fixture('scenario-cards.event.json'));
+  const expected = fixture('scenario-cards.expected.html');
+  assert.equal(inject(tpl, data, event), expected);
+});

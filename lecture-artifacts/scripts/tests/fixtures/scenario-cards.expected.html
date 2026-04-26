@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<!--
+  АКТ V · АТЛАС ЦЕННОСТЕЙ
+  Лекция: Иван Палитай (чт 30.04 09:20–10:40)
+  Mobile-first. Акцент: синий #3E529B.
+  Механика: оглавление-сетка → разворот-плакат с цитатой → аккордеоны
+  (сценарий, 3 встройки в предметы, 3 трудных вопроса).
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>05 · Атлас ценностей · Весенний педсовет 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue:    #3E529B;
+    --blue-d:  #324180;
+    --blue-soft: rgba(62,82,155,0.10);
+    --ochre:   #A2855F;
+    --teal:    #35A2A8;
+    --ink:     #2C2B2B;
+    --ink-2:   #4A4845;
+    --ink-3:   #7A7670;
+    --line:    #E2DFD7;
+    --line-2:  #C9C4B8;
+    --paper:   #F8F8F7;
+    --paper-2: #EDEAE2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--paper); color: var(--ink);
+    line-height: 1.5; font-size: 16px;
+  }
+  ::selection { background: var(--blue); color: var(--paper); }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(248,248,247,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--blue); font-weight: 700;
+  }
+  .topbar-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    cursor: pointer;
+  }
+  .topbar-step b { color: var(--ink); }
+  .topbar-step:hover { color: var(--blue); }
+
+  /* SCREEN ROUTER */
+  body[data-screen="index"] #scrIndex { display: block; }
+  body[data-screen="index"] #scrValue { display: none; }
+  body[data-screen="value"] #scrValue { display: block; }
+  body[data-screen="value"] #scrIndex { display: none; }
+
+  /* INDEX SCREEN */
+  .hero { padding: 32px 20px 8px; max-width: 720px; margin: 0 auto; }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--blue); font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(40px,11vw,64px);
+    line-height: 0.96; letter-spacing: -0.025em;
+    font-weight: 800;
+  }
+  .hero h1 b { color: var(--blue); font-weight: 800; }
+  .hero-sub {
+    margin-top: 22px; color: var(--ink-2); font-size: 17px;
+    max-width: 36ch;
+  }
+  .hero-meta {
+    margin-top: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-3);
+  }
+
+  /* INDEX GRID — типографическое оглавление */
+  .index-eye {
+    padding: 32px 20px 8px; max-width: 720px; margin: 0 auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600;
+    border-top: 1px solid var(--line);
+    padding-top: 28px;
+  }
+  .index-list {
+    max-width: 720px; margin: 0 auto;
+    padding: 12px 20px 60px;
+  }
+  .index-item {
+    display: grid;
+    grid-template-columns: 56px 1fr 28px;
+    align-items: center;
+    gap: 14px;
+    padding: 22px 0;
+    border-bottom: 1px solid var(--line);
+    background: none; border-left: none; border-right: none; border-top: none;
+    width: 100%; text-align: left;
+    font: inherit; color: var(--ink);
+    cursor: pointer;
+    transition: padding 0.18s, color 0.18s;
+  }
+  .index-item:hover { padding-left: 8px; color: var(--blue); }
+  .index-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; color: var(--ink-3);
+    letter-spacing: 0.1em;
+    border: 1px solid var(--line-2); border-radius: 4px;
+    padding: 4px 0; text-align: center;
+    transition: all 0.18s;
+  }
+  .index-item:hover .index-num { background: var(--blue); color: var(--paper); border-color: var(--blue); }
+  .index-name {
+    font-size: clamp(22px,5.5vw,30px);
+    font-weight: 800; line-height: 1.0;
+    letter-spacing: -0.018em;
+  }
+  .index-latin {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    margin-top: 6px; font-weight: 500;
+  }
+  .index-arrow {
+    font-size: 22px; color: var(--ink-3);
+    transition: transform 0.18s;
+  }
+  .index-item:hover .index-arrow { transform: translateX(4px); color: var(--blue); }
+
+  .random-cta {
+    margin: 20px 20px 24px;
+    max-width: 680px;
+    margin-left: auto; margin-right: auto;
+    padding: 22px;
+    background: var(--ink); color: var(--paper);
+    border: none; border-radius: 18px; cursor: pointer;
+    font: inherit; font-weight: 700; font-size: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px;
+    transition: background 0.18s;
+  }
+  .random-cta:hover { background: var(--blue); }
+  .random-cta b { color: var(--blue); }
+  .random-cta:hover b { color: var(--ochre); }
+  .random-cta .arr { font-size: 22px; }
+
+  /* VALUE SCREEN — Poster + Accordions */
+  .value-back {
+    padding: 18px 20px 6px; max-width: 720px; margin: 0 auto;
+  }
+  .value-back button {
+    background: none; border: none; cursor: pointer;
+    font: inherit; color: var(--ink-3); font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .value-back button:hover { color: var(--blue); }
+
+  .poster {
+    background: var(--blue); color: var(--paper);
+    padding: 32px 24px 36px;
+    position: relative; overflow: hidden;
+  }
+  .poster[data-acc="ochre"] { background: var(--ochre); }
+  .poster[data-acc="teal"] { background: var(--teal); }
+  .poster[data-acc="ink"] { background: var(--ink); }
+  .poster::after {
+    content: ''; position: absolute;
+    right: -120px; bottom: -120px;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .poster-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.18em; opacity: 0.7;
+    margin-bottom: 18px;
+  }
+  .poster h2 {
+    font-size: clamp(48px,13vw,84px);
+    line-height: 0.92; letter-spacing: -0.028em;
+    font-weight: 900;
+    text-transform: uppercase;
+  }
+  .poster .latin {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.2em; opacity: 0.7;
+    margin-top: 10px; text-transform: uppercase;
+  }
+  .poster-quote {
+    font-size: 19px; line-height: 1.35;
+    margin-top: 28px;
+    padding-left: 18px;
+    border-left: 3px solid rgba(255,255,255,0.45);
+    position: relative; z-index: 2;
+    max-width: 36ch;
+  }
+
+  /* ACCORDION */
+  .accordions {
+    max-width: 720px; margin: 0 auto;
+    padding: 0 20px 60px;
+  }
+  .acc {
+    border-bottom: 1px solid var(--line);
+  }
+  .acc-head {
+    width: 100%; background: none; border: none; cursor: pointer;
+    font: inherit; padding: 24px 4px;
+    display: flex; align-items: flex-start; gap: 14px; text-align: left;
+    color: var(--ink);
+  }
+  .acc-head .ah-num {
+    flex: 0 0 28px; height: 28px;
+    border: 1.5px solid var(--ink); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 700;
+    margin-top: 2px;
+    transition: all 0.18s;
+  }
+  .acc-head .ah-body { flex: 1; }
+  .acc-head .ah-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--ink-3);
+    font-weight: 600; margin-bottom: 4px;
+  }
+  .acc-head .ah-title {
+    font-size: 22px; font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.014em;
+  }
+  .acc-head .ah-toggle {
+    flex: 0 0 24px; font-size: 22px; color: var(--ink-3);
+    margin-top: 4px;
+    transition: transform 0.2s;
+  }
+  .acc.open .ah-toggle { transform: rotate(45deg); color: var(--blue); }
+  .acc.open .acc-head .ah-num { background: var(--blue); color: var(--paper); border-color: var(--blue); }
+  .acc-content {
+    overflow: hidden;
+    max-height: 0; transition: max-height 0.4s ease;
+  }
+  .acc-content-inner {
+    padding: 4px 4px 28px 46px;
+  }
+
+  .meta-pills {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-bottom: 18px;
+  }
+  .meta-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.06em;
+    background: var(--paper-2); color: var(--ink-2);
+    padding: 4px 10px; border-radius: 999px;
+  }
+  .meta-pill b { color: var(--ink); }
+
+  .objective {
+    font-size: 15px; color: var(--ink-2);
+    line-height: 1.45; margin-bottom: 18px;
+    padding: 14px 16px;
+    background: var(--paper-2);
+    border-radius: 10px;
+  }
+  .objective b { color: var(--blue); display: block; font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 4px; }
+
+  .scen-steps {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: step;
+  }
+  .scen-steps li {
+    position: relative;
+    padding: 10px 0 10px 36px;
+    border-top: 1px solid var(--line);
+    font-size: 15px; line-height: 1.4;
+    counter-increment: step;
+  }
+  .scen-steps li::before {
+    content: counter(step,decimal-leading-zero);
+    position: absolute; left: 0; top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--blue);
+    font-weight: 700; letter-spacing: 0.06em;
+  }
+
+  /* TABS — встройки */
+  .tabs {
+    display: flex; gap: 4px;
+    background: var(--paper-2); padding: 4px;
+    border-radius: 10px; margin-bottom: 14px;
+  }
+  .tabs button {
+    flex: 1; background: none; border: none; cursor: pointer;
+    font: inherit; font-size: 13px; font-weight: 600;
+    padding: 10px 8px; border-radius: 7px; color: var(--ink-2);
+    transition: all 0.15s;
+  }
+  .tabs button.active { background: var(--paper); color: var(--blue); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+  .tab-content {
+    font-size: 15px; line-height: 1.55;
+    color: var(--ink); padding: 8px 0;
+  }
+  .tab-content strong { background: rgba(62,82,155,0.12); padding: 0 4px; border-radius: 3px; }
+
+  /* QUESTIONS — детали */
+  details.q {
+    border: 1px solid var(--line);
+    border-radius: 12px; padding: 0;
+    margin-bottom: 8px; overflow: hidden;
+  }
+  details.q[open] { border-color: var(--blue); }
+  details.q summary {
+    list-style: none; cursor: pointer;
+    padding: 14px 16px;
+    font-size: 14px; font-weight: 600; line-height: 1.3;
+    display: flex; align-items: flex-start; gap: 10px;
+    color: var(--ink);
+  }
+  details.q summary::-webkit-details-marker { display: none; }
+  details.q summary::before {
+    content: '?'; flex: 0 0 22px; height: 22px;
+    border-radius: 50%; background: var(--paper-2); color: var(--ink-3);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 700;
+  }
+  details.q[open] summary::before { background: var(--blue); color: var(--paper); }
+  details.q .a {
+    padding: 0 16px 16px 48px;
+    font-size: 14px; color: var(--ink-2); line-height: 1.45;
+  }
+
+  /* NAV BETWEEN VALUES */
+  .value-nav {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line);
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    margin-top: 16px;
+  }
+  .value-nav button {
+    background: var(--paper); border: none; cursor: pointer; font: inherit;
+    padding: 22px 18px; text-align: left;
+    color: var(--ink); line-height: 1.2;
+  }
+  .value-nav button:first-child { text-align: right; }
+  .value-nav button small {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3); margin-bottom: 4px; font-weight: 600;
+  }
+  .value-nav button:last-child small { color: var(--blue); }
+  .value-nav button b { font-size: 16px; font-weight: 700; }
+  .value-nav button:hover { background: var(--paper-2); color: var(--blue); }
+
+  .footer-brand {
+    border-top: 1px solid var(--line);
+    padding: 28px 20px 36px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer-brand b { color: var(--ink-2); font-weight: 600; }
+
+  /* DESKTOP DEMO */
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .hero, .index-eye, .index-list, .accordions, .value-back, .footer-brand {
+      max-width: 1200px;
+    }
+    .hero { padding: 80px 40px 16px; }
+    .hero h1 { font-size: clamp(72px,8vw,140px); }
+    .hero-sub { font-size: 22px; }
+    .index-list, .index-eye { padding-left: 40px; padding-right: 40px; }
+    .index-list { display: grid; grid-template-columns: 1fr 1fr; gap: 0 40px; }
+    .index-item { grid-template-columns: 64px 1fr 32px; padding: 28px 0; }
+    .index-name { font-size: 36px; }
+
+    .poster { padding: 80px 40px; }
+    .poster h2 { font-size: 160px; line-height: 0.86; }
+    .poster-quote { font-size: 28px; max-width: 22ch; }
+
+    .accordions { padding: 0 40px 80px; }
+    .acc-head { padding: 32px 8px; }
+    .acc-head .ah-title { font-size: 28px; }
+
+    .random-cta { padding: 32px; font-size: 20px; }
+    .topbar, .footer-brand { padding-left: 40px; padding-right: 40px; }
+  }
+</style>
+</head>
+<body data-screen="index">
+
+<div class="topbar">
+  <div class="topbar-mark">Акт <!-- evt:lecture-num -->V<!-- /evt --> · <!-- evt:act-title -->Атлас ценностей<!-- /evt --></div>
+  <div class="topbar-step" id="topToIndex"><span id="topPos">8 ценностей</span></div>
+</div>
+
+<main>
+
+<section id="scrIndex">
+  <header class="hero">
+    <div class="hero-eye">№ 05 · К лекции Ивана Палитая</div>
+    <h1>Что я <b>с этим</b><br>делаю в понедельник.</h1>
+    <p class="hero-sub">Восемь ценностей — у каждой готовый сценарий классного часа, встройки в три предмета и ответы на трудные детские вопросы.</p>
+    <div class="hero-meta">четверг 30.04, 09:20–10:40</div>
+  </header>
+
+  <button class="random-cta" id="randomCta">
+    <span>Не знаю, с какой начать — <b>выбери за меня</b></span>
+    <span class="arr">↻</span>
+  </button>
+
+  <div class="index-eye">Оглавление · 8 ценностей</div>
+  <nav class="index-list" id="indexList"></nav>
+</section>
+
+<section id="scrValue">
+  <div class="value-back"><button id="backBtn">← к оглавлению</button></div>
+  <div id="valueBody"></div>
+</section>
+
+</main>
+
+<footer class="footer-brand">
+  при поддержке <b>Центра знаний Машук</b> · <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt --> · акт <!-- evt:lecture-num -->V<!-- /evt --> из VII
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  "values": [
+    {
+      "id": "family",
+      "num": "I",
+      "name": "Семья",
+      "latin": "Familia",
+      "acc": "blue",
+      "quote": "Семья — не «частное дело», а первая школа гражданина.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "5–9 класс",
+        "objective": "Помочь ученикам увидеть собственную семью как часть общей истории.",
+        "steps": [
+          "Откройте разговор: «Какое одно правило в вашей семье вы передадите детям?»",
+          "Соберите ответы по кругу — записываем на доске, без комментариев.",
+          "Спросите: «Откуда это правило? От бабушки, прабабушки?»",
+          "Покажите как личные семьи складываются в общую историю страны.",
+          "Закройте: «Семья — лаборатория, где формируется гражданин»."
+        ]
+      },
+      "embeds": {
+        "Литература": "На семейных произведениях задайте: <strong>«Что персонажи унаследовали от родителей и что изменили?»</strong>",
+        "История": "Введите <strong>«семейную летопись»</strong>: что в изучаемый период делали обычные семьи.",
+        "Окружающий мир": "Задание: <strong>«найдите 3 поколения вашей семьи и узнайте их профессии»</strong>."
+      },
+      "questions": [
+        {
+          "q": "А зачем, если у меня плохие отношения с родителями?",
+          "a": "Семья как идея и семья как факт — разные вещи. Можно работать над отношениями, понимая, что семья — это живой институт."
+        },
+        {
+          "q": "Если родители не передают ценности — что делать?",
+          "a": "Ценности передают многие: учитель, тренер, бабушка, наставник. Семья шире, чем родители."
+        },
+        {
+          "q": "Если у меня нет семьи — я неполноценный?",
+          "a": "Семья — не только кровь. Это люди, с которыми вы строите общее. Их можно найти."
+        }
+      ]
+    },
+    {
+      "id": "labor",
+      "num": "II",
+      "name": "Труд",
+      "latin": "Labor",
+      "acc": "ochre",
+      "quote": "Труд — это форма, в которой человек выходит за пределы себя.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "5–11 класс",
+        "objective": "Перевести разговор о труде из «надо работать» в «труд — это то, что ты строишь».",
+        "steps": [
+          "Покажите фотографию реальной стройки рядом со школой.",
+          "Спросите: «Сколько людей работало над этим?» — раскройте цепочку.",
+          "Введите: «Труд — это связь людей через общее дело».",
+          "Спросите: «Что вы сегодня сделали для других?»",
+          "Закройте: «Труд — это про присутствие в общем мире»."
+        ]
+      },
+      "embeds": {
+        "Литература": "В произведениях о труде спросите: <strong>«Кто трудится для дела, кто — против?»</strong>",
+        "История": "Постройте инфографику: <strong>«часы работы ребёнка и взрослого в разные эпохи»</strong>.",
+        "Окружающий мир": "Задание <strong>«цепочка простой вещи»</strong>: возьмите карандаш и распишите все профессии."
+      },
+      "questions": [
+        {
+          "q": "Если я работаю только на себя — я плохой?",
+          "a": "Нет. Но самые крепкие конструкции стоят, когда личное встроено в общее. Это и есть смысл труда."
+        },
+        {
+          "q": "Зачем трудиться, если ИИ всё сделает?",
+          "a": "ИИ не заменяет смыслообразующий труд: воспитание, искусство, дружбу. Эту территорию мы оставляем за собой."
+        },
+        {
+          "q": "Если работа меня выгорает — это тоже труд?",
+          "a": "Тогда это симптом: что-то не настроено. Труд должен укреплять, а не разрушать."
+        }
+      ]
+    },
+    {
+      "id": "memory",
+      "num": "III",
+      "name": "Историческая память",
+      "latin": "Memoria",
+      "acc": "ink",
+      "quote": "Народ без памяти становится материалом для чужих сценариев.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "7–11 класс",
+        "objective": "Показать, что память — не музей, а инфраструктура самостоятельности.",
+        "steps": [
+          "Принесите 3 предмета: фото ветерана, старую монету, современные наушники.",
+          "Спросите: «Что у них общего?»",
+          "Раскройте: всё это память, но разная — личная, эпохи, сегодняшнего дня.",
+          "Введите: «Память — это то, что соединяет вас с прошлым и будущим».",
+          "Закройте: «Без памяти — нет „я\"»."
+        ]
+      },
+      "embeds": {
+        "Литература": "На исторической прозе: <strong>«Что писатель помнит и что заставляет помнить нас?»</strong>",
+        "История": "Введите <strong>«линию влияния»</strong>: доводите событие до сегодняшнего дня.",
+        "Окружающий мир": "Тема: <strong>«решения XX века, которые мы видим вокруг»</strong>."
+      },
+      "questions": [
+        {
+          "q": "Если в истории были плохие вещи — помнить их?",
+          "a": "Особенно их. Память — не одобрение, а понимание. Это защита от повторения."
+        },
+        {
+          "q": "Зачем мне помнить чужое?",
+          "a": "То, что было до вас — не чужое. Вы стоите на этом, как на фундаменте."
+        },
+        {
+          "q": "Если все версии истории разные — какой верить?",
+          "a": "Верить — не главный глагол. Понимать. Сравнивать источники, искать факты."
+        }
+      ]
+    },
+    {
+      "id": "dignity",
+      "num": "IV",
+      "name": "Достоинство",
+      "latin": "Dignitas",
+      "acc": "blue",
+      "quote": "Достоинство — это способ держать себя так, что неприлично становится не вам.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "5–11 класс",
+        "objective": "Различить достоинство и гордость, дать ученикам внутренний инструмент.",
+        "steps": [
+          "Спросите: «Когда вы чувствовали себя униженно — и что сделали?»",
+          "Дайте пространство для размышления, не требуйте ответов.",
+          "Введите различие: гордость — реакция на других, достоинство — отношение к себе.",
+          "Покажите: «Достоинство не зависит от того, что говорят другие».",
+          "Закройте: «Это работа над собой — каждый день»."
+        ]
+      },
+      "embeds": {
+        "Литература": "В диалогах достоинства: <strong>«Где герой выбирает достоинство против выгоды?»</strong>",
+        "История": "Введите <strong>«моменты выбора»</strong>: Декабристы, староверы, спасители на войне.",
+        "Окружающий мир": "Тема <strong>«как поступить»</strong>: 5 ситуаций выбора и их последствия."
+      },
+      "questions": [
+        {
+          "q": "Если все унижают — как сохранить достоинство?",
+          "a": "Достоинство не уйдёт, если вы сами не сдадите. Оно живёт внутри, его не отнимут."
+        },
+        {
+          "q": "А если меня бьют — что, не сопротивляться?",
+          "a": "Достоинство — не пассивность. Это трезвая защита себя без срыва в унижение других."
+        },
+        {
+          "q": "Зачем достоинство, если это «слабее»?",
+          "a": "Это не о силе. Сильный — кто умеет уважать себя и других. Это и есть сила."
+        }
+      ]
+    },
+    {
+      "id": "unity",
+      "num": "V",
+      "name": "Единство многообразия",
+      "latin": "Unitas",
+      "acc": "teal",
+      "quote": "Россия не унифицирует — она удерживает. Сто народов под одной крышей.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "6–11 класс",
+        "objective": "Показать, что разнообразие внутри страны — её устройство, а не проблема.",
+        "steps": [
+          "Покажите карту России с этническими группами.",
+          "Спросите: «Сколько народов?» — ответ: около 190.",
+          "Спросите: «Как они уживаются?»",
+          "Раскройте: единство — не одинаковость, а общее дело.",
+          "Закройте: «Удерживать — труднее, чем унифицировать. И ценнее»."
+        ]
+      },
+      "embeds": {
+        "Литература": "Тексты разных народов России: <strong>«Что общее, что уникальное?»</strong>",
+        "История": "Каждый период: <strong>как разные народы участвовали в общем деле.</strong>",
+        "Окружающий мир": "Тема <strong>«народы вокруг нас»</strong>: где живут, праздники, традиции."
+      },
+      "questions": [
+        {
+          "q": "Если кто-то не хочет быть частью этой общности?",
+          "a": "Право человека. Удерживать — это значит уметь принимать. И не навязывать."
+        },
+        {
+          "q": "Зачем единство, если мы такие разные?",
+          "a": "Именно поэтому. Лёгкое единство — у одинаковых. Трудное и крепкое — у разных."
+        },
+        {
+          "q": "Если другие народы лучше нашего?",
+          "a": "У каждого народа есть сильные и слабые стороны. Сравнения — повод учиться, а не унижаться."
+        }
+      ]
+    },
+    {
+      "id": "service",
+      "num": "VI",
+      "name": "Служение",
+      "latin": "Servitium",
+      "acc": "ochre",
+      "quote": "Служение — это понимание, что моё личное благо встроено в общее.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "7–11 класс",
+        "objective": "Различить служение и подчинение, увидеть служение в обычной жизни.",
+        "steps": [
+          "Спросите: «Кто такой служащий человек?»",
+          "Соберите ответы: солдат, врач, полицейский.",
+          "Расширьте: учитель, дворник, родитель — тоже служат.",
+          "Введите различие: служение — выбор, подчинение — необходимость.",
+          "Закройте: «Каждый из вас уже служит — близким, классу, городу»."
+        ]
+      },
+      "embeds": {
+        "Литература": "Герои служения: <strong>«Что они теряют ради служения и приобретают?»</strong>",
+        "История": "Формат <strong>«люди службы»</strong>: врачи, учителя, инженеры в каждом периоде.",
+        "Окружающий мир": "Тема <strong>«профессии для людей»</strong>: что было бы без них."
+      },
+      "questions": [
+        {
+          "q": "Если я хочу жить для себя — я плохой?",
+          "a": "Нет. Но «жить только для себя» — это очень одинокая стратегия. Служение делает богаче."
+        },
+        {
+          "q": "Если служба меня использует — это служение?",
+          "a": "Это уже эксплуатация. Служение — это свободный выбор, а не давление."
+        },
+        {
+          "q": "Зачем служить, если никто не оценит?",
+          "a": "Ценность служения — внутренняя. Внешнее признание — приятный бонус, но не цель."
+        }
+      ]
+    },
+    {
+      "id": "creation",
+      "num": "VII",
+      "name": "Созидание",
+      "latin": "Creatio",
+      "acc": "blue",
+      "quote": "Созидание — это оставить мир хоть на одну вещь лучше, чем застал.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "5–11 класс",
+        "objective": "Сделать видимой собственную способность ученика созидать.",
+        "steps": [
+          "Спросите: «Что вы за свою жизнь создали?»",
+          "Дайте 2 минуты. Большинство затруднится.",
+          "Подскажите: рисунок, помощь другу, мысль на уроке — это тоже созидание.",
+          "Раскройте: созидание — не только большое. Это маленькие добавления к миру.",
+          "Закройте: «Если вы добавили хорошее — вы созидатель»."
+        ]
+      },
+      "embeds": {
+        "Литература": "Герои-творцы: <strong>«Что они оставляют после себя — и для кого?»</strong>",
+        "История": "Блок <strong>«что осталось от эпохи»</strong>: здания, тексты, изобретения.",
+        "Окружающий мир": "Тема <strong>«вещи вокруг — кто их сделал»</strong>: школа, лампа, учебник."
+      },
+      "questions": [
+        {
+          "q": "Если я просто потребитель — я плохой?",
+          "a": "Нет. Но мир беднеет, если все только потребляют. Созидание — это вклад, любой."
+        },
+        {
+          "q": "А если у меня нет таланта?",
+          "a": "Талант — не условие. Маленькое доброе действие — уже созидание."
+        },
+        {
+          "q": "Если я не закончил — это всё равно созидание?",
+          "a": "Да. Процесс важнее результата. Не каждый посаженный росток вырастет, но без посадки точно ничего."
+        }
+      ]
+    },
+    {
+      "id": "continuity",
+      "num": "VIII",
+      "name": "Преемственность",
+      "latin": "Continuitas",
+      "acc": "ink",
+      "quote": "Преемственность — это живая передача: что я узнал, я передал.",
+      "scenario": {
+        "duration": "15 минут",
+        "grade": "6–11 класс",
+        "objective": "Сделать ученика звеном преемственности — не получателем готового.",
+        "steps": [
+          "Спросите: «Чему вас научил кто-то старший — что вы передали младшим?»",
+          "Дайте время. Соберите ответы.",
+          "Если мало — нормально. Большинство не передавали осознанно.",
+          "Введите: «Каждый из вас — передатчик. Невольно или осознанно».",
+          "Закройте: «Сегодня вы получаете. Завтра — передаёте»."
+        ]
+      },
+      "embeds": {
+        "Литература": "Отношения «учитель—ученик»: <strong>«Что учитель передал кроме знания?»</strong>",
+        "История": "Линии преемственности: <strong>как передавались традиции, тексты, ремёсла</strong>.",
+        "Окружающий мир": "Тема <strong>«семейные традиции»</strong>: откуда пришли, что передадите дальше."
+      },
+      "questions": [
+        {
+          "q": "Если старшие передают плохое — тоже передавать?",
+          "a": "Нет. Преемственность — отбор. Брать ценное, отказываться от вредного."
+        },
+        {
+          "q": "Если я индивидуальность — зачем преемственность?",
+          "a": "Она стоит на чужих плечах. Каждое слово, которое вы знаете, родилось до вас."
+        },
+        {
+          "q": "Если у меня нет младших?",
+          "a": "Они появятся. Но даже сейчас вы передаёте друзьям, одноклассникам."
+        }
+      ]
+    }
+  ]
+};
+
+const state = { idx: 0 };
+
+/* INDEX */
+function renderIndex() {
+  const list = document.getElementById('indexList');
+  list.innerHTML = '';
+  DATA.values.forEach((v, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'index-item';
+    btn.innerHTML = `
+      <div class="index-num">${v.num}</div>
+      <div>
+        <div class="index-name">${v.name}</div>
+        <span class="index-latin">${v.latin}</span>
+      </div>
+      <div class="index-arrow">→</div>`;
+    btn.addEventListener('click', () => openValue(i));
+    list.appendChild(btn);
+  });
+  document.getElementById('topPos').textContent = `${DATA.values.length} ценностей`;
+}
+
+document.getElementById('randomCta').addEventListener('click', () => {
+  openValue(Math.floor(Math.random() * DATA.values.length));
+});
+document.getElementById('backBtn').addEventListener('click', () => {
+  document.body.dataset.screen = 'index';
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+document.getElementById('topToIndex').addEventListener('click', () => {
+  if (document.body.dataset.screen === 'value') {
+    document.body.dataset.screen = 'index';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+});
+
+/* VALUE PAGE */
+function openValue(i) {
+  state.idx = i;
+  const v = DATA.values[i];
+  const prev = DATA.values[(i - 1 + DATA.values.length) % DATA.values.length];
+  const next = DATA.values[(i + 1) % DATA.values.length];
+
+  const embedsKeys = Object.keys(v.embeds);
+  const body = document.getElementById('valueBody');
+  body.innerHTML = `
+    <section class="poster" data-acc="${v.acc}">
+      <div class="poster-num">${v.num} · ${v.num === 'I' ? 'первая' : ''}ценность ${i+1} из 8</div>
+      <h2>${v.name}</h2>
+      <div class="latin">${v.latin}</div>
+      <p class="poster-quote">«${v.quote}»</p>
+    </section>
+
+    <section class="accordions">
+      <article class="acc" id="acc1">
+        <button class="acc-head" data-acc-id="1">
+          <div class="ah-num">1</div>
+          <div class="ah-body">
+            <div class="ah-eye">15 минут · сценарий</div>
+            <div class="ah-title">Готовый классный час</div>
+          </div>
+          <div class="ah-toggle">+</div>
+        </button>
+        <div class="acc-content"><div class="acc-content-inner">
+          <div class="meta-pills">
+            <span class="meta-pill"><b>${v.scenario.duration}</b></span>
+            <span class="meta-pill"><b>${v.scenario.grade}</b></span>
+          </div>
+          <div class="objective"><b>цель</b>${v.scenario.objective}</div>
+          <ol class="scen-steps">
+            ${v.scenario.steps.map(s => `<li>${s}</li>`).join('')}
+          </ol>
+        </div></div>
+      </article>
+
+      <article class="acc" id="acc2">
+        <button class="acc-head" data-acc-id="2">
+          <div class="ah-num">2</div>
+          <div class="ah-body">
+            <div class="ah-eye">3 предмета · встройки</div>
+            <div class="ah-title">Как втащить в обычные уроки</div>
+          </div>
+          <div class="ah-toggle">+</div>
+        </button>
+        <div class="acc-content"><div class="acc-content-inner">
+          <div class="tabs" id="embedTabs">
+            ${embedsKeys.map((k,j) => `<button class="${j===0?'active':''}" data-key="${k}">${k}</button>`).join('')}
+          </div>
+          <div class="tab-content" id="tabContent">${v.embeds[embedsKeys[0]]}</div>
+        </div></div>
+      </article>
+
+      <article class="acc" id="acc3">
+        <button class="acc-head" data-acc-id="3">
+          <div class="ah-num">3</div>
+          <div class="ah-body">
+            <div class="ah-eye">3 вопроса · ответы</div>
+            <div class="ah-title">Когда дети спросят прямо</div>
+          </div>
+          <div class="ah-toggle">+</div>
+        </button>
+        <div class="acc-content"><div class="acc-content-inner">
+          ${v.questions.map(q => `
+            <details class="q">
+              <summary>${q.q}</summary>
+              <div class="a">${q.a}</div>
+            </details>`).join('')}
+        </div></div>
+      </article>
+    </section>
+
+    <nav class="value-nav">
+      <button data-go="${(state.idx - 1 + DATA.values.length) % DATA.values.length}">
+        <small>← ${prev.num} · предыдущая</small>
+        <b>${prev.name}</b>
+      </button>
+      <button data-go="${(state.idx + 1) % DATA.values.length}">
+        <small>${next.num} · следующая →</small>
+        <b>${next.name}</b>
+      </button>
+    </nav>`;
+
+  /* accordion toggles */
+  body.querySelectorAll('.acc-head').forEach(h => {
+    h.addEventListener('click', () => {
+      const acc = h.parentElement;
+      const open = acc.classList.toggle('open');
+      const c = acc.querySelector('.acc-content');
+      c.style.maxHeight = open ? c.scrollHeight + 'px' : '0';
+    });
+  });
+  /* tab listeners */
+  body.querySelectorAll('#embedTabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      body.querySelectorAll('#embedTabs button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tabContent').innerHTML = v.embeds[btn.dataset.key];
+      const acc = document.getElementById('acc2');
+      if (acc.classList.contains('open')) {
+        const c = acc.querySelector('.acc-content');
+        c.style.maxHeight = c.scrollHeight + 'px';
+      }
+    });
+  });
+  /* nav */
+  body.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => openValue(+b.dataset.go)));
+
+  /* open first accordion by default */
+  body.querySelector('#acc1').classList.add('open');
+  const c1 = body.querySelector('#acc1 .acc-content');
+  setTimeout(() => { c1.style.maxHeight = c1.scrollHeight + 'px'; }, 50);
+
+  document.getElementById('topPos').textContent = `${v.num} · ${v.name}`;
+  document.body.dataset.screen = 'value';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+renderIndex();
+</script>
+</body>
+</html>
