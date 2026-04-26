@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.2.4] — 2026-04-26
+
+- `lecture-artifacts` 0.3.3 → 0.3.4: универсализация step-builder voices+summary; рендеры переведены на safe DOM.
+
 ## [1.2.3] — 2026-04-26
 
 - `lecture-artifacts` 0.3.2 → 0.3.3: универсализация manifesto's closing block + links section; рендер ссылок переведён на safe DOM.

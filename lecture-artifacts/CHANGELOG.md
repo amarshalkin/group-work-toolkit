@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.4] — 2026-04-26
+
+- `step-builder` шаблон: hardcoded `VOICES_META` (3 конкретных людей: Сиденко, Чернова, Антонова) удалён, заменён на `DATA.voicesMeta` (обязательное поле).
+- 6 hardcoded UI-строк (voices-eye, voices-empty, summary eye/heading/text/voices-eye) теперь в `DATA.labels` с sensible fallbacks.
+- Step-card plan label теперь читается из `DATA.steps[].title` вместо hardcoded `labels` массива.
+- `renderStep` и `renderSummary` переписаны с `innerHTML` на safe DOM API; добавлен мини-санитайзер `setHtmlSafely` для inline `<b>/<strong>/<em>/<i>/<br>` в voice-text.
+- Schema step-builder дополнена секцией «DATA-driven voices, labels и step titles».
+- `lecture-artifact-build/SKILL.md`: пункт про обязательное `DATA.voicesMeta` для step-builder.
+
 ## [0.3.3] — 2026-04-26
 
 - `manifesto` шаблон: hardcoded закрывающий блок («Не нужен идеальный учитель…») и links-секция («Шесть инструментов · к каждой лекции», «Возьмите с собой в понедельник.») сделаны конфигурируемыми. 4 новых markers: `evt:closing-title`, `evt:closing-text`, `evt:links-eye-text`, `evt:links-h-text`.

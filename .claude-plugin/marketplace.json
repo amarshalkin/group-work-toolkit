@@ -7,7 +7,7 @@
   },
   "metadata": {
     "description": "Маркетплейс плагинов для подготовки и проведения педагогических событий: проектирование групповой работы (group-work-toolkit) и сборка HTML-артефактов из расшифровок лекций (lecture-artifacts).",
-    "version": "1.2.3"
+    "version": "1.2.4"
   },
   "plugins": [
     {
@@ -23,7 +23,7 @@
       "name": "lecture-artifacts",
       "source": "./lecture-artifacts",
       "description": "Превращает расшифровку лекции в готовую HTML-страницу-артефакт по одному из 7 функциональных шаблонов (квиз, дашборд, кейсы, манифест и т. д.) с опциональной автопубликацией через knottasoft:host-html.",
-      "version": "0.3.3",
+      "version": "0.3.4",
       "author": { "name": "Артём Маршалкин", "email": "artem.marshalkin@gmail.com" },
       "category": "education",
       "tags": ["education", "lectures", "html", "templates", "russian", "knotta"]

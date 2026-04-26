@@ -386,16 +386,32 @@
 </footer>
 
 <script>
-const VOICES_META = {
-  s: { name: 'Андрей Сиденко',    role: 'ИИ-этика',     v: 's' },
-  c: { name: 'Наталья Чернова',   role: 'безопасность', v: 'c' },
-  a: { name: 'Светлана Антонова', role: 'методика',     v: 'a' }
-};
-
 /* ════════════════════════════════════════════════════════════════════════
    DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
    ════════════════════════════════════════════════════════════════════════ */
 const DATA = {
+  "voicesMeta": {
+    "s": {
+      "name": "Андрей Сиденко",
+      "role": "ИИ-этика"
+    },
+    "c": {
+      "name": "Наталья Чернова",
+      "role": "безопасность"
+    },
+    "a": {
+      "name": "Светлана Антонова",
+      "role": "методика"
+    }
+  },
+  "labels": {
+    "voicesEye": "три голоса об этом выборе",
+    "voicesEmpty": "Выберите вариант — три голоса прокомментируют ваш выбор.",
+    "summaryEye": "Готовый план · 45 минут",
+    "summaryHeading": "Ваш урок собран.",
+    "summaryText": "Шесть решений превратились в план. Внизу — финальный совет от каждого из трёх голосов.",
+    "summaryVoicesEye": "финальные комментарии"
+  },
   "steps": [
     {
       "id": "subject",
@@ -692,9 +708,31 @@ const state = {
   choices: {} // stepIdx → optionId
 };
 
+/* setHtmlSafely: parse a small HTML fragment and copy only allowed inline tags
+   (<b>, <strong>, <em>, <i>, <br>) into el. Strips other tags but keeps text. */
+const SAFE_INLINE = new Set(['B','STRONG','EM','I','BR']);
+function setHtmlSafely(el, html) {
+  el.replaceChildren();
+  const doc = new DOMParser().parseFromString('<body>' + (html == null ? '' : String(html)) + '</body>', 'text/html');
+  const walk = (src, dst) => {
+    src.childNodes.forEach(n => {
+      if (n.nodeType === 3) {
+        dst.appendChild(document.createTextNode(n.nodeValue));
+      } else if (n.nodeType === 1 && SAFE_INLINE.has(n.tagName)) {
+        const tag = document.createElement(n.tagName.toLowerCase());
+        walk(n, tag);
+        dst.appendChild(tag);
+      } else if (n.nodeType === 1) {
+        walk(n, dst);
+      }
+    });
+  };
+  walk(doc.body, el);
+}
+
 function renderProgress() {
   const line = document.getElementById('progressLine');
-  line.innerHTML = '';
+  line.replaceChildren();
   for (let i = 0; i < DATA.steps.length; i++) {
     const seg = document.createElement('div');
     seg.className = 'seg';
@@ -713,34 +751,82 @@ function renderStep() {
   if (state.step >= DATA.steps.length) { renderSummary(); return; }
   const s = DATA.steps[state.step];
   const sel = state.choices[state.step];
+  const VM = DATA.voicesMeta || {};
+  const L = DATA.labels || {};
 
-  main.innerHTML = `
-    <section class="step">
-      <div class="step-num">шаг <b>${state.step+1}</b> из 6</div>
-      <h2>${s.title}</h2>
-      <p class="step-sub">${s.sub}</p>
-    </section>
-    <section class="options" id="opts"></section>
-    <section class="voices" id="voices"></section>
-    <div class="nav-row">
-      ${state.step > 0 ? '<button class="nav-btn prev" id="prevBtn">←</button>' : ''}
-      <button class="nav-btn next" id="nextBtn" ${sel ? '' : 'disabled'}>
-        ${state.step === DATA.steps.length - 1 ? 'Собрать план →' : 'Дальше →'}
-      </button>
-    </div>`;
+  main.replaceChildren();
 
-  const opts = document.getElementById('opts');
+  // section.step
+  const stepSec = document.createElement('section');
+  stepSec.className = 'step';
+  const stepNum = document.createElement('div');
+  stepNum.className = 'step-num';
+  stepNum.appendChild(document.createTextNode('шаг '));
+  const stepNumB = document.createElement('b');
+  stepNumB.textContent = String(state.step + 1);
+  stepNum.appendChild(stepNumB);
+  stepNum.appendChild(document.createTextNode(' из ' + DATA.steps.length));
+  stepSec.appendChild(stepNum);
+  const stepH2 = document.createElement('h2');
+  stepH2.textContent = s.title;
+  stepSec.appendChild(stepH2);
+  const stepP = document.createElement('p');
+  stepP.className = 'step-sub';
+  stepP.textContent = s.sub;
+  stepSec.appendChild(stepP);
+  main.appendChild(stepSec);
+
+  // section.options
+  const opts = document.createElement('section');
+  opts.className = 'options';
+  opts.id = 'opts';
+  main.appendChild(opts);
+
+  // section.voices
+  const voices = document.createElement('section');
+  voices.className = 'voices';
+  voices.id = 'voices';
+  main.appendChild(voices);
+
+  // nav-row
+  const nav = document.createElement('div');
+  nav.className = 'nav-row';
+  if (state.step > 0) {
+    const prev = document.createElement('button');
+    prev.className = 'nav-btn prev';
+    prev.id = 'prevBtn';
+    prev.textContent = '←';
+    nav.appendChild(prev);
+  }
+  const next = document.createElement('button');
+  next.className = 'nav-btn next';
+  next.id = 'nextBtn';
+  if (!sel) next.disabled = true;
+  next.textContent = state.step === DATA.steps.length - 1 ? 'Собрать план →' : 'Дальше →';
+  nav.appendChild(next);
+  main.appendChild(nav);
+
+  // options
   s.options.forEach(o => {
     const btn = document.createElement('button');
     btn.className = 'opt' + (sel === o.id ? ' selected' : '');
-    btn.innerHTML = `
-      <div class="opt-row">
-        <div class="opt-radio"></div>
-        <div class="opt-body">
-          <div class="opt-title">${o.title}</div>
-          <div class="opt-desc">${o.desc}</div>
-        </div>
-      </div>`;
+    const row = document.createElement('div');
+    row.className = 'opt-row';
+    const radio = document.createElement('div');
+    radio.className = 'opt-radio';
+    row.appendChild(radio);
+    const body = document.createElement('div');
+    body.className = 'opt-body';
+    const t = document.createElement('div');
+    t.className = 'opt-title';
+    t.textContent = o.title;
+    body.appendChild(t);
+    const d = document.createElement('div');
+    d.className = 'opt-desc';
+    d.textContent = o.desc;
+    body.appendChild(d);
+    row.appendChild(body);
+    btn.appendChild(row);
     btn.addEventListener('click', () => {
       state.choices[state.step] = o.id;
       renderStep();
@@ -748,23 +834,40 @@ function renderStep() {
     opts.appendChild(btn);
   });
 
-  const voices = document.getElementById('voices');
+  // voices
   if (sel) {
     const opt = s.options.find(o => o.id === sel);
-    voices.innerHTML = `<div class="voices-eye">три голоса об этом выборе</div>`;
+    const eye = document.createElement('div');
+    eye.className = 'voices-eye';
+    eye.textContent = L.voicesEye || 'три голоса об этом выборе';
+    voices.appendChild(eye);
     ['s','c','a'].forEach(v => {
-      const meta = VOICES_META[v];
-      voices.innerHTML += `
-        <div class="voice-card" data-v="${v}">
-          <div class="voice-head">
-            <div class="voice-name">${meta.name}</div>
-            <div class="voice-role">${meta.role}</div>
-          </div>
-          <div class="voice-text">${opt.voices[v]}</div>
-        </div>`;
+      const meta = VM[v] || { name: v, role: '' };
+      const card = document.createElement('div');
+      card.className = 'voice-card';
+      card.dataset.v = v;
+      const head = document.createElement('div');
+      head.className = 'voice-head';
+      const name = document.createElement('div');
+      name.className = 'voice-name';
+      name.textContent = meta.name;
+      head.appendChild(name);
+      const role = document.createElement('div');
+      role.className = 'voice-role';
+      role.textContent = meta.role;
+      head.appendChild(role);
+      card.appendChild(head);
+      const text = document.createElement('div');
+      text.className = 'voice-text';
+      setHtmlSafely(text, opt.voices[v]);
+      card.appendChild(text);
+      voices.appendChild(card);
     });
   } else {
-    voices.innerHTML = `<div class="voices-empty">Выберите вариант — три голоса прокомментируют ваш выбор.</div>`;
+    const empty = document.createElement('div');
+    empty.className = 'voices-empty';
+    empty.textContent = L.voicesEmpty || 'Выберите вариант — три голоса прокомментируют ваш выбор.';
+    voices.appendChild(empty);
   }
 
   if (state.step > 0) {
@@ -780,42 +883,93 @@ function renderStep() {
 
 function renderSummary() {
   const main = document.getElementById('main');
-  const labels = ['Класс и предмет','Цель','Роль ИИ','Безопасность','Главный ход','Проверка'];
-  const rows = DATA.steps.map((s, i) => {
+  const VM = DATA.voicesMeta || {};
+  const L = DATA.labels || {};
+
+  main.replaceChildren();
+
+  const summary = document.createElement('section');
+  summary.className = 'summary';
+
+  // summary-hero
+  const hero = document.createElement('div');
+  hero.className = 'summary-hero';
+  const eye = document.createElement('div');
+  eye.className = 'se';
+  eye.textContent = L.summaryEye || 'Готовый план · 45 минут';
+  hero.appendChild(eye);
+  const h3 = document.createElement('h3');
+  h3.textContent = L.summaryHeading || 'Ваш урок собран.';
+  hero.appendChild(h3);
+  const p = document.createElement('p');
+  setHtmlSafely(p, L.summaryText || 'Шесть решений превратились в план. Внизу — финальный совет от каждого из трёх голосов.');
+  hero.appendChild(p);
+  summary.appendChild(hero);
+
+  // plan-card
+  const plan = document.createElement('div');
+  plan.className = 'plan-card';
+  DATA.steps.forEach((s, i) => {
     const opt = s.options.find(o => o.id === state.choices[i]);
-    return `<div class="plan-row">
-      <div class="plan-label">${labels[i]}</div>
-      <div class="plan-value">${opt.title}</div>
-    </div>`;
-  }).join('');
+    const row = document.createElement('div');
+    row.className = 'plan-row';
+    const lbl = document.createElement('div');
+    lbl.className = 'plan-label';
+    lbl.textContent = s.title;
+    row.appendChild(lbl);
+    const val = document.createElement('div');
+    val.className = 'plan-value';
+    val.textContent = opt ? opt.title : '';
+    row.appendChild(val);
+    plan.appendChild(row);
+  });
+  summary.appendChild(plan);
 
-  main.innerHTML = `
-    <section class="summary">
-      <div class="summary-hero">
-        <div class="se">Готовый план · 45 минут</div>
-        <h3>Ваш урок собран.</h3>
-        <p>Шесть решений превратились в план. Внизу — финальный совет от каждого из трёх голосов.</p>
-      </div>
+  // summary-voices
+  const sv = document.createElement('div');
+  sv.className = 'summary-voices';
+  const svEye = document.createElement('div');
+  svEye.className = 'summary-voices-eye';
+  svEye.textContent = L.summaryVoicesEye || 'финальные комментарии';
+  sv.appendChild(svEye);
+  ['s','c','a'].forEach(v => {
+    const meta = VM[v] || { name: v, role: '' };
+    const item = document.createElement('div');
+    item.className = 'sv-item';
+    item.dataset.v = v;
+    const bar = document.createElement('div');
+    bar.className = 'sv-bar';
+    item.appendChild(bar);
+    const wrap = document.createElement('div');
+    const name = document.createElement('div');
+    name.className = 'sv-name';
+    name.textContent = meta.name + ' · ' + meta.role;
+    wrap.appendChild(name);
+    const text = document.createElement('div');
+    text.className = 'sv-text';
+    setHtmlSafely(text, (DATA.finalVoices || {})[v]);
+    wrap.appendChild(text);
+    item.appendChild(wrap);
+    sv.appendChild(item);
+  });
+  summary.appendChild(sv);
 
-      <div class="plan-card">${rows}</div>
+  // summary-actions
+  const actions = document.createElement('div');
+  actions.className = 'summary-actions';
+  const restart = document.createElement('button');
+  restart.className = 'btn-restart';
+  restart.id = 'restartBtn';
+  restart.textContent = 'Собрать заново';
+  actions.appendChild(restart);
+  const print = document.createElement('button');
+  print.className = 'btn-print';
+  print.id = 'printBtn';
+  print.textContent = 'Сохранить PDF';
+  actions.appendChild(print);
+  summary.appendChild(actions);
 
-      <div class="summary-voices">
-        <div class="summary-voices-eye">финальные комментарии</div>
-        ${['s','c','a'].map(v => `
-          <div class="sv-item" data-v="${v}">
-            <div class="sv-bar"></div>
-            <div>
-              <div class="sv-name">${VOICES_META[v].name} · ${VOICES_META[v].role}</div>
-              <div class="sv-text">${DATA.finalVoices[v]}</div>
-            </div>
-          </div>`).join('')}
-      </div>
-
-      <div class="summary-actions">
-        <button class="btn-restart" id="restartBtn">Собрать заново</button>
-        <button class="btn-print" id="printBtn">Сохранить PDF</button>
-      </div>
-    </section>`;
+  main.appendChild(summary);
 
   document.getElementById('restartBtn').addEventListener('click', () => {
     state.step = 0; state.choices = {};
