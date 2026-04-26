@@ -4,6 +4,7 @@
 // `const DATA = {...};` block delimited by the «DATA — обновляется...» banner.
 
 import { readFileSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
 
 const DATA_BLOCK_RE =
   /(\/\* ═+\s*\n\s*DATA — обновляется[\s\S]*?═+ \*\/\s*\n)const DATA = \{[\s\S]*?\n\};/m;
@@ -86,7 +87,7 @@ async function main(argv) {
   process.stdout.write(`wrote ${outPath} (${out.length} bytes)\n`);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
   main(process.argv.slice(2)).catch((err) => {
     process.stderr.write(`inject-data: ${err.message}\n`);
     process.exit(1);
