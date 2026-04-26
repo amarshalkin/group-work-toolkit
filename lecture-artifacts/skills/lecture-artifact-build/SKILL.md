@@ -21,6 +21,7 @@ This skill is the engine behind every template-specific slash command. The comma
 3. **Read the transcript** with the `Read` tool. Verify it is non-empty.
 4. **Read the template artefacts**: `templates/<template>/template.html`, `templates/<template>/schema.md`, `templates/<template>/example-data.json`.
 5. **Generate DATA JSON.** Read the schema thoroughly. Use the example as a shape reference. Extract content from the transcript that satisfies the schema. Pin general fields (`lecturer`, `lectureTitle`, `date`) from `program[i]` — never invent. For arrays with strict cardinality (e.g. "exactly 12 questions"), match exactly; if the transcript doesn't cover all entries, fill remaining ones with conservative typical content and add a note in the user-facing summary.
+   - **Для `case-matcher`** — кроме обычной DATA, заполни `DATA.labels.caseDetailLabel` (e.g. «к стране →», «к подходу →»). Это надпись JS-кнопки после квиза.
 6. **Special case for `manifesto`.** Build `links[]` from `.local.md`: every `program[i]` (excluding the manifesto's own entry) with non-null `published_url` becomes one link `{num: roman(i.n), title: defaultTitleFor(i.template), desc: defaultDescFor(i.template), href: i.published_url}`. The mapping `(template) → (default title, default desc)` is defined in `${CLAUDE_PLUGIN_ROOT}/references/template-mapping.md`. If a sister artefact has no `published_url` yet, omit it from `links[]`.
 7. **Validate.** Write the generated JSON to a temp file (`/tmp/lecture-artifact-<template>-<timestamp>.json`). Run two checks:
 
@@ -36,6 +37,8 @@ This skill is the engine behind every template-specific slash command. The comma
    - `event-content-summary` ← `event.content_summary` (передавать ТОЛЬКО если задано)
    - `act-title` ← short act name for the topbar (per-template default; can be overridden in program[].title shortening)
    - `page-title` ← per the template's `schema.md` "Заголовок страницы (page-title)" section. Skip for `step-builder`.
+   - `cases-deck-hint` (только для `case-matcher`) ← «<N прописью> <предмет>» — N из `data.countries.length`, предмет в род. падеже мн. числа («стран», «подходов», «методов», «школ»). Полная строка, включая " · свайпайте горизонтально".
+   - `cases-back-label` (только для `case-matcher`) ← подпись кнопки возврата, дательный падеж («к картотеке», «к подходам»).
    - `lecture-when` ← компонуется из `program[i].when` ИЛИ `program[i].date` (+ опционально `program[i].hall`). Формат: `"<день> <дата>, <время> · <зал>"`. Любая часть отсутствует — пропускается. Если ни одной — НЕ передаётся (блок `evt-if:lecture-when` исчезнет).
    - `lecture-slot` ← `program[i].slot` (e.g. "мИИтинг + презентация"). Релевантно для шаблонов где этот маркер используется (manifesto). Не передаётся если поле отсутствует.
    - `lecture-title` ← НЕ передаётся в стандартном flow (eyebrow удалён в v0.3.0). Только для manifesto, где он опционально оборачивает «итог»-тэг в hero-eye. Передавать только если шаблон явно его использует.

@@ -403,7 +403,7 @@
       </div>
     </div>
 
-    <div class="deck-eye"><b>↔</b> 8 стран · свайпайте горизонтально</div>
+    <div class="deck-eye"><b>↔</b> <!-- evt:cases-deck-hint -->8 стран · свайпайте горизонтально<!-- /evt --></div>
     <div class="deck" id="deck"></div>
     <div class="deck-dots" id="deckDots"></div>
 
@@ -418,7 +418,7 @@
   </section>
 
   <section id="scrCountry">
-    <button class="country-back" id="countryBack">← к картотеке</button>
+    <button class="country-back" id="countryBack">← <!-- evt:cases-back-label -->к картотеке<!-- /evt --></button>
     <div id="countryBody"></div>
   </section>
 
@@ -856,6 +856,9 @@ const DATA = {
       "title": "Россия (свой путь) — ближе вашей школе",
       "body": "Вы видите опыт всех семи моделей и собираете свой. Не копируете слепо — адаптируете. Главное: разбираться, спрашивать себя — что подходит именно нам."
     }
+  },
+  "labels": {
+    "caseDetailLabel": "к стране →"
   }
 };
 
@@ -995,7 +998,7 @@ function showResult(){
       <h3 id="quizQ"></h3>`;
     renderQuiz();
   };
-  document.getElementById('qNext').textContent = 'к стране →';
+  document.getElementById('qNext').textContent = (DATA.labels && DATA.labels.caseDetailLabel) || 'к стране →';
   document.getElementById('qNext').disabled = false;
   document.getElementById('qNext').onclick = () => openCountry(winner);
 }

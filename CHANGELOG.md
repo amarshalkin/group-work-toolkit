@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.2.2] — 2026-04-26
+
+- `lecture-artifacts` 0.3.1 → 0.3.2: универсализация подписей в case-matcher (раньше hardcoded "стран/стране/картотеке").
+
 ## [1.2.1] — 2026-04-26
 
 - `lecture-artifacts` 0.3.0 → 0.3.1: счётчик-валидация (`validate-counts.mjs`); дисциплина числовых маркеров в SKILL.md и schemas.

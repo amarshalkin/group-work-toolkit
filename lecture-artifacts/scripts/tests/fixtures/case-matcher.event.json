@@ -4,6 +4,8 @@
     "event-name": "Весенний педсовет",
     "event-year": "2026",
     "lecture-num": "III",
-    "act-title": "Картотека"
+    "act-title": "Картотека",
+    "cases-deck-hint": "8 стран · свайпайте горизонтально",
+    "cases-back-label": "к картотеке"
   }
 }
