@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3] — 2026-04-26
+
+- `manifesto` шаблон: hardcoded закрывающий блок («Не нужен идеальный учитель…») и links-секция («Шесть инструментов · к каждой лекции», «Возьмите с собой в понедельник.») сделаны конфигурируемыми. 4 новых markers: `evt:closing-title`, `evt:closing-text`, `evt:links-eye-text`, `evt:links-h-text`.
+- Рендер `DATA.links` переписан с `innerHTML` на safe DOM API.
+- Schema manifesto дополнена секцией «Закрывающий блок и ссылки».
+- `lecture-artifact-build/SKILL.md`: 4 новых маркера в списке для manifesto.
+
 ## [0.3.2] — 2026-04-26
 
 - `case-matcher` шаблон: hardcoded подписи стран («8 стран», «к картотеке», «к стране →») сделаны универсальными. Новые markers `evt:cases-deck-hint` и `evt:cases-back-label` для HTML-частей; новое поле `DATA.labels.caseDetailLabel` для JS-частей. Шаблон теперь подходит для любых сравнительных кейсов (страны/подходы/методы/школы/регионы).

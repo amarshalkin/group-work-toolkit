@@ -401,8 +401,8 @@
 <section class="theses" id="theses"></section>
 
 <section class="closing">
-  <h2>Не нужен <b>идеальный</b> учитель.<br>Нужен — <b>проснувшийся</b>.</h2>
-  <p class="closing-text">Если из всех тезисов вы возьмёте хотя бы один и сделаете один шаг на этой неделе — педсовет состоялся. Остальное — уже движение, не съезд.</p>
+  <h2><!-- evt:closing-title -->Не нужен <b>идеальный</b> учитель.<br>Нужен — <b>проснувшийся</b>.<!-- /evt --></h2>
+  <p class="closing-text"><!-- evt:closing-text -->Если из всех тезисов вы возьмёте хотя бы один и сделаете один шаг на этой неделе — педсовет состоялся. Остальное — уже движение, не съезд.<!-- /evt --></p>
 </section>
 
 <section class="signature">
@@ -413,8 +413,8 @@
 </section>
 
 <section class="links-section">
-  <div class="links-eye">Шесть инструментов · к каждой лекции</div>
-  <h1 class="links-h">Возьмите с собой <b>в понедельник</b>.</h1>
+  <div class="links-eye"><!-- evt:links-eye-text -->Шесть инструментов · к каждой лекции<!-- /evt --></div>
+  <h1 class="links-h"><!-- evt:links-h-text -->Возьмите с собой <b>в понедельник</b>.<!-- /evt --></h1>
   <nav class="links-grid" id="linksGrid"></nav>
 </section>
 
@@ -539,35 +539,71 @@ const DATA = {
   ]
 };
 
+/* helper: append rich text (supports <b>) without innerHTML */
+function appendRich(parent, text) {
+  const re = /<b>([\s\S]*?)<\/b>/g;
+  let last = 0, m;
+  while ((m = re.exec(text)) !== null) {
+    if (m.index > last) parent.appendChild(document.createTextNode(text.slice(last, m.index)));
+    const b = document.createElement('b');
+    b.textContent = m[1];
+    parent.appendChild(b);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parent.appendChild(document.createTextNode(text.slice(last)));
+}
+
+function mkDiv(cls, text) {
+  const d = document.createElement('div');
+  if (cls) d.className = cls;
+  if (text !== undefined) d.textContent = text;
+  return d;
+}
+
 /* render theses */
 const tList = document.getElementById('theses');
 DATA.theses.forEach((t, i) => {
   const el = document.createElement('article');
   el.className = 'thesis';
   el.dataset.c = t.c;
-  el.innerHTML = `
-    <button class="thesis-head" type="button">
-      <div class="thesis-num">${t.num}</div>
-      <div>
-        <div class="thesis-title">${t.title}</div>
-        <div class="thesis-author">${t.author}</div>
-      </div>
-      <div class="thesis-toggle">+</div>
-    </button>
-    <div class="thesis-body">
-      <div class="thesis-body-inner">
-        <p class="thesis-explain">${t.explain}</p>
-        <blockquote class="thesis-quote">«${t.quote}»<span class="who">${t.who}</span></blockquote>
-        <div class="thesis-action">
-          <div class="thesis-action-eye">шаг на эту неделю</div>
-          <div class="thesis-action-text">${t.action}</div>
-        </div>
-      </div>
-    </div>`;
+
+  const head = document.createElement('button');
+  head.className = 'thesis-head';
+  head.type = 'button';
+  head.appendChild(mkDiv('thesis-num', t.num));
+  const headMid = document.createElement('div');
+  headMid.appendChild(mkDiv('thesis-title', t.title));
+  headMid.appendChild(mkDiv('thesis-author', t.author));
+  head.appendChild(headMid);
+  head.appendChild(mkDiv('thesis-toggle', '+'));
+  el.appendChild(head);
+
+  const body = mkDiv('thesis-body');
+  const bodyInner = mkDiv('thesis-body-inner');
+
+  const explain = document.createElement('p');
+  explain.className = 'thesis-explain';
+  appendRich(explain, t.explain);
+  bodyInner.appendChild(explain);
+
+  const quote = document.createElement('blockquote');
+  quote.className = 'thesis-quote';
+  quote.appendChild(document.createTextNode('«' + t.quote + '»'));
+  const who = document.createElement('span');
+  who.className = 'who';
+  who.textContent = t.who;
+  quote.appendChild(who);
+  bodyInner.appendChild(quote);
+
+  const action = mkDiv('thesis-action');
+  action.appendChild(mkDiv('thesis-action-eye', 'шаг на эту неделю'));
+  action.appendChild(mkDiv('thesis-action-text', t.action));
+  bodyInner.appendChild(action);
+
+  body.appendChild(bodyInner);
+  el.appendChild(body);
   tList.appendChild(el);
 
-  const head = el.querySelector('.thesis-head');
-  const body = el.querySelector('.thesis-body');
   head.addEventListener('click', () => {
     const open = el.classList.toggle('open');
     body.style.maxHeight = open ? body.scrollHeight + 'px' : '0';
@@ -580,13 +616,29 @@ DATA.links.forEach(l => {
   const a = document.createElement('a');
   a.className = 'link-item';
   a.href = l.href;
-  a.innerHTML = `
-    <div class="link-num">${l.num}</div>
-    <div class="link-body">
-      <div class="lt">${l.title}</div>
-      <div class="ld">${l.desc}</div>
-    </div>
-    <div class="link-arrow">→</div>`;
+
+  const num = document.createElement('div');
+  num.className = 'link-num';
+  num.textContent = l.num;
+  a.appendChild(num);
+
+  const body = document.createElement('div');
+  body.className = 'link-body';
+  const lt = document.createElement('div');
+  lt.className = 'lt';
+  lt.textContent = l.title;
+  body.appendChild(lt);
+  const ld = document.createElement('div');
+  ld.className = 'ld';
+  ld.textContent = l.desc;
+  body.appendChild(ld);
+  a.appendChild(body);
+
+  const arrow = document.createElement('div');
+  arrow.className = 'link-arrow';
+  arrow.textContent = '→';
+  a.appendChild(arrow);
+
   lg.appendChild(a);
 });
 

@@ -1,5 +1,9 @@
 # Marketplace changelog
 
+## [1.2.3] — 2026-04-26
+
+- `lecture-artifacts` 0.3.2 → 0.3.3: универсализация manifesto's closing block + links section; рендер ссылок переведён на safe DOM.
+
 ## [1.2.2] — 2026-04-26
 
 - `lecture-artifacts` 0.3.1 → 0.3.2: универсализация подписей в case-matcher (раньше hardcoded "стран/стране/картотеке").
