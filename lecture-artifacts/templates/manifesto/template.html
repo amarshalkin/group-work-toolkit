@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<!--
+  АКТ VII · МАНИФЕСТ ВЕСЕННЕГО ПЕДСОВЕТА 2026
+  Сверх-артефакт. Синтез из всех лекций программы.
+  Пт 02.05, 09:10–10:20 (мИИтинг + Презентация результатов).
+  Mobile-first. Палитра: графит фон + айвори текст + 7 акцентов на тезис.
+  Механика: вертикальный ритм-плакат → 7 разворачиваемых тезисов → ленты ссылок.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>07 · Манифест Весеннего Педсовета 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:     #1A1919;
+    --ink-2:   #2C2B2B;
+    --ink-3:   #3A3937;
+    --paper:   #F8F8F7;
+    --paper-2: #E8E5DC;
+    --paper-3: #C9C4B8;
+    --paper-4: #A09C92;
+    --blue:    #5366B0;
+    --teal:    #4DBBC0;
+    --ochre:   #C29F6F;
+    --rose:    #C97186;
+    --olive:   #8B9D6E;
+    --plum:    #9670A8;
+    --amber:   #D9A046;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: 'Onest', system-ui, sans-serif;
+    background: var(--ink); color: var(--paper);
+    font-size: 16px; line-height: 1.5;
+  }
+  ::selection { background: var(--paper); color: var(--ink); }
+
+  /* TOP */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(26,25,25,0.94); backdrop-filter: blur(8px);
+    border-bottom: 1px solid rgba(248,248,247,0.10);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700;
+  }
+  .topbar-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--paper-4);
+  }
+  .topbar-step b { color: var(--paper); }
+
+  /* HERO */
+  .hero {
+    padding: 60px 20px 40px;
+    max-width: 760px; margin: 0 auto;
+    border-bottom: 1px solid rgba(248,248,247,0.10);
+  }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700;
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-eye::before {
+    content: ''; width: 24px; height: 1px; background: var(--teal);
+  }
+  .hero h1 {
+    font-size: clamp(44px,12vw,80px);
+    line-height: 0.94;
+    letter-spacing: -0.028em;
+    font-weight: 900;
+  }
+  .hero h1 .accent { color: var(--teal); font-style: italic; font-weight: 800; }
+  .hero h1 .em { color: var(--ochre); }
+  .hero-lede {
+    margin-top: 28px;
+    font-size: 19px; line-height: 1.45;
+    color: var(--paper-2);
+    max-width: 38ch;
+  }
+  .hero-lede b { color: var(--paper); font-weight: 600; }
+
+  .hero-meta {
+    margin-top: 28px;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--paper-4);
+    letter-spacing: 0.06em;
+  }
+  .hero-meta div { padding-left: 12px; border-left: 1px solid rgba(248,248,247,0.20); }
+  .hero-meta b { color: var(--paper-2); display: block; font-weight: 600; margin-bottom: 4px; }
+
+  /* INTRO MARK */
+  .intro-mark {
+    max-width: 760px; margin: 0 auto;
+    padding: 40px 20px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--paper-4); font-weight: 600;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .intro-mark::after { content: ''; flex: 1; height: 1px; background: rgba(248,248,247,0.12); }
+
+  /* THESIS LIST */
+  .theses { max-width: 760px; margin: 0 auto; padding: 0 0 40px; }
+  .thesis {
+    border-top: 1px solid rgba(248,248,247,0.10);
+    position: relative;
+  }
+  .thesis:last-child { border-bottom: 1px solid rgba(248,248,247,0.10); }
+  .thesis-head {
+    width: 100%; background: none; border: none; cursor: pointer;
+    font: inherit; color: var(--paper); text-align: left;
+    padding: 28px 20px;
+    display: grid; grid-template-columns: 60px 1fr 30px;
+    align-items: flex-start; gap: 14px;
+    transition: background 0.2s;
+  }
+  .thesis-head:hover { background: rgba(248,248,247,0.03); }
+  .thesis.open .thesis-head { background: rgba(248,248,247,0.04); }
+
+  .thesis-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.06em;
+    padding: 6px 0; text-align: center;
+    border: 1.5px solid; border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .thesis-title {
+    font-size: clamp(20px,5.4vw,28px);
+    line-height: 1.18;
+    letter-spacing: -0.014em;
+    font-weight: 700;
+    text-wrap: pretty;
+  }
+  .thesis-author {
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--paper-4);
+    font-weight: 500;
+  }
+  .thesis-toggle {
+    font-size: 22px; color: var(--paper-4);
+    margin-top: 4px; text-align: right;
+    transition: transform 0.25s, color 0.25s;
+  }
+  .thesis.open .thesis-toggle { transform: rotate(45deg); color: var(--paper); }
+
+  /* per-thesis colors */
+  .thesis[data-c="blue"]  .thesis-num { color: var(--blue);  border-color: var(--blue); }
+  .thesis[data-c="teal"]  .thesis-num { color: var(--teal);  border-color: var(--teal); }
+  .thesis[data-c="ochre"] .thesis-num { color: var(--ochre); border-color: var(--ochre); }
+  .thesis[data-c="rose"]  .thesis-num { color: var(--rose);  border-color: var(--rose); }
+  .thesis[data-c="olive"] .thesis-num { color: var(--olive); border-color: var(--olive); }
+  .thesis[data-c="plum"]  .thesis-num { color: var(--plum);  border-color: var(--plum); }
+  .thesis[data-c="amber"] .thesis-num { color: var(--amber); border-color: var(--amber); }
+  .thesis.open[data-c="blue"]  .thesis-num { background: var(--blue);  color: var(--ink); }
+  .thesis.open[data-c="teal"]  .thesis-num { background: var(--teal);  color: var(--ink); }
+  .thesis.open[data-c="ochre"] .thesis-num { background: var(--ochre); color: var(--ink); }
+  .thesis.open[data-c="rose"]  .thesis-num { background: var(--rose);  color: var(--ink); }
+  .thesis.open[data-c="olive"] .thesis-num { background: var(--olive); color: var(--ink); }
+  .thesis.open[data-c="plum"]  .thesis-num { background: var(--plum);  color: var(--ink); }
+  .thesis.open[data-c="amber"] .thesis-num { background: var(--amber); color: var(--ink); }
+
+  .thesis-body {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.45s ease;
+  }
+  .thesis-body-inner {
+    padding: 0 20px 32px 94px;
+  }
+  .thesis-explain {
+    font-size: 16px; line-height: 1.55;
+    color: var(--paper-2);
+    margin-bottom: 22px;
+    text-wrap: pretty;
+  }
+  .thesis-explain b { color: var(--paper); font-weight: 600; }
+
+  .thesis-quote {
+    border-left: 3px solid;
+    padding: 4px 0 4px 16px;
+    margin: 22px 0;
+    font-size: 17px; line-height: 1.4;
+    font-style: italic;
+    color: var(--paper);
+    text-wrap: pretty;
+  }
+  .thesis[data-c="blue"]  .thesis-quote { border-left-color: var(--blue); }
+  .thesis[data-c="teal"]  .thesis-quote { border-left-color: var(--teal); }
+  .thesis[data-c="ochre"] .thesis-quote { border-left-color: var(--ochre); }
+  .thesis[data-c="rose"]  .thesis-quote { border-left-color: var(--rose); }
+  .thesis[data-c="olive"] .thesis-quote { border-left-color: var(--olive); }
+  .thesis[data-c="plum"]  .thesis-quote { border-left-color: var(--plum); }
+  .thesis[data-c="amber"] .thesis-quote { border-left-color: var(--amber); }
+  .thesis-quote .who {
+    display: block;
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; font-style: normal;
+    color: var(--paper-4); font-weight: 600;
+  }
+
+  .thesis-action {
+    background: rgba(248,248,247,0.06);
+    border-radius: 14px;
+    padding: 18px 18px 18px 18px;
+    position: relative;
+  }
+  .thesis-action-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 8px;
+  }
+  .thesis[data-c="blue"]  .thesis-action-eye { color: var(--blue); }
+  .thesis[data-c="teal"]  .thesis-action-eye { color: var(--teal); }
+  .thesis[data-c="ochre"] .thesis-action-eye { color: var(--ochre); }
+  .thesis[data-c="rose"]  .thesis-action-eye { color: var(--rose); }
+  .thesis[data-c="olive"] .thesis-action-eye { color: var(--olive); }
+  .thesis[data-c="plum"]  .thesis-action-eye { color: var(--plum); }
+  .thesis[data-c="amber"] .thesis-action-eye { color: var(--amber); }
+  .thesis-action-text {
+    font-size: 15px; line-height: 1.45; font-weight: 600;
+    color: var(--paper);
+  }
+
+  /* CLOSING */
+  .closing {
+    max-width: 760px; margin: 0 auto;
+    padding: 60px 20px 40px;
+    border-top: 1px solid rgba(248,248,247,0.10);
+  }
+  .closing h2 {
+    font-size: clamp(30px,7.5vw,46px);
+    line-height: 1.0; letter-spacing: -0.022em;
+    font-weight: 800;
+    text-wrap: balance;
+  }
+  .closing h2 b { color: var(--teal); font-weight: 800; }
+  .closing-text {
+    margin-top: 24px;
+    font-size: 17px; line-height: 1.55;
+    color: var(--paper-2);
+    max-width: 38ch;
+  }
+
+  /* SIGNATURE */
+  .signature {
+    max-width: 760px; margin: 0 auto;
+    padding: 24px 20px 40px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .sig-row {
+    display: flex; align-items: baseline; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px dashed rgba(248,248,247,0.14);
+  }
+  .sig-row b {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--paper-4); font-weight: 600;
+    flex: 0 0 84px;
+  }
+  .sig-row span { font-size: 15px; color: var(--paper-2); }
+
+  /* LINKS GRID */
+  .links-section {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 60px 0 40px;
+  }
+  .links-eye {
+    max-width: 760px; margin: 0 auto;
+    padding: 0 20px 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #7A7670;
+    letter-spacing: 0.18em; text-transform: uppercase; font-weight: 700;
+  }
+  .links-h {
+    max-width: 760px; margin: 0 auto;
+    padding: 8px 20px 28px;
+    font-size: clamp(28px,7vw,40px);
+    line-height: 1.0; letter-spacing: -0.02em; font-weight: 800;
+    color: var(--ink);
+  }
+  .links-h b { color: var(--blue); }
+  .links-grid {
+    max-width: 760px; margin: 0 auto;
+    padding: 0 20px;
+    display: grid; gap: 1px;
+    background: var(--paper-3);
+    border-top: 1px solid var(--paper-3);
+    border-bottom: 1px solid var(--paper-3);
+  }
+  .link-item {
+    background: var(--paper);
+    padding: 22px 16px;
+    display: grid; grid-template-columns: 40px 1fr 24px;
+    gap: 14px; align-items: flex-start;
+    text-decoration: none; color: var(--ink);
+    transition: background 0.2s;
+    cursor: pointer;
+  }
+  .link-item:hover { background: var(--paper-2); }
+  .link-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; font-weight: 700; color: #7A7670;
+    padding-top: 3px; letter-spacing: 0.06em;
+  }
+  .link-body { }
+  .link-body .lt {
+    font-size: 18px; font-weight: 700; line-height: 1.15;
+    letter-spacing: -0.012em;
+  }
+  .link-body .ld {
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #7A7670;
+    letter-spacing: 0.06em;
+  }
+  .link-arrow {
+    font-size: 18px; color: #7A7670;
+    padding-top: 4px; text-align: right;
+    transition: transform 0.18s;
+  }
+  .link-item:hover .link-arrow { transform: translateX(4px); color: var(--ink); }
+
+  /* FOOTER */
+  .footer-brand {
+    background: var(--paper);
+    color: #7A7670;
+    padding: 32px 20px 56px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer-brand b { color: var(--ink); font-weight: 600; }
+
+  /* DESKTOP */
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .topbar, .hero, .intro-mark, .theses, .closing, .signature, .links-eye, .links-h, .links-grid, .footer-brand {
+      max-width: 1100px;
+    }
+    .topbar { padding: 14px 40px; }
+    .hero { padding: 100px 40px 60px; }
+    .hero h1 { font-size: clamp(80px,9vw,140px); }
+    .hero-lede { font-size: 24px; }
+    .intro-mark, .theses, .closing, .signature, .links-eye, .links-h, .footer-brand { padding-left: 40px; padding-right: 40px; }
+    .thesis-head { grid-template-columns: 80px 1fr 40px; padding: 36px 40px; }
+    .thesis-title { font-size: 36px; }
+    .thesis-body-inner { padding: 0 40px 40px 134px; }
+    .thesis-explain { font-size: 19px; }
+    .thesis-quote { font-size: 22px; }
+    .closing { padding: 100px 40px 60px; }
+    .closing h2 { font-size: 64px; }
+    .links-section { padding: 100px 0 60px; }
+    .links-grid { grid-template-columns: 1fr 1fr; padding-left: 40px; padding-right: 40px; }
+    .link-item { padding: 28px 22px; }
+    .link-body .lt { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-mark"><!-- evt:act-title -->Манифест<!-- /evt --> · Акт <!-- evt:lecture-num -->VII<!-- /evt --></div>
+  <div class="topbar-step"><b>7</b> тезисов</div>
+</div>
+
+<header class="hero">
+  <div class="hero-eye"><!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt --> · итог</div>
+  <h1>
+    Учитель — это <span class="accent">не профессия</span>.<br>
+    Это <span class="em">позиция</span> в мире.
+  </h1>
+  <p class="hero-lede">
+    Семь тезисов, собранных из всех актов программы. <b>Не план, а компас.</b> Каждый — с разбором, голосом автора и одним шагом, который можно сделать на этой неделе.
+  </p>
+  <div class="hero-meta">
+    <div><b>Когда</b>пт 02.05, 09:10</div>
+    <div><b>Слот</b>мИИтинг + презентация</div>
+  </div>
+</header>
+
+<div class="intro-mark">Семь тезисов</div>
+
+<section class="theses" id="theses"></section>
+
+<section class="closing">
+  <h2>Не нужен <b>идеальный</b> учитель.<br>Нужен — <b>проснувшийся</b>.</h2>
+  <p class="closing-text">Если из всех тезисов вы возьмёте хотя бы один и сделаете один шаг на этой неделе — педсовет состоялся. Остальное — уже движение, не съезд.</p>
+</section>
+
+<section class="signature">
+  <div class="sig-row"><b>Где</b><span>Пятигорск, Центр знаний Машук</span></div>
+  <div class="sig-row"><b>Когда</b><span>28 апреля — 2 мая <!-- evt:event-year -->2026<!-- /evt --></span></div>
+  <div class="sig-row"><b>Кто</b><span>~280 педагогов из всех регионов России</span></div>
+  <div class="sig-row"><b>Лекций</b><span>11 ключевых + 7 параллельных мастер-классов</span></div>
+</section>
+
+<section class="links-section">
+  <div class="links-eye">Шесть инструментов · к каждой лекции</div>
+  <h1 class="links-h">Возьмите с собой <b>в понедельник</b>.</h1>
+  <nav class="links-grid" id="linksGrid"></nav>
+</section>
+
+<footer class="footer-brand">
+  при поддержке <b>Центра знаний Машук</b> · <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt --> · Манифест
+</footer>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  theses: [
+    { c:'blue', num:'I',
+      title:'ИИ — это не угроза и не помощник. Это новая природная среда, в которой мы теперь живём.',
+      author:'Дмитрий Бризицкий · «ИИ: современный фронтир»',
+      explain:'Бесполезно спрашивать «нужно ли использовать ИИ». Это всё равно что спрашивать, нужно ли использовать электричество. <b>Нужно научиться отличать его течения, опасности и возможности</b> — как мы учили детей переходить дорогу, когда появились автомобили.',
+      quote:'Мы первое поколение учителей, которое преподаёт детям то, чего ещё не знаем сами. Это нормально — если мы это признаём.',
+      who:'из лекции Дмитрия Бризицкого',
+      action:'На этой неделе попробуйте дать ИИ задачу, в которой вы — эксперт. Найдите 2 ошибки. Это — ваша новая компетенция.' },
+
+    { c:'teal', num:'II',
+      title:'Цифровая среда школы — это не инфраструктура. Это воспитательная позиция.',
+      author:'Виктор Басюк · «Образовательное пространство»',
+      explain:'Не «есть ли у нас планшеты», а <b>чему дети учатся, проводя время в этих планшетах</b>. Цифровая среда — это правила, привычки и культура внимания, которые мы выстраиваем как педагогический коллектив. Если не мы — её выстроят алгоритмы.',
+      quote:'Школа без позиции в цифровой среде — это школа, которая отдала своих детей чужому воспитателю.',
+      who:'из лекции Виктора Басюка',
+      action:'Соберите коллег и проговорите: какие три цифровые привычки мы хотим у наших выпускников? Запишите. Это — начало стратегии.' },
+
+    { c:'ochre', num:'III',
+      title:'Российский путь в цифре — не догонять и не копировать. Удерживать своё.',
+      author:'Константин Серёгин · «Цифра в мировом образовании»',
+      explain:'Финляндия, Сингапур, Эстония — у каждой страны свой путь, выросший из своей истории. Бессмысленно <b>пересаживать ствол вместо того, чтобы растить свои корни</b>. У нас другая педагогическая традиция, другой запрос родителей, другая культура — и это не недостаток. Это материал.',
+      quote:'Учиться у других — да. Заимствовать целиком — никогда. Это всегда проигрыш.',
+      who:'из лекции Константина Серёгина',
+      action:'Найдите одну зарубежную практику, которая вам понравилась. Спросите: что в ней работает у нас, а что — нет, и почему. Это — ваше методическое мышление в действии.' },
+
+    { c:'rose', num:'IV',
+      title:'Лучшая практика — та, которую вы повторите в понедельник. Остальное — литература.',
+      author:'7 параллельных мастер-классов',
+      explain:'Педсовет — не библиотека вдохновения. Это <b>конкретные ходы, которые мы переносим в свой класс</b> с понедельника. Если идея слишком красива, чтобы её повторить — значит, она не для вашей школы. Берите простое и работающее.',
+      quote:'Метод — это то, что выживает в кабинете 14, в пятницу, на 6-м уроке. Всё остальное — теория.',
+      who:'из мастер-классов Маршалкина, Калашникова, Брюзгиной',
+      action:'Выберите одну практику из 7 мастер-классов. Сделайте её на одном уроке на этой неделе. Запишите, что не получилось — это ваш материал для роста.' },
+
+    { c:'olive', num:'V',
+      title:'Ценности преподаются не словами, а тем, как мы себя ведём в трудных ситуациях.',
+      author:'Иван Палитай · «Основы российской государственности»',
+      explain:'Дети не помнят, что мы говорили про честность. Они помнят, как мы поступили, когда было невыгодно её соблюдать. <b>Воспитание — это не урок, это репутация</b>. Восемь ценностей становятся живыми только когда учитель сам в них живёт.',
+      quote:'Семья, труд, достоинство — это не предметы. Это температура, которую дети считывают с нас.',
+      who:'из лекции Ивана Палитая',
+      action:'Выберите одну ценность из восьми. На этой неделе — одно микро-решение в классе, в котором вы её защитили. Не урок про неё, а сам поступок.' },
+
+    { c:'plum', num:'VI',
+      title:'Учитель в 2026-м — это режиссёр сложного диалога, а не транслятор готового знания.',
+      author:'Сиденко · Чернова · Антонова',
+      explain:'Знание теперь у каждого в кармане. <b>Учитель — это тот, кто умеет собрать урок, в котором это знание становится мышлением</b>. ИИ-этика, цифровая безопасность и методика — три голоса, которые должны звучать одновременно в голове учителя при подготовке любого урока.',
+      quote:'Раньше учитель отвечал за факты. Теперь — за смыслы. Это другая профессия.',
+      who:'синтез трёх параллельных лекций',
+      action:'На следующий урок задайте себе три вопроса заранее: что здесь про ИИ-этику? что про цифровую безопасность? что про смысл? Если хоть на один не ответили — стоит подумать ещё.' },
+
+    { c:'amber', num:'VII',
+      title:'Учитель — узел сети, а не одиночка на сцене. Главное — связи, а не лекции.',
+      author:'итог всех 5 дней педсовета',
+      explain:'То, что собрано в Пятигорске за 5 дней — это <b>не контент, а сеть людей, которые узнали друг друга</b>. Один учитель в маленьком городе бессилен. Двести учителей, которые держат друг с другом связь — могут менять страну. Возьмите телефон коллеги, с которым вы согласны. Возьмите ещё один — с которым не согласны. И тех и других — нужно держать.',
+      quote:'Главное здесь — не я, не вы, не залы. Главное — что мы теперь знаем друг о друге.',
+      who:'итог Весеннего педсовета 2026',
+      action:'Возьмите контакты пяти педагогов из других регионов. Один раз в месяц — короткое сообщение «как дела в школе». Это и есть та сеть, которая выдержит всё остальное.' }
+  ],
+
+  links: [
+    { num:'I',   title:'Карта ИИ-фронтира',     desc:'самотест · 8 узлов · трек', href:'https://p.knotta.ru/ga9x9m' },
+    { num:'II',  title:'Пульт цифровой среды',  desc:'6 шагов · профиль школы',   href:'https://p.knotta.ru/3szmdq' },
+    { num:'III', title:'Атлас цифры в мире',    desc:'8 стран · квиз · модель',   href:'https://p.knotta.ru/sfp9pz' },
+    { num:'IV',  title:'Меню 3 практик',        desc:'7 мастер-классов в окне',   href:'https://p.knotta.ru/gezhqs' },
+    { num:'V',   title:'Атлас ценностей',       desc:'8 ценностей · сценарий',    href:'https://p.knotta.ru/ywdpy2' },
+    { num:'VI',  title:'Урок-конструктор',      desc:'6 шагов · 3 голоса · план', href:'https://p.knotta.ru/jbzdnd' }
+  ]
+};
+
+/* render theses */
+const tList = document.getElementById('theses');
+DATA.theses.forEach((t, i) => {
+  const el = document.createElement('article');
+  el.className = 'thesis';
+  el.dataset.c = t.c;
+  el.innerHTML = `
+    <button class="thesis-head" type="button">
+      <div class="thesis-num">${t.num}</div>
+      <div>
+        <div class="thesis-title">${t.title}</div>
+        <div class="thesis-author">${t.author}</div>
+      </div>
+      <div class="thesis-toggle">+</div>
+    </button>
+    <div class="thesis-body">
+      <div class="thesis-body-inner">
+        <p class="thesis-explain">${t.explain}</p>
+        <blockquote class="thesis-quote">«${t.quote}»<span class="who">${t.who}</span></blockquote>
+        <div class="thesis-action">
+          <div class="thesis-action-eye">шаг на эту неделю</div>
+          <div class="thesis-action-text">${t.action}</div>
+        </div>
+      </div>
+    </div>`;
+  tList.appendChild(el);
+
+  const head = el.querySelector('.thesis-head');
+  const body = el.querySelector('.thesis-body');
+  head.addEventListener('click', () => {
+    const open = el.classList.toggle('open');
+    body.style.maxHeight = open ? body.scrollHeight + 'px' : '0';
+  });
+});
+
+/* render links */
+const lg = document.getElementById('linksGrid');
+DATA.links.forEach(l => {
+  const a = document.createElement('a');
+  a.className = 'link-item';
+  a.href = l.href;
+  a.innerHTML = `
+    <div class="link-num">${l.num}</div>
+    <div class="link-body">
+      <div class="lt">${l.title}</div>
+      <div class="ld">${l.desc}</div>
+    </div>
+    <div class="link-arrow">→</div>`;
+  lg.appendChild(a);
+});
+
+/* open the first thesis on load */
+setTimeout(() => {
+  const first = tList.querySelector('.thesis');
+  first.classList.add('open');
+  const b = first.querySelector('.thesis-body');
+  b.style.maxHeight = b.scrollHeight + 'px';
+}, 80);
+</script>
+</body>
+</html>
