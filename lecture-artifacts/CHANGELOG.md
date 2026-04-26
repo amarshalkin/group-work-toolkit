@@ -1,0 +1,5 @@
+# Changelog
+
+## [Unreleased]
+
+- Каркас плагина.
