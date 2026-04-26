@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<!--
+  АКТ VI · УРОК-КОНСТРУКТОР
+  Лекции: Сиденко (ИИ-этика), Чернова (безопасность), Антонова (методика)
+  Чт 30.04, 11:00–12:20.
+  Mobile-first. Акцент: бирюза #35A2A8.
+  Механика: 6 шагов, на каждом — варианты + 3 параллельных комментария.
+-->
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>06 · Урок-конструктор</title>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:    #35A2A8;
+    --teal-d:  #267A7E;
+    --teal-soft: rgba(53,162,168,0.10);
+    --blue:    #3E529B;
+    --ochre:   #A2855F;
+    --rose:    #B85C7A;
+    --ink:     #2C2B2B;
+    --ink-2:   #4A4845;
+    --ink-3:   #7A7670;
+    --line:    #E2DFD7;
+    --line-2:  #C9C4B8;
+    --paper:   #F8F8F7;
+    --paper-2: #EDEAE2;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Onest', system-ui, sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.5; }
+  ::selection { background: var(--teal); color: var(--paper); }
+
+  /* TOP */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(248,248,247,0.96); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 12px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .topbar-mark {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700;
+  }
+  .topbar-step {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+  }
+  .topbar-step b { color: var(--ink); }
+
+  /* HERO */
+  .hero { padding: 28px 20px 12px; max-width: 720px; margin: 0 auto; }
+  .hero-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--teal); font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(36px,9.5vw,56px);
+    line-height: 0.98; letter-spacing: -0.022em; font-weight: 800;
+  }
+  .hero h1 b { color: var(--teal); font-weight: 800; }
+  .hero-sub { margin-top: 18px; color: var(--ink-2); font-size: 16px; max-width: 40ch; }
+  .voices-row {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    margin-top: 22px;
+  }
+  .voice-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 999px;
+    background: var(--paper-2);
+    font-size: 12px; font-weight: 600; color: var(--ink);
+  }
+  .voice-chip .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .voice-chip[data-v="s"] .dot { background: var(--teal); }
+  .voice-chip[data-v="c"] .dot { background: var(--rose); }
+  .voice-chip[data-v="a"] .dot { background: var(--ochre); }
+
+  /* PROGRESS */
+  .progress-wrap {
+    position: sticky; top: 47px; z-index: 40;
+    background: rgba(248,248,247,0.95); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 20px;
+  }
+  .progress-line {
+    display: flex; gap: 4px; max-width: 720px; margin: 0 auto;
+  }
+  .progress-line .seg {
+    flex: 1; height: 4px; background: var(--line); border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .progress-line .seg.done { background: var(--teal); }
+  .progress-line .seg.active { background: var(--ink); }
+  .progress-meta {
+    max-width: 720px; margin: 8px auto 0;
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.06em;
+  }
+  .progress-meta b { color: var(--ink); }
+
+  /* STEP */
+  .step {
+    max-width: 720px; margin: 0 auto;
+    padding: 28px 20px 16px;
+  }
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600; margin-bottom: 8px;
+  }
+  .step-num b { color: var(--teal); }
+  .step h2 {
+    font-size: clamp(28px,7vw,40px);
+    line-height: 1.05; letter-spacing: -0.02em; font-weight: 800;
+  }
+  .step-sub { margin-top: 10px; color: var(--ink-2); font-size: 15px; }
+
+  /* OPTIONS */
+  .options { padding: 8px 20px 0; max-width: 720px; margin: 0 auto; }
+  .opt {
+    width: 100%; text-align: left; cursor: pointer;
+    background: var(--paper); border: 1.5px solid var(--line);
+    border-radius: 16px; padding: 18px;
+    margin-bottom: 12px; font: inherit;
+    transition: all 0.2s;
+  }
+  .opt:hover { border-color: var(--ink-3); }
+  .opt.selected {
+    border-color: var(--teal);
+    background: var(--teal-soft);
+    box-shadow: 0 0 0 3px rgba(53,162,168,0.12);
+  }
+  .opt-row {
+    display: flex; align-items: flex-start; gap: 14px;
+  }
+  .opt-radio {
+    flex: 0 0 22px; height: 22px;
+    border: 2px solid var(--line-2); border-radius: 50%;
+    margin-top: 2px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .opt.selected .opt-radio {
+    border-color: var(--teal); background: var(--teal);
+  }
+  .opt.selected .opt-radio::after {
+    content: ''; width: 8px; height: 8px;
+    background: var(--paper); border-radius: 50%;
+  }
+  .opt-body { flex: 1; }
+  .opt-title { font-size: 17px; font-weight: 700; line-height: 1.25; margin-bottom: 4px; }
+  .opt-desc { font-size: 14px; color: var(--ink-2); line-height: 1.4; }
+
+  /* VOICES — три комментария */
+  .voices {
+    max-width: 720px; margin: 18px auto 0;
+    padding: 0 20px;
+  }
+  .voices-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    font-weight: 600; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .voices-eye::before, .voices-eye::after {
+    content: ''; flex: 1; height: 1px; background: var(--line);
+  }
+  .voice-card {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 14px; padding: 16px 16px 14px;
+    margin-bottom: 10px;
+    position: relative;
+    border-left-width: 4px;
+  }
+  .voice-card[data-v="s"] { border-left-color: var(--teal); }
+  .voice-card[data-v="c"] { border-left-color: var(--rose); }
+  .voice-card[data-v="a"] { border-left-color: var(--ochre); }
+  .voice-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 8px;
+  }
+  .voice-name {
+    font-weight: 700; font-size: 14px;
+  }
+  .voice-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600;
+  }
+  .voice-text { font-size: 14px; line-height: 1.5; color: var(--ink); }
+  .voice-text strong { background: rgba(0,0,0,0.05); padding: 0 4px; border-radius: 3px; }
+
+  .voices-empty {
+    background: var(--paper-2); border-radius: 14px;
+    padding: 22px 16px; text-align: center;
+    font-size: 14px; color: var(--ink-3);
+  }
+
+  /* NAV */
+  .nav-row {
+    max-width: 720px; margin: 24px auto 40px;
+    padding: 0 20px;
+    display: flex; gap: 10px;
+  }
+  .nav-btn {
+    flex: 1; padding: 16px 20px;
+    border-radius: 14px; border: none; cursor: pointer; font: inherit;
+    font-weight: 700; font-size: 15px;
+    transition: all 0.2s;
+  }
+  .nav-btn.prev { background: var(--paper-2); color: var(--ink); flex: 0 0 auto; padding: 16px 22px; }
+  .nav-btn.prev:hover { background: var(--line); }
+  .nav-btn.next {
+    background: var(--ink); color: var(--paper);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .nav-btn.next:hover { background: var(--teal); }
+  .nav-btn.next:disabled {
+    background: var(--paper-2); color: var(--ink-3); cursor: not-allowed;
+  }
+  .nav-btn.next:disabled:hover { background: var(--paper-2); }
+
+  /* SUMMARY (step 7) */
+  .summary {
+    max-width: 720px; margin: 0 auto;
+    padding: 8px 20px 0;
+  }
+  .summary-hero {
+    background: var(--ink); color: var(--paper);
+    padding: 28px 22px;
+    border-radius: 18px;
+    position: relative; overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .summary-hero::after {
+    content: ''; position: absolute; right: -80px; bottom: -80px;
+    width: 220px; height: 220px; border-radius: 50%;
+    background: var(--teal); opacity: 0.18;
+  }
+  .summary-hero .se {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--teal); font-weight: 700; margin-bottom: 12px;
+  }
+  .summary-hero h3 {
+    font-size: clamp(28px,7vw,40px);
+    line-height: 1.05; font-weight: 800; letter-spacing: -0.018em;
+  }
+  .summary-hero p {
+    margin-top: 14px; font-size: 16px; opacity: 0.85; max-width: 36ch;
+    position: relative; z-index: 2;
+  }
+
+  .plan-card {
+    background: var(--paper); border: 1px solid var(--line);
+    border-radius: 16px;
+    margin-bottom: 12px; overflow: hidden;
+  }
+  .plan-row {
+    display: grid; grid-template-columns: 90px 1fr;
+    gap: 14px; padding: 16px 18px;
+    align-items: flex-start;
+  }
+  .plan-row + .plan-row { border-top: 1px dashed var(--line); }
+  .plan-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600;
+    padding-top: 3px;
+  }
+  .plan-value {
+    font-size: 15px; font-weight: 600; line-height: 1.35;
+  }
+
+  .summary-voices {
+    background: var(--paper-2);
+    border-radius: 16px;
+    padding: 18px 18px 8px;
+    margin-bottom: 18px;
+  }
+  .summary-voices-eye {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-3);
+    letter-spacing: 0.16em; text-transform: uppercase;
+    font-weight: 700; margin-bottom: 14px;
+  }
+  .sv-item {
+    display: grid; grid-template-columns: 14px 1fr;
+    gap: 14px; padding: 14px 0;
+    border-top: 1px solid var(--line);
+  }
+  .sv-item:first-child { border-top: none; padding-top: 0; }
+  .sv-bar {
+    width: 4px; height: 100%; min-height: 40px;
+    border-radius: 2px;
+  }
+  .sv-item[data-v="s"] .sv-bar { background: var(--teal); }
+  .sv-item[data-v="c"] .sv-bar { background: var(--rose); }
+  .sv-item[data-v="a"] .sv-bar { background: var(--ochre); }
+  .sv-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--ink-3); font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .sv-text { font-size: 14px; line-height: 1.45; }
+
+  .summary-actions {
+    display: flex; gap: 10px;
+    margin: 22px 0 40px;
+  }
+  .summary-actions button {
+    flex: 1; padding: 16px 18px;
+    border-radius: 14px; border: none; cursor: pointer; font: inherit;
+    font-weight: 700; font-size: 15px;
+  }
+  .btn-print { background: var(--teal); color: var(--paper); }
+  .btn-print:hover { background: var(--teal-d); }
+  .btn-restart { background: var(--paper-2); color: var(--ink); }
+  .btn-restart:hover { background: var(--line); }
+
+  .footer-brand {
+    border-top: 1px solid var(--line);
+    padding: 28px 20px 36px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: var(--ink-3);
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .footer-brand b { color: var(--ink-2); font-weight: 600; }
+
+  @media (min-width: 980px) {
+    body { font-size: 18px; }
+    .hero, .step, .options, .voices, .nav-row, .summary, .footer-brand, .progress-wrap, .topbar { max-width: 1100px; }
+    .topbar, .progress-wrap, .footer-brand { padding-left: 40px; padding-right: 40px; }
+    .hero { padding: 56px 40px 16px; }
+    .hero h1 { font-size: clamp(56px,7vw,84px); }
+    .step { padding: 40px 40px 16px; }
+    .step h2 { font-size: 56px; }
+    .options { padding-left: 40px; padding-right: 40px; }
+    .voices, .nav-row, .summary { padding-left: 40px; padding-right: 40px; }
+    .voice-card { padding: 22px; }
+    .nav-row { margin-bottom: 60px; }
+  }
+
+  /* PRINT */
+  @media print {
+    .topbar, .progress-wrap, .summary-actions, .footer-brand { display: none; }
+    body { background: white; }
+    .summary-hero, .plan-card, .summary-voices { box-shadow: none; }
+    .summary-hero { background: white; color: var(--ink); border: 1px solid var(--ink); }
+    .summary-hero::after { display: none; }
+    .summary-hero .se, .summary-hero h3 { color: var(--ink); }
+    .summary-hero p { color: var(--ink-2); }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-mark">Акт <!-- evt:lecture-num -->VI<!-- /evt --> · <!-- evt:act-title -->Урок-конструктор<!-- /evt --></div>
+  <div class="topbar-step">шаг <b id="topStep">1</b>/6</div>
+</div>
+
+<div class="progress-wrap" id="progressWrap">
+  <div class="progress-line" id="progressLine"></div>
+  <div class="progress-meta">
+    <span id="progressTitle">Класс и предмет</span>
+    <span><b id="progressMin">15</b> мин чтения</span>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<footer class="footer-brand">
+  при поддержке <b>Центра знаний Машук</b> · <!-- evt:event-name -->Весенний педсовет<!-- /evt --> <!-- evt:event-year -->2026<!-- /evt --> · акт <!-- evt:lecture-num -->VI<!-- /evt --> из VII
+</footer>
+
+<script>
+const VOICES_META = {
+  s: { name: 'Андрей Сиденко',    role: 'ИИ-этика',     v: 's' },
+  c: { name: 'Наталья Чернова',   role: 'безопасность', v: 'c' },
+  a: { name: 'Светлана Антонова', role: 'методика',     v: 'a' }
+};
+
+/* ════════════════════════════════════════════════════════════════════════
+   DATA — обновляется после расшифровки лекции (ТОЛЬКО этот объект).
+   ════════════════════════════════════════════════════════════════════════ */
+const DATA = {
+  steps: [
+    { id:'subject', title:'Класс и предмет', sub:'С чего начнём — какой урок собираем?',
+      options: [
+        { id:'lit-9', title:'Литература · 9 класс', desc:'«Капитанская дочка», глава о Пугачёве',
+          voices:{
+            s:'Тема политически и эмоционально заряжена. ИИ может помочь подросткам взглянуть на персонажей с разных позиций — но <strong>не закрывайте дискуссию готовым ответом</strong>.',
+            c:'Если планируете показать кадры экранизаций — <strong>проверьте возрастной рейтинг</strong>. Сцены казни могут быть травматичны.',
+            a:'9 класс готов к диалогу о моральном выборе. Закладывайте 25–30 минут на обсуждение, не меньше.'
+          } },
+        { id:'phys-7', title:'Физика · 7 класс', desc:'Простые механизмы и КПД',
+          voices:{
+            s:'Технический предмет — но именно здесь хорошо вшить разговор о <strong>«что считаем „полезным" эффектом»</strong>. Это и есть начало этики ИИ.',
+            c:'Лабораторные с механизмами — стандарт безопасности. Проверьте инструктаж по ТБ.',
+            a:'У 7-классников проседает интуиция «работа = сила × путь». Дайте 5 минут на ручное измерение.'
+          } },
+        { id:'soc-10', title:'Обществознание · 10 класс', desc:'ИИ и рынок труда',
+          voices:{
+            s:'Идеальная связка. Дайте детям <strong>живой контакт с ИИ-инструментом</strong>, а не разговор «об ИИ» в отрыве.',
+            c:'Если используете чат-боты — обсудите заранее, какие данные нельзя в них вводить. Это часть урока.',
+            a:'10 класс — рабочий формат: 10 мин теория, 20 мин практика, 10 мин рефлексия.'
+          } },
+        { id:'inf-8', title:'Информатика · 8 класс', desc:'Алгоритмы и базы данных',
+          voices:{
+            s:'Базы данных — естественный мост к разговору о персональных данных. <strong>Не упускайте</strong>.',
+            c:'Если работаете с реальными данными учеников — <strong>анонимизируйте</strong>. Это закон.',
+            a:'8 класс хорошо схватывает алгоритмы через наглядные блок-схемы. Раздаточные карточки сильнее, чем слайды.'
+          } }
+      ] },
+
+    { id:'goal', title:'Образовательная цель', sub:'Что ученики должны унести с собой?',
+      options: [
+        { id:'know', title:'Узнать новое', desc:'Получить факты, термины, концепции',
+          voices:{
+            s:'Самая «нейтральная» цель — но и самая опасная. Дети узнают ровно то, что им скажут. Заложите <strong>точку сомнения</strong>.',
+            c:'Если используете внешние источники — проверьте их на достоверность. ИИ-сводки иногда ошибаются.',
+            a:'Чистое «узнать» работает в начале темы. На середине и конце — нужны другие цели.'
+          } },
+        { id:'understand', title:'Понять механизм', desc:'Соединить «как» с «почему»',
+          voices:{
+            s:'Здесь ИИ полезен — он умеет показывать вариации и контрпримеры. Но <strong>финальное понимание должен сформулировать ученик</strong>.',
+            c:'Безопасно. Понимание не требует данных учеников. Стандартные правила.',
+            a:'Лучшая цель для большинства уроков. Закладывайте 60% времени на это.'
+          } },
+        { id:'apply', title:'Применить', desc:'Решить задачу, сделать продукт, провести опыт',
+          voices:{
+            s:'Если применяют через ИИ-инструмент — <strong>добавьте слой «проверь, что получил»</strong>. Иначе это списывание.',
+            c:'Если применение требует выхода в интернет — заложите 5 минут на правила цифровой гигиены.',
+            a:'Применение требует времени. На 45 мин урок — минимум 15 минут чистого деланья.'
+          } },
+        { id:'reflect', title:'Поспорить и подумать', desc:'Сформулировать своё отношение, увидеть позиции',
+          voices:{
+            s:'Идеальное место для ИИ-собеседника — он умеет держать оппонирующую позицию. Но <strong>не давайте ему быть авторитетом</strong>.',
+            c:'Спорные темы — снизьте риск буллинга. Заранее проговорите правила дискуссии.',
+            a:'Сложная цель. Готовьте вопросы заранее, не «давайте поспорим» с пустыми руками.'
+          } }
+      ] },
+
+    { id:'ai', title:'Где использовать ИИ', sub:'Какую роль ИИ играет в этом уроке?',
+      options: [
+        { id:'none', title:'Никак', desc:'Урок без ИИ. Тоже ответ.',
+          voices:{
+            s:'Это <strong>валидный выбор</strong>. ИИ — не самоцель. На некоторые темы он мешает.',
+            c:'Самый безопасный вариант. Никаких новых рисков.',
+            a:'Хорошо для тем, где важен непосредственный опыт: физический эксперимент, живая дискуссия.'
+          } },
+        { id:'demo', title:'Я показываю на проекторе', desc:'Учитель работает с ИИ, дети смотрят',
+          voices:{
+            s:'Безопасный вход в ИИ-практику. Покажите промпт, покажите ошибки ИИ — это <strong>часть урока</strong>.',
+            c:'Низкий риск: данные учеников не уходят. Главное — не показывать чужие персональные данные.',
+            a:'Хорошо как первый опыт. Но к 9–10 классу пора давать самим.'
+          } },
+        { id:'students', title:'Ученики работают с ИИ сами', desc:'В парах, в группах или индивидуально',
+          voices:{
+            s:'Главный вопрос — <strong>чему учим</strong>: списывать или мыслить с ИИ. Без явного задания «проверь ответ» получится списывание.',
+            c:'Требует подготовки. Аккаунты, правила, что вводить нельзя. Заложите 10 мин на инструктаж.',
+            a:'Лучшие уроки — здесь. Но первый раз на новой теме — вспомогательно, а не центрально.'
+          } },
+        { id:'compare', title:'Сравниваем человека и ИИ', desc:'Решаем одну задачу двумя способами',
+          voices:{
+            s:'Самый «правильный» формат с точки зрения этики ИИ. <strong>Дети видят границы инструмента</strong>.',
+            c:'Безопасно, если задача без личных данных.',
+            a:'Требует времени — минимум 25 минут чистой работы. Не на каждом уроке возможно.'
+          } }
+      ] },
+
+    { id:'safety', title:'Цифровая безопасность', sub:'Какие риски заранее закроем?',
+      options: [
+        { id:'min', title:'Минимум — общие правила', desc:'Напомнить про пароли и неприятные сайты',
+          voices:{
+            s:'Технически достаточно. Но если урок касается ИИ — этого мало.',
+            c:'<strong>Этого мало для 2026 года</strong>. Дети уже сталкивались с дипфейками друзей. Нужен разговор.',
+            a:'Если вы новичок в теме — начните с этого, потом усложняйте.'
+          } },
+        { id:'data', title:'Тема персональных данных', desc:'Что нельзя вводить в ИИ и куда. Адреса, фото семьи, медицинские данные',
+          voices:{
+            s:'Хороший выбор. Дайте конкретные примеры: «вот этот промпт нормальный, а вот этот — нет».',
+            c:'<strong>Точная попадание</strong>. Сделайте правило класса: «личные данные — никогда в ИИ-инструмент».',
+            a:'Универсально подходит к любому предмету. Можно встроить в 5 минут.'
+          } },
+        { id:'verify', title:'Проверка фактов и ИИ-галлюцинации', desc:'ИИ ошибается. Учим распознавать',
+          voices:{
+            s:'<strong>Лучший выбор для интеграции в любой предмет</strong>. Заодно учим работать с источниками.',
+            c:'Косвенная безопасность — защита от дезинформации. Очень нужна.',
+            a:'Прекрасно встраивается в литературу, историю, обществознание. На физике — сложнее.'
+          } },
+        { id:'deepfake', title:'Дипфейки и манипуляция', desc:'Как распознать поддельное фото/видео/голос',
+          voices:{
+            s:'Сложная тема. Требует <strong>живых примеров</strong>, иначе абстракция.',
+            c:'Очень актуально для 7–11 классов. Имеет место и в этической, и в правовой плоскости.',
+            a:'Лучше отдельным мини-блоком, не как фон. Отдельные 10–15 минут.'
+          } }
+      ] },
+
+    { id:'method', title:'Главный методический ход', sub:'Что станет ядром урока?',
+      options: [
+        { id:'discussion', title:'Дискуссия с правилами', desc:'Дети говорят, учитель — модератор',
+          voices:{
+            s:'ИИ может быть третьим участником — он держит тезисы, к которым дети возвращаются.',
+            c:'Заранее правила: уважение, никаких личных нападок. Ставьте таймер.',
+            a:'<strong>Отличный приём</strong>, если у вас есть навык фасилитации. Если нет — учитесь, начинайте с малых форматов.'
+          } },
+        { id:'investigation', title:'Расследование / кейс', desc:'Дети получают «дело», ищут, доказывают',
+          voices:{
+            s:'Сильный формат, особенно с ИИ как «свидетелем», которого надо допрашивать.',
+            c:'Если кейс с реальными людьми — анонимизируйте.',
+            a:'Лучший приём для «применить» и «понять». Требует 30+ минут.'
+          } },
+        { id:'demo-do', title:'Демонстрация → повторение', desc:'Показываю, потом делают',
+          voices:{
+            s:'Если показываете работу с ИИ — <strong>покажите и ошибку</strong>. Иначе у детей нет иммунитета.',
+            c:'Самый предсказуемый, низкорисковый формат.',
+            a:'Хорошо для технических навыков (физика, информатика). Слабо для гуманитарного.'
+          } },
+        { id:'project', title:'Мини-проект на 1 урок', desc:'В конце — продукт, не ответ',
+          voices:{
+            s:'Если в проекте есть ИИ — заранее <strong>пропишите критерий: что должно остаться авторским</strong>.',
+            c:'Если проект публикуется — проверьте, что не нарушает прав других.',
+            a:'Сильный формат, но реалистично — на 90 мин. На 45 мин получается недопроект.'
+          } }
+      ] },
+
+    { id:'check', title:'Проверка результата', sub:'Как поймём, что урок сработал?',
+      options: [
+        { id:'quiz', title:'Тест в конце урока', desc:'5–7 вопросов на ключевое',
+          voices:{
+            s:'<strong>Проверьте сами тест в ИИ-инструменте</strong>. Если ИИ отвечает на 100% — тест плохой, измеряет память, а не понимание.',
+            c:'Бумажный тест безопаснее цифрового. Если в гугл-форме — без ФИО, только псевдонимы.',
+            a:'Стандарт. Работает, но не показывает глубины.'
+          } },
+        { id:'ticket', title:'Билет на выход', desc:'Одна записка: что поняли, что осталось непонятным',
+          voices:{
+            s:'Заодно проверка, не списывают ли. Если ответ слишком гладкий — это ИИ.',
+            c:'Безопасно. Без личных данных.',
+            a:'<strong>Лучший быстрый чек</strong>. Используйте чаще тестов.'
+          } },
+        { id:'product', title:'Продукт-результат', desc:'То, что сделали — само себе оценка',
+          voices:{
+            s:'Если делали с ИИ — критерии оценки должны учитывать <strong>авторский вклад</strong>, не только итог.',
+            c:'Безопасно, если продукт не публикуется без согласования.',
+            a:'Лучший формат для понимания. Требует чётких критериев заранее.'
+          } },
+        { id:'reflection', title:'Рефлексия словом', desc:'«Я понял, что…» — каждый по кругу',
+          voices:{
+            s:'Хорошо для тем с этической нагрузкой. ИИ здесь не нужен.',
+            c:'Низкорисково. Будьте готовы к неожиданным реакциям.',
+            a:'Работает в малой группе. На 30+ человек — растягивается, лучше письменная форма.'
+          } }
+      ] }
+  ],
+
+  finalVoices: {
+    s: 'Если вы выбрали ИИ-усиленный формат — <strong>сделайте 5 минут «после ИИ»</strong>: пусть дети расскажут, где ИИ был полезен, а где он вёл их в сторону. Это и есть ИИ-этика на практике.',
+    c: 'Перед уроком пройдите чек-лист: аккаунты готовы, инструктаж прописан, что нельзя в ИИ — на доске. <strong>30 секунд на безопасность сэкономят 30 минут разбора инцидента</strong>.',
+    a: 'Самая частая ошибка — перегруз. Уберите 1–2 элемента из плана. Лучше один элемент глубоко, чем три на поверхности. <strong>Урок — не доклад</strong>.'
+  }
+};
+
+const state = {
+  step: 0,
+  choices: {} // stepIdx → optionId
+};
+
+function renderProgress() {
+  const line = document.getElementById('progressLine');
+  line.innerHTML = '';
+  for (let i = 0; i < DATA.steps.length; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'seg';
+    if (i < state.step) seg.classList.add('done');
+    if (i === state.step) seg.classList.add('active');
+    line.appendChild(seg);
+  }
+  document.getElementById('topStep').textContent = state.step < DATA.steps.length ? state.step + 1 : DATA.steps.length;
+  document.getElementById('progressTitle').textContent = state.step < DATA.steps.length ? DATA.steps[state.step].title : 'Готовый план урока';
+  document.getElementById('progressMin').textContent = state.step < DATA.steps.length ? '15' : '5';
+}
+
+function renderStep() {
+  renderProgress();
+  const main = document.getElementById('main');
+  if (state.step >= DATA.steps.length) { renderSummary(); return; }
+  const s = DATA.steps[state.step];
+  const sel = state.choices[state.step];
+
+  main.innerHTML = `
+    <section class="step">
+      <div class="step-num">шаг <b>${state.step+1}</b> из 6</div>
+      <h2>${s.title}</h2>
+      <p class="step-sub">${s.sub}</p>
+    </section>
+    <section class="options" id="opts"></section>
+    <section class="voices" id="voices"></section>
+    <div class="nav-row">
+      ${state.step > 0 ? '<button class="nav-btn prev" id="prevBtn">←</button>' : ''}
+      <button class="nav-btn next" id="nextBtn" ${sel ? '' : 'disabled'}>
+        ${state.step === DATA.steps.length - 1 ? 'Собрать план →' : 'Дальше →'}
+      </button>
+    </div>`;
+
+  const opts = document.getElementById('opts');
+  s.options.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'opt' + (sel === o.id ? ' selected' : '');
+    btn.innerHTML = `
+      <div class="opt-row">
+        <div class="opt-radio"></div>
+        <div class="opt-body">
+          <div class="opt-title">${o.title}</div>
+          <div class="opt-desc">${o.desc}</div>
+        </div>
+      </div>`;
+    btn.addEventListener('click', () => {
+      state.choices[state.step] = o.id;
+      renderStep();
+    });
+    opts.appendChild(btn);
+  });
+
+  const voices = document.getElementById('voices');
+  if (sel) {
+    const opt = s.options.find(o => o.id === sel);
+    voices.innerHTML = `<div class="voices-eye">три голоса об этом выборе</div>`;
+    ['s','c','a'].forEach(v => {
+      const meta = VOICES_META[v];
+      voices.innerHTML += `
+        <div class="voice-card" data-v="${v}">
+          <div class="voice-head">
+            <div class="voice-name">${meta.name}</div>
+            <div class="voice-role">${meta.role}</div>
+          </div>
+          <div class="voice-text">${opt.voices[v]}</div>
+        </div>`;
+    });
+  } else {
+    voices.innerHTML = `<div class="voices-empty">Выберите вариант — три голоса прокомментируют ваш выбор.</div>`;
+  }
+
+  if (state.step > 0) {
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      state.step--; renderStep(); window.scrollTo({top:0,behavior:'smooth'});
+    });
+  }
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    if (!state.choices[state.step]) return;
+    state.step++; renderStep(); window.scrollTo({top:0,behavior:'smooth'});
+  });
+}
+
+function renderSummary() {
+  const main = document.getElementById('main');
+  const labels = ['Класс и предмет','Цель','Роль ИИ','Безопасность','Главный ход','Проверка'];
+  const rows = DATA.steps.map((s, i) => {
+    const opt = s.options.find(o => o.id === state.choices[i]);
+    return `<div class="plan-row">
+      <div class="plan-label">${labels[i]}</div>
+      <div class="plan-value">${opt.title}</div>
+    </div>`;
+  }).join('');
+
+  main.innerHTML = `
+    <section class="summary">
+      <div class="summary-hero">
+        <div class="se">Готовый план · 45 минут</div>
+        <h3>Ваш урок собран.</h3>
+        <p>Шесть решений превратились в план. Внизу — финальный совет от каждого из трёх голосов.</p>
+      </div>
+
+      <div class="plan-card">${rows}</div>
+
+      <div class="summary-voices">
+        <div class="summary-voices-eye">финальные комментарии</div>
+        ${['s','c','a'].map(v => `
+          <div class="sv-item" data-v="${v}">
+            <div class="sv-bar"></div>
+            <div>
+              <div class="sv-name">${VOICES_META[v].name} · ${VOICES_META[v].role}</div>
+              <div class="sv-text">${DATA.finalVoices[v]}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <div class="summary-actions">
+        <button class="btn-restart" id="restartBtn">Собрать заново</button>
+        <button class="btn-print" id="printBtn">Сохранить PDF</button>
+      </div>
+    </section>`;
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    state.step = 0; state.choices = {};
+    renderStep(); window.scrollTo({top:0,behavior:'smooth'});
+  });
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+}
+
+renderStep();
+</script>
+</body>
+</html>
